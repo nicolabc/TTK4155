@@ -10,6 +10,9 @@ Discarded input sections
  .text          0x00000000        0x0 lab1.o
  .data          0x00000000        0x0 lab1.o
  .bss           0x00000000        0x0 lab1.o
+ .text          0x00000000        0x0 uart.o
+ .data          0x00000000        0x0 uart.o
+ .bss           0x00000000        0x0 uart.o
  .text          0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr5\libgcc.a(_exit.o)
  .data          0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr5\libgcc.a(_exit.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr5\libgcc.a(_exit.o)
@@ -44,6 +47,7 @@ Linker script and memory map
 Address of section .data set to 0x800100
 LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5/crtm162.o
 LOAD lab1.o
+LOAD uart.o
 START GROUP
 LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libm.a
 END GROUP
@@ -143,7 +147,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000       0xba
+.text           0x00000000       0xc4
  *(.vectors)
  .vectors       0x00000000       0x70 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5/crtm162.o
                 0x00000000                __vector_default
@@ -226,13 +230,19 @@ END GROUP
                 0x00000084                __vector_20
                 0x00000088                . = ALIGN (0x2)
  *(.text.*)
- .text.main     0x00000088       0x2e lab1.o
+ .text.main     0x00000088       0x26 lab1.o
                 0x00000088                main
-                0x000000b6                . = ALIGN (0x2)
+ .text.USART_Init
+                0x000000ae        0xa uart.o
+                0x000000ae                USART_Init
+ .text.USART_Transmit
+                0x000000b8        0x8 uart.o
+                0x000000b8                USART_Transmit
+                0x000000c0                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000000b6        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr5\libgcc.a(_exit.o)
-                0x000000b6                _exit
-                0x000000b6                exit
+ .fini9         0x000000c0        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr5\libgcc.a(_exit.o)
+                0x000000c0                _exit
+                0x000000c0                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -251,11 +261,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000000b6        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr5\libgcc.a(_exit.o)
+ .fini0         0x000000c0        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x000000ba                _etext = .
+                0x000000c4                _etext = .
 
-.data           0x00800100        0x0 load address 0x000000ba
+.data           0x00800100        0x0 load address 0x000000c4
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -272,8 +282,8 @@ END GROUP
  *(.bss*)
  *(COMMON)
                 0x00800100                PROVIDE (__bss_end, .)
-                0x000000ba                __data_load_start = LOADADDR (.data)
-                0x000000ba                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x000000c4                __data_load_start = LOADADDR (.data)
+                0x000000c4                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x00800060        0x0
                 0x00800060                PROVIDE (__noinit_start, .)
@@ -323,6 +333,7 @@ END GROUP
  *(.comment)
  .comment       0x00000000       0x30 lab1.o
                                  0x31 (size before relaxing)
+ .comment       0x00000000       0x31 uart.o
 
 .note.gnu.build-id
  *(.note.gnu.build-id)
@@ -339,37 +350,46 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000       0x20
+.debug_aranges  0x00000000       0x48
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x20 lab1.o
+ .debug_aranges
+                0x00000020       0x28 uart.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x145
+.debug_info     0x00000000      0x21d
  *(.debug_info .gnu.linkonce.wi.*)
- .debug_info    0x00000000      0x145 lab1.o
+ .debug_info    0x00000000      0x15e lab1.o
+ .debug_info    0x0000015e       0xbf uart.o
 
-.debug_abbrev   0x00000000       0xd3
+.debug_abbrev   0x00000000      0x1a0
  *(.debug_abbrev)
- .debug_abbrev  0x00000000       0xd3 lab1.o
+ .debug_abbrev  0x00000000      0x115 lab1.o
+ .debug_abbrev  0x00000115       0x8b uart.o
 
-.debug_line     0x00000000      0x143
+.debug_line     0x00000000      0x1fe
  *(.debug_line .debug_line.* .debug_line_end)
- .debug_line    0x00000000      0x143 lab1.o
+ .debug_line    0x00000000      0x13c lab1.o
+ .debug_line    0x0000013c       0xc2 uart.o
 
-.debug_frame    0x00000000       0x24
+.debug_frame    0x00000000       0x58
  *(.debug_frame)
  .debug_frame   0x00000000       0x24 lab1.o
+ .debug_frame   0x00000024       0x34 uart.o
 
-.debug_str      0x00000000      0x15f
+.debug_str      0x00000000      0x18f
  *(.debug_str)
- .debug_str     0x00000000      0x15f lab1.o
-                                0x193 (size before relaxing)
+ .debug_str     0x00000000      0x179 lab1.o
+                                0x1ad (size before relaxing)
+ .debug_str     0x00000179       0x16 uart.o
+                                0x167 (size before relaxing)
 
-.debug_loc
+.debug_loc      0x00000000       0x26
  *(.debug_loc)
+ .debug_loc     0x00000000       0x26 uart.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -389,9 +409,10 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000       0x10
+.debug_ranges   0x00000000       0x28
  *(.debug_ranges)
  .debug_ranges  0x00000000       0x10 lab1.o
+ .debug_ranges  0x00000010       0x18 uart.o
 
 .debug_macro
  *(.debug_macro)
