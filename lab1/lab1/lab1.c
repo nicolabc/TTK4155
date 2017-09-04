@@ -7,6 +7,7 @@
 
 
 #include <avr/io.h>
+#include <stdio.h>
 
 #define F_CPU 4915200
 
@@ -32,6 +33,14 @@ int main(void)
 		PORTA |= (1<<PA1);*/
 		
 		USART_Transmit('a');
+		//_delay_ms(1000);
+		
+		printf(" 3boi\n");
 		_delay_ms(1000);
+			
+			
+		
+		/*char c = USART_Receive();
+		USART_Transmit(c);*/
 	}
 }
