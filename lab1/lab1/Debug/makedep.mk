@@ -4,5 +4,7 @@
 
 lab1.c
 
+sram.c
+
 uart.c
 

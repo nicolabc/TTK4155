@@ -101,35 +101,15 @@ Disassembly of section .text:
   aa:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 000000ae <main>:
-//#define loop_until_bit_is_clear( reg, bit ) while( test_bit( reg, bit ) )
-
-
-int main(void)
-{
-	USART_Init ( MYUBRR );
   ae:	8f e1       	ldi	r24, 0x1F	; 31
   b0:	90 e0       	ldi	r25, 0x00	; 0
   b2:	0e 94 78 00 	call	0xf0	; 0xf0 <USART_Init>
-	set_bit(DDRA,PA1);	// setter PA1 til output
   b6:	d1 9a       	sbi	0x1a, 1	; 26
-	clear_bit(PORTA,PA1);	 // setter PA1 høy (så det blir 5V på utgangen til PA1)
   b8:	d9 98       	cbi	0x1b, 1	; 27
-	
-	set_bit(DDRE, PE1); //Lab 2, setter PE1 til output (Tror vi)
   ba:	31 9a       	sbi	0x06, 1	; 6
-	set_bit(PORTE, PE1); //Lab 2, setter PE1 til høy (Latch enable)
   bc:	39 9a       	sbi	0x07, 1	; 7
-		/*PORTA &= ~(1<<PA1);
-        //TODO:: Please write your application code 
-		_delay_ms(3000);
-		PORTA |= (1<<PA1);*/
-		
-		USART_Transmit('a');
   be:	81 e6       	ldi	r24, 0x61	; 97
   c0:	0e 94 70 00 	call	0xe0	; 0xe0 <USART_Transmit>
-		//_delay_ms(1000);
-		
-		printf(" 3boi\n");
   c4:	86 e0       	ldi	r24, 0x06	; 6
   c6:	91 e0       	ldi	r25, 0x01	; 1
   c8:	0e 94 ce 00 	call	0x19c	; 0x19c <puts>
