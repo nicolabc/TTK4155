@@ -9,6 +9,7 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include "sram.h"
+#include "uart.h"
 
 void SRAM_test(void)
 {

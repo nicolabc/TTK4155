@@ -14,6 +14,7 @@
 #include "util/delay.h"
 #include "uart.h"
 #include "sram.h"
+#include "externalmemory.h"
 
 #define FOSC 4915200// Clock Speed
 #define BAUD 9600
@@ -38,7 +39,27 @@ int main(void)
 	//DDRA |= (1<<PA1); // setter PA1 til output
 	//PORTA |= (1<<PA1); // setter PA1 høy (så det blir 5V på utgangen til PA1)
 	
+
 	
+	//Tester sram
+	enableExternalMemory();
+	//a11
+	set_bit(DDRC,PC3); // DDRC |= (1 << PC3) Setter PC3 til output
+	set_bit(PORTC, PC3); // PORTC |= (1 << PC3) Setter PC3 høy
+	
+	//a10	
+	set_bit(DDRC, PC2);
+	clear_bit(PORTC, PC2);
+	
+	//a9	
+	set_bit(DDRC, PC1);
+	set_bit(PORTC, PC1);
+	
+	//a8	
+	set_bit(DDRC, PC0);
+	clear_bit(PORTC, PC0);
+	SRAM_test();
+	printf("START");
     while(1)
     {
 		/*PORTA &= ~(1<<PA1);

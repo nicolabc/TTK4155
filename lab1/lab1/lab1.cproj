@@ -109,6 +109,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="externalmemory.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="externalmemory.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="lab1.c">
       <SubType>compile</SubType>
     </Compile>
