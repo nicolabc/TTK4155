@@ -42,14 +42,19 @@ int main(void)
 
 	
 	//Tester sram
-	enableExternalMemory();
+	enableExternalMemory(); //Trenger vi denne alltid på???
+	//SRAM_test();
+	
+	
+	
+	/* Trengs ikke fordi vi kan aksessere med pointer
 	//a11
 	set_bit(DDRC,PC3); // DDRC |= (1 << PC3) Setter PC3 til output
-	set_bit(PORTC, PC3); // PORTC |= (1 << PC3) Setter PC3 høy
+	clear_bit(PORTC, PC3); // PORTC |= (1 << PC3) Setter PC3 høy
 	
 	//a10	
 	set_bit(DDRC, PC2);
-	clear_bit(PORTC, PC2);
+	set_bit(PORTC, PC2);
 	
 	//a9	
 	set_bit(DDRC, PC1);
@@ -57,11 +62,18 @@ int main(void)
 	
 	//a8	
 	set_bit(DDRC, PC0);
-	clear_bit(PORTC, PC0);
-	SRAM_test();
+	set_bit(PORTC, PC0);
+	*/
+	
+	volatile char *ext_ram = (char *) 0x13FF; //For å aksessere external IC lager vi pointer til adresse
+	while(1){
+		ext_ram[0] = 1; //For å faktisk gjøre noe med adressen må noe skrives dit
+	}
 	printf("START");
     while(1)
-    {
+    {	
+		uint8_t a = 1;
+		ext_ram[0] = a;
 		/*PORTA &= ~(1<<PA1);
         //TODO:: Please write your application code 
 		_delay_ms(3000);
