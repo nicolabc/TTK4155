@@ -8,12 +8,14 @@
 
 #include <avr/io.h>
 #include <stdio.h>
+#include <avr/interrupt.h>
 
 #define F_CPU 4915200
 
 #include "util/delay.h"
 #include "uart.h"
 #include "sram.h"
+#include "adc.h"
 #include "externalmemory.h"
 
 #define FOSC 4915200// Clock Speed
@@ -29,12 +31,16 @@
 int main(void)
 {
 	USART_Init ( MYUBRR );
-	set_bit(DDRA,PA1);	// setter PA1 til output
-	clear_bit(PORTA,PA1);	 // setter PA1 høy (så det blir 5V på utgangen til PA1)
 	
-	set_bit(DDRE, PE1); //Lab 2, setter PE1 til output (Tror vi)
-	set_bit(PORTE, PE1); //Lab 2, setter PE1 til høy (Latch enable)
+	//set_bit(DDRA,PA1);	// setter PA1 til output
+	//clear_bit(PORTA,PA1);	 // setter PA1 høy (så det blir 5V på utgangen til PA1)
 	
+	//set_bit(DDRE, PE1); //Lab 2, setter PE1 til output (Tror vi)
+	//set_bit(PORTE, PE1); //Lab 2, setter PE1 til høy (Latch enable)
+	
+	/*clear_bit(DDRE, PE0); // Setter PE0 til lav for å lese fra pin (input, interrupt
+	set_bit(PORTE, PE1); //
+	*/
 	
 	//DDRA |= (1<<PA1); // setter PA1 til output
 	//PORTA |= (1<<PA1); // setter PA1 høy (så det blir 5V på utgangen til PA1)
@@ -65,10 +71,25 @@ int main(void)
 	set_bit(PORTC, PC0);
 	*/
 	
-	volatile char *ext_ram = (char *) 0x13FF; //For å aksessere external IC lager vi pointer til adresse
+	volatile char *ext_ram = (char *) 0x1400; //For å aksessere external IC lager vi pointer til adresse
+	volatile uint8_t retreived_valueX;
+	volatile uint8_t retreived_valueY;
+	printf("START ADC \n");
 	while(1){
-		ext_ram[0] = 1; //For å faktisk gjøre noe med adressen må noe skrives dit
+		//ext_ram[0] = 1;
+		retreived_valueX = ADCreadX(); 
+		retreived_valueY = ADCreadY();
+		//ext_ram = 1; //For å faktisk gjøre noe med adressen må noe skrives dit
+		//_delay_ms(1000);
+		//ext_ram[1] = 3;
+		
+		
+		printf("Retrieved value, X/Y: %i /// %i \n", retreived_valueX, retreived_valueY);
+		
+		//printf("Retrieved value Y: %i \n", retreived_valueY);
 	}
+	
+	
 	printf("START");
     while(1)
     {	

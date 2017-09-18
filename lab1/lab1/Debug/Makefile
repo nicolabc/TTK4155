@@ -37,6 +37,7 @@ SUBDIRS :=
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
+../adc.c \
 ../externalmemory.c \
 ../lab1.c \
 ../sram.c \
@@ -50,24 +51,28 @@ ASM_SRCS +=
 
 
 OBJS +=  \
+adc.o \
 externalmemory.o \
 lab1.o \
 sram.o \
 uart.o
 
 OBJS_AS_ARGS +=  \
+adc.o \
 externalmemory.o \
 lab1.o \
 sram.o \
 uart.o
 
 C_DEPS +=  \
+adc.d \
 externalmemory.d \
 lab1.d \
 sram.d \
 uart.d
 
 C_DEPS_AS_ARGS +=  \
+adc.d \
 externalmemory.d \
 lab1.d \
 sram.d \
@@ -87,6 +92,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 
