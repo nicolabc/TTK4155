@@ -12,21 +12,39 @@
 
 #include "util/delay.h"
 #include "adc.h"
+#include "joy.h"
 
-void ADCinit(void){
+/*
+void adc_init(void){
 	
 }
+*/
 
-int ADCreadX(void){
+int adc_getX(void){
 	volatile char *adc_start = (char *) 0x1400;
 	adc_start[0] = 4;
 	_delay_us(50);
-	return adc_start[0];
+	
+	return (adc_start[0]);
 }
 
-int ADCreadY(void){
+int adc_getY(void){
 	volatile char *adc_start = (char *) 0x1400;
 	adc_start[0] = 5;
 	_delay_us(50);
-	return adc_start[0];
+	return (adc_start[0]);
+}
+
+int adc_getLeftSlider(void){
+	volatile char *adc_start = (char *) 0x1400;
+	adc_start[0] = 6;
+	_delay_us(50);
+	return (((adc_start[0]*1.0)/255)*100);
+}
+
+int adc_getRightSlider(void){
+	volatile char *adc_start = (char *) 0x1400;
+	adc_start[0] = 7;
+	_delay_us(50);
+	return (((adc_start[0]*1.0)/255)*100);
 }

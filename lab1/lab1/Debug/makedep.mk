@@ -4,7 +4,11 @@
 
 adc.c
 
+avr.c
+
 externalmemory.c
+
+joy.c
 
 lab1.c
 

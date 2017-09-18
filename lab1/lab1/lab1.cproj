@@ -115,10 +115,22 @@
     <Compile Include="adc.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="avr.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="avr.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="externalmemory.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="externalmemory.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="joy.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="joy.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="lab1.c">

@@ -10,11 +10,14 @@
 #define ADC_H_
 
 
-void ADCinit(void);
+void adc_init(void);
 
-int ADCreadX(void);
+int adc_getX(void);
 
-int ADCreadY(void);
+int adc_getY(void);
 
+int adc_getLeftSlider(void);
+
+int adc_getRightSlider(void);
 
 #endif /* ADC_H_ */

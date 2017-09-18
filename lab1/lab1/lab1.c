@@ -17,6 +17,7 @@
 #include "sram.h"
 #include "adc.h"
 #include "externalmemory.h"
+#include "avr.h"
 
 #define FOSC 4915200// Clock Speed
 #define BAUD 9600
@@ -31,62 +32,50 @@
 int main(void)
 {
 	USART_Init ( MYUBRR );
-	
-	//set_bit(DDRA,PA1);	// setter PA1 til output
-	//clear_bit(PORTA,PA1);	 // setter PA1 høy (så det blir 5V på utgangen til PA1)
-	
-	//set_bit(DDRE, PE1); //Lab 2, setter PE1 til output (Tror vi)
-	//set_bit(PORTE, PE1); //Lab 2, setter PE1 til høy (Latch enable)
-	
-	/*clear_bit(DDRE, PE0); // Setter PE0 til lav for å lese fra pin (input, interrupt
-	set_bit(PORTE, PE1); //
-	*/
-	
-	//DDRA |= (1<<PA1); // setter PA1 til output
-	//PORTA |= (1<<PA1); // setter PA1 høy (så det blir 5V på utgangen til PA1)
-	
-
+	enableExternalMemory(); 
 	
 	//Tester sram
-	enableExternalMemory(); //Trenger vi denne alltid på???
+	
 	//SRAM_test();
 	
-	
-	
-	/* Trengs ikke fordi vi kan aksessere med pointer
-	//a11
-	set_bit(DDRC,PC3); // DDRC |= (1 << PC3) Setter PC3 til output
-	clear_bit(PORTC, PC3); // PORTC |= (1 << PC3) Setter PC3 høy
-	
-	//a10	
-	set_bit(DDRC, PC2);
-	set_bit(PORTC, PC2);
-	
-	//a9	
-	set_bit(DDRC, PC1);
-	set_bit(PORTC, PC1);
-	
-	//a8	
-	set_bit(DDRC, PC0);
-	set_bit(PORTC, PC0);
-	*/
-	
-	volatile char *ext_ram = (char *) 0x1400; //For å aksessere external IC lager vi pointer til adresse
-	volatile uint8_t retreived_valueX;
-	volatile uint8_t retreived_valueY;
+	avr_init();
+
+	volatile char *ext_ram = (char *) 0x1201; //For å aksessere external IC lager vi pointer til adresse
+	volatile int8_t retreived_valueX;
+	volatile int8_t retreived_valueY;
 	printf("START ADC \n");
+	
+	volatile int8_t sliderValueLeft;
+	volatile int8_t sliderValueRight;
+	
+	int leftButton = 0;
+	int rightButton = 0;
 	while(1){
+		
+		/*
+		sliderValueLeft = adc_getLeftSlider();
+		sliderValueRight = adc_getRightSlider();
+		printf("Left///Right: %i /// %i \n", sliderValueLeft, sliderValueRight);
+		*/
+		
+		
 		//ext_ram[0] = 1;
-		retreived_valueX = ADCreadX(); 
-		retreived_valueY = ADCreadY();
-		//ext_ram = 1; //For å faktisk gjøre noe med adressen må noe skrives dit
-		//_delay_ms(1000);
-		//ext_ram[1] = 3;
+		retreived_valueX = joy_getPercent(adc_getX()); 
+		retreived_valueY = joy_getPercent(adc_getY());
+
 		
 		
 		printf("Retrieved value, X/Y: %i /// %i \n", retreived_valueX, retreived_valueY);
 		
 		//printf("Retrieved value Y: %i \n", retreived_valueY);
+		
+		/*
+		
+		leftButton = PINB & (1<<PB0);
+		rightButton = PINB & (1<<PB1);
+		
+		printf("Left button: %i Right button %i \n", leftButton, rightButton);
+		*/
 	}
 	
 	
