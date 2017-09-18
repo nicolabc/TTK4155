@@ -93,6 +93,7 @@ int main(void)
 	printf("START");
     while(1)
     {	
+		
 		uint8_t a = 1;
 		ext_ram[0] = a;
 		/*PORTA &= ~(1<<PA1);
