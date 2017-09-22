@@ -12,6 +12,8 @@ joy.c
 
 lab1.c
 
+oled.c
+
 sram.c
 
 uart.c

@@ -20,4 +20,10 @@ int adc_getLeftSlider(void);
 
 int adc_getRightSlider(void);
 
+void adc_init();
+
+uint8_t adc_read(uint8_t ch);
+
+
+
 #endif /* ADC_H_ */

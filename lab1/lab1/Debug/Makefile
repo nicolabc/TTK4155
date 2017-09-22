@@ -42,6 +42,7 @@ C_SRCS +=  \
 ../externalmemory.c \
 ../joy.c \
 ../lab1.c \
+../oled.c \
 ../sram.c \
 ../uart.c
 
@@ -58,6 +59,7 @@ avr.o \
 externalmemory.o \
 joy.o \
 lab1.o \
+oled.o \
 sram.o \
 uart.o
 
@@ -67,6 +69,7 @@ avr.o \
 externalmemory.o \
 joy.o \
 lab1.o \
+oled.o \
 sram.o \
 uart.o
 
@@ -76,6 +79,7 @@ avr.d \
 externalmemory.d \
 joy.d \
 lab1.d \
+oled.d \
 sram.d \
 uart.d
 
@@ -85,6 +89,7 @@ avr.d \
 externalmemory.d \
 joy.d \
 lab1.d \
+oled.d \
 sram.d \
 uart.d
 
@@ -102,6 +107,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 
