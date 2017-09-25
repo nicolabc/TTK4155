@@ -6,9 +6,83 @@
  */ 
 
 
+#include <avr/io.h>
+#include <stdio.h>
+#include <avr/pgmspace.h>
+#include <string.h>
 
 #include "oled.h"
-/*
+#include "fonts.h"
+
+
+void write_c(uint8_t command){
+	volatile char *ext_oled_c = (char *) (0x1000);
+	ext_oled_c[0] = command;
+}
+
+void oled_write_data(uint8_t data){
+	volatile char *ext_oled_d = (char *) (0x1200);
+	ext_oled_d[0] = data;
+}
+
+void oled_goto_page(uint8_t page){
+	write_c(0xb0+page);
+}
+
+void oled_goto_column(uint8_t column){ //From 0x00 to 0x7E
+	
+	uint8_t lastFourBits = column & (0b00001111);
+	uint8_t firstFourBits = (column & (0b11110000)) >> 4;
+	
+	write_c(0x00+lastFourBits); //Siden de siste fire bitsene i column-bitsene våre representerer siste hex-verdien til column (f.eks. om column er 7E, så blir lastFourBits E).
+	write_c(0x10+firstFourBits);
+	//Slik pekerne til oled er definert, må vi dele opp column i 7 og E (om column er 7E) og bruke write_c for å skrive riktig kommando ut fra hva lower column og higher column er i tabell 8.1 - command table
+}
+
+void oled_goto_pos(uint8_t page, uint8_t col){
+	oled_goto_page(page);
+	oled_goto_column(col);
+}
+
+
+void oled_clear_screen(void){ //Clears the entire screen
+	int i = 0;
+	int j = 0;
+	for(i = 0; i <8; i++){
+		oled_goto_page(i);
+		for(j = 0; j < 128; j++){
+			oled_write_data(0b00000000); //To clear a single column
+		} 
+	}
+}
+void oled_print_char(char myChar){
+	int asciValue = myChar;
+	
+	int number = asciValue -32;
+
+	int i = 0;
+	for(i=0; i<5; i++){
+		oled_write_data(pgm_read_byte(&font5[number][i])); //siden vi må aksessere programminnet, må vi bruke pgm_read_byte
+	}
+}
+
+void oled_print(char* myString, uint8_t page, uint8_t col){ //har med page og col her så jeg slipper å bruke oled_goto_pos før jeg vil printe noe
+	oled_goto_pos(page,col);
+	int i = 0;
+	int xPosition = col;
+	printf("%i", strlen((myString)));
+	int j = 0;
+	for (i = 0; i < strlen(myString); i++){
+		if(5*j + xPosition > 123){ //OM VI ENDRER FONT SIZE FRA FONT5, MÅ VI ENDRE 5*i OGSÅ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			oled_goto_pos(++page,0);
+			xPosition = 0;
+			j = 0;
+		}
+		j++;
+		oled_print_char(myString[i]);
+	}
+}
+
 void oled_init(){
 	
 	write_c(0xae);        //  display  off
@@ -24,7 +98,7 @@ void oled_init(){
 	write_c(0x50);
 	write_c(0xd9);        //set  pre-charge  period
 	write_c(0x21);
-	write_c(0x20);        //Set  Memory  Addressing  Mode
+	write_c(0x20);        //Set  Memory  Addressing  Mode -- Page addressing mode
 	write_c(0x02);
 	write_c(0xdb);        //VCOM  deselect  level  mode
 	write_c(0x30);
@@ -34,14 +108,3 @@ void oled_init(){
 	write_c(0xa6);        //set  normal  display
 	write_c(0xaf);        //  display  on
 }
-
-void OLED_print_arrow(uint8_t row, uint8_t col){
-	
-	OLED_pos(row, col);
-	OLED_write_data(0b00011000);
-	OLED_write_data(0b00011000);
-	OLED_write_data(0b01111110);
-	OLED_write_data(0b00111100);
-	OLED_write_data(0b00011000);
-}
-*/

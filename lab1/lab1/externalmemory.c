@@ -13,7 +13,7 @@
 #define set_bit( reg, bit ) (reg |= (1 << bit))
 #define clear_bit( reg, bit ) (reg &= ~(1 << bit))
 
-void enableExternalMemory(void){
+void extMem_init(void){
 	
 	set_bit(MCUCR,SRE); // MCUCR |= (1 << SRE); //Setter SRE høy i MCUCR registeret slik at AVR kan skrive til external memory
 	set_bit(SFIOR,XMM2); // SFIOR |= (1 << XMM2); //Maskerer ut PC7-PC4 til JTAG

@@ -5,10 +5,13 @@
  *  Author: nicolabc
  */ 
 
-
+#include <stdint.h>
+//#include <inttypes.h>
 #include <avr/io.h>
 #include <stdio.h>
 #include <avr/interrupt.h>
+//#include <avr/pgmspace.h>
+
 
 #define F_CPU 4915200
 
@@ -19,6 +22,8 @@
 #include "externalmemory.h"
 #include "avr.h"
 #include "oled.h"
+#include "joy.h"
+//#include "fonts.h"
 
 #define FOSC 4915200// Clock Speed
 #define BAUD 9600
@@ -30,72 +35,23 @@
 
 int main(void)
 {
+	
 	USART_Init ( MYUBRR );
-	enableExternalMemory(); 
-	
-	//Tester sram
-	
+	extMem_init(); 
+	avr_init();
+	adc_init();
+	oled_init();
+	oled_clear_screen();
 	//SRAM_test();
 	
-	avr_init();
+	
+	//oled_goto_pos(0,0);
+
 	
 
-	volatile char *ext_ram = (char *) 0x1201; //For å aksessere external IC lager vi pointer til adresse
-	adc_init();
-	while(1){
-		
-		/*
-		sliderValueLeft = adc_getLeftSlider();
-		sliderValueRight = adc_getRightSlider();
-		
-		leftButton = PINB & (1<<PB0);
-		rightButton = (PINB & (1<<PB1)); //Blir 2, men kan bruke if
-		
-		printf("Left///Right: %i /// %i /// Left button: %i Right button %i \n", sliderValueLeft, sliderValueRight, leftButton, rightButton );
-		
-		*/
-		
-		//ext_ram[0] = 1;
-
-		//
-
-		
-		
-		//printf("Retrieved value, X/Y: %i /// %i \n", retreived_valueX, retreived_valueY);
-		//printf("Retrieved value, X: %i \n", retreived_valueX);
-		//printf("Retrieved value, Y: %i \n", retreived_valueY);
-
-		//printf("                                                     Retrieved value Y: %i \n", retreived_valueY);
-		
-		
-		
-		printf("Left: %i //////  right: %i ////// L3: %i \n", joy_readButton(0), joy_readButton(1), joy_readButton(2));
-		
-		//printf("Left button: %i Right button %i \n", leftButton, rightButton);
-		
-	}
+	oled_print("Chase a check, never     chase a bitch            Mask on, fuck it mask offMask on, fuck it mask off", 0,0);
 	
 	
-	printf("START");
-    while(1)
-    {	
-		
-		uint8_t a = 1;
-		ext_ram[0] = a;
-		/*PORTA &= ~(1<<PA1);
-        //TODO:: Please write your application code 
-		_delay_ms(3000);
-		PORTA |= (1<<PA1);*/
-		
-		USART_Transmit('a');
-		//_delay_ms(1000);
-		
-		printf(" 3boi\n");
-		_delay_ms(1000);
-			
-			
-		
-		/*char c = USART_Receive();
-		USART_Transmit(c);*/
-	}
+
+
 }

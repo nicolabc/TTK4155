@@ -22,12 +22,12 @@ void adc_init(void){
 
 volatile int adcInProgress = 0;
 
-void adc_init(){
+void adc_init(void){
 	DDRE &= ~(1<<DDE0); //Hvis vi skal bruke interrupt pin-en i stedet for delay (blir en slags interrupt)
 }
 
 uint8_t adc_read(uint8_t ch){
-	//ch = 0: joystick x. ch = 1: joystick y. ch = 2: slider left. ch = 3: slider right. ch = 4: button left. ch = 5: button right
+	//ch = 0: joystick x. ch = 1: joystick y. ch = 2: slider left. ch = 3: slider right. 
 	volatile char *ext_adc =(char*) 0x1400;
 	*ext_adc = 0x4 + ch;
 	//while(PINE & (1<<PINE0));

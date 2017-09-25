@@ -7,6 +7,8 @@
 
 #include "joy.h"
 #include <avr/io.h>
+#include <stdio.h>
+#include <avr/interrupt.h>
 
 
 int joy_getPercent(int raw){
@@ -33,7 +35,7 @@ int joy_getDirectionY(int raw){
 	return DOWN;
 }
 
-int joy_readButton(int button){
+int joy_readButton(int button){ // Button 0, 1 or 2
 	if (button == 2){
 		if ((PINB & (1<<(PB0+button))) > 0){
 			return 0; //så: om joystickknappen ikke er trykket inn, vil verdien i parentesen være 4. om knappen ikke er trykket inn, returnerer vi 0

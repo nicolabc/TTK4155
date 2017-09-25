@@ -9,15 +9,25 @@
 #ifndef OLED_H_
 #define OLED_H_
 
-/*void oled_init();
-void oled_reset();
+void write_c(uint8_t command);
+void oled_write_data(uint8_t data);
+void oled_init();
+void oled_goto_page(uint8_t page);
+void oled_goto_column(uint8_t column);
+void oled_goto_pos(uint8_t page, uint8_t col);
+void oled_clear_screen(void);
+void oled_print_char(char myChar);
+void oled_print(char* myString, uint8_t page, uint8_t col);
+
+//void oled_print(char*);
+
+/*void oled_reset();
 void oled_home();
-void oled_goto_line(line);
-void oled_goto_column(column);
+
 void oled_clear_line(line);
-void oled_pos(row, column);
-void oled_print(char*);
+
 void oled_set_brightness(lvl);
-void oled_print_arrow(uint8_t row, uint8_t col);
 */
+
+
 #endif /* OLED_H_ */

@@ -12,6 +12,7 @@
 
 void adc_init(void);
 
+/*
 int adc_getX(void);
 
 int adc_getY(void);
@@ -19,8 +20,8 @@ int adc_getY(void);
 int adc_getLeftSlider(void);
 
 int adc_getRightSlider(void);
-
-void adc_init();
+*/
+//void adc_init();
 
 uint8_t adc_read(uint8_t ch);
 

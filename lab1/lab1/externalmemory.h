@@ -9,7 +9,7 @@
 #ifndef EXTERNALMEMORY_H_
 #define EXTERNALMEMORY_H_
 
-void enableExternalMemory(void);
+void extMem_init(void);
 
 
 
