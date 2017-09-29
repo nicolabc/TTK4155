@@ -23,6 +23,7 @@
 #include "avr.h"
 #include "oled.h"
 #include "joy.h"
+#include "menu.h"
 //#include "fonts.h"
 
 #define FOSC 4915200// Clock Speed
@@ -42,14 +43,28 @@ int main(void)
 	adc_init();
 	oled_init();
 	oled_clear_screen();
+	menu_init();
 	//SRAM_test();
 	
 	
 	//oled_goto_pos(0,0);
-
 	
+	oled_print("Chase a check, never     chase a bitch            Mask on, fuck it mask offMask on, fuck it mask off <--", 0,0);
+	
+	while(1){
+		//printf("V:   %i \n", adc_read(2));
+		//printf("H:   %i \n", adc_read(3));
+	
+	/*	
+		if(){//Knapp endrer seg -- knappeendringsfunksjon(getdirectionY())){ //Evt ha x-direction som å velge og gå tilbake (kan ha funksjon som returnerer all directions)
+			
+			//printMenu(currentHead);
+			
+		}
+		
+		*/
 
-	oled_print("Chase a check, never     chase a bitch            Mask on, fuck it mask offMask on, fuck it mask off", 0,0);
+	}
 	
 	
 

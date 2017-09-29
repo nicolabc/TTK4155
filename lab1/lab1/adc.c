@@ -24,14 +24,36 @@ volatile int adcInProgress = 0;
 
 void adc_init(void){
 	DDRE &= ~(1<<DDE0); //Hvis vi skal bruke interrupt pin-en i stedet for delay (blir en slags interrupt)
+	
+	/* HVIS VI ØNSKER INTERRUPT
+	cli();
+	
+	// Interrupt on rising edge PE0
+	EMCUCR |= (1<<ISC2);
+	
+	// Enable interrupt on PE0
+	GICR |= (1<<INT2);
+	
+	// Enable global interrupts
+	sei();
+	*/
 }
 
-uint8_t adc_read(uint8_t ch){
-	//ch = 0: joystick x. ch = 1: joystick y. ch = 2: slider left. ch = 3: slider right. 
+uint8_t adc_read(uint8_t ch){ //ch = 0: joystick x. ch = 1: joystick y. ch = 2: slider left. ch = 3: slider right. 
+	
+	
 	volatile char *ext_adc =(char*) 0x1400;
 	*ext_adc = 0x4 + ch;
+	
+	
 	//while(PINE & (1<<PINE0));
-	_delay_us(60);
+	/* HVIS VI ØNSKER INTERRUPT
+	adcInProgress = 1;
+	while (adcInProgress)
+	*/
+	
+	
+	_delay_us(50);
 	return *ext_adc;	
 }
 

@@ -10,7 +10,7 @@
 #define ADC_H_
 
 
-void adc_init(void);
+void adc_init(void); 
 
 /*
 int adc_getX(void);
@@ -23,7 +23,7 @@ int adc_getRightSlider(void);
 */
 //void adc_init();
 
-uint8_t adc_read(uint8_t ch);
+uint8_t adc_read(uint8_t ch); //ch = 0: joystick x. ch = 1: joystick y. ch = 2: slider left. ch = 3: slider right.
 
 
 

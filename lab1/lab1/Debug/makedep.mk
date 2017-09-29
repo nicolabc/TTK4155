@@ -12,6 +12,8 @@ joy.c
 
 lab1.c
 
+menu.c
+
 oled.c
 
 sram.c
