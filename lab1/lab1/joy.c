@@ -5,31 +5,38 @@
  *  Author: nicolabc
  */ 
 
+
 #include "joy.h"
+#include "menu.h"
 #include <avr/io.h>
 #include <stdio.h>
 #include <avr/interrupt.h>
 
+
+int joyLastDirectionY; //Må gjøres global for å leve etter vi går ut av scope
+int joyLastDirectionX;
 
 int joy_getPercent(int raw){
 	return (((raw*(1.0)-127.5) / 127.5) * 100);
 }
 
 int joy_getDirectionX(int raw){
-	if (raw > 122 && raw < 133){
+	
+	if (raw > 120 && raw < 135){
 		return NEUTRAL;
 	}
-	else if(raw >= 133){
+	else if(raw >= 135){
 		return RIGHT;
 	}
 	return LEFT;
 }
 
 int joy_getDirectionY(int raw){
-	if (raw > 122 && raw < 133){
+
+	if (raw > 108 && raw < 147){ //127.5+-19.5
 		return NEUTRAL;
 	}
-	else if(raw >= 133){
+	else if(raw >= 147){
 		return UP;
 	}
 	return DOWN;
@@ -49,4 +56,66 @@ int joy_readButton(int button){ // Button 0, 1 or 2
 		return 0;
 	}
 	return (PINB & (1<<(PB0+button)));
+}
+
+int joy_doesDirectionChange(void){
+	int joyCurrentDirectionY = joy_getDirectionY(adc_read(1));
+	int joyCurrentDirectionX = joy_getDirectionX(adc_read(0));
+	int joyCurrentDirection = NEUTRAL;
+	
+	int doesDirectionChange = 0;
+	
+	if(joyLastDirectionY != joyCurrentDirectionY){ //Prioriterer opp og ned
+		joyCurrentDirection = joyCurrentDirectionY;
+		oled_clear_screen(); //Skjermen må oppdateres
+		doesDirectionChange = 1;
+		
+	}
+	else if(joyLastDirectionX != joyCurrentDirectionX){
+		joyCurrentDirection = joyCurrentDirectionX;
+		oled_clear_screen(); //skjermen må oppdateres
+		doesDirectionChange = 1;
+	}
+	else{
+		doesDirectionChange = 0;
+	}
+	switch(joyCurrentDirection){
+		case DOWN:
+			//oled_print("DOWN", 6 , 70);
+			if(currentSelection->next != NULL){
+				currentSelection = currentSelection->next;
+			}
+				
+			break;
+		case UP:
+			//oled_print("UP", 6,70);
+			if(currentSelection->previous != NULL){
+				currentSelection = currentSelection->previous;
+			}
+			break;
+		case RIGHT:
+			if(currentSelection->submenuHead != NULL){
+				currentSelection = currentSelection->submenuHead;
+				currentHead = currentSelection;
+			}
+			break;
+		case LEFT:
+			if(currentSelection->parentmenuHead != NULL){
+				currentSelection = currentSelection->parentmenuHead;
+				currentHead = currentSelection;
+			}
+			break;
+		case NEUTRAL:
+			break;
+		//default:
+				
+		//default:
+			
+		//Burde ikke skje
+			
+	}
+	joyLastDirectionY = joyCurrentDirectionY; //Oppdaterer hva som var sist
+	joyLastDirectionX = joyCurrentDirectionX;
+	
+	return doesDirectionChange;
 }

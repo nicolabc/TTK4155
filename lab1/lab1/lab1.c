@@ -49,8 +49,9 @@ int main(void)
 	
 	//oled_goto_pos(0,0);
 	
-	oled_print("Chase a check, never     chase a bitch            Mask on, fuck it mask offMask on, fuck it mask off <--", 0,0);
-	
+	//oled_print("Chase a check, never     chase a bitch            Mask on, fuck it mask offMask on, fuck it mask off <--", 0,0);
+	//oled_print(currentHead->name,5,10);
+	printMenu();
 	while(1){
 		//printf("V:   %i \n", adc_read(2));
 		//printf("H:   %i \n", adc_read(3));
@@ -63,6 +64,12 @@ int main(void)
 		}
 		
 		*/
+	
+		//printMenu();
+		if(joy_doesDirectionChange()){
+			printMenu();
+			}
+		printf("Y:    %i    %i \n",joy_getDirectionY(adc_read(1)),adc_read(1));
 
 	}
 	

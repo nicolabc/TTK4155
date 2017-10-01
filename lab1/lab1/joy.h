@@ -33,4 +33,6 @@ int joy_getDirectionY(int raw);
 
 int joy_readButton(int button);
 
+int joy_doesDirectionChange(void);
+
 #endif /* JOY_H_ */
