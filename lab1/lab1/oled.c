@@ -23,20 +23,24 @@ void write_c(uint8_t command){
 void oled_write_data(uint8_t data){
 	volatile char *ext_oled_d = (char *) (0x1200);
 	ext_oled_d[0] = data;
+	//Inkrementere peker for double bufferen
 }
 
 void oled_goto_page(uint8_t page){
 	write_c(0xb0+page);
+	//Inkrementere peker for double bufferen
 }
+//Trenger funksjon for Ã¥ oppdatere skjermen
 
 void oled_goto_column(uint8_t column){ //From 0x00 to 0x7E
 	
+	//Inkrementere peker for double bufferen
 	uint8_t lastFourBits = column & (0b00001111);
 	uint8_t firstFourBits = (column & (0b11110000)) >> 4;
 	
-	write_c(0x00+lastFourBits); //Siden de siste fire bitsene i column-bitsene våre representerer siste hex-verdien til column (f.eks. om column er 7E, så blir lastFourBits E).
+	write_c(0x00+lastFourBits); //Siden de siste fire bitsene i column-bitsene vÃ¥re representerer siste hex-verdien til column (f.eks. om column er 7E, sÃ¥ blir lastFourBits E).
 	write_c(0x10+firstFourBits);
-	//Slik pekerne til oled er definert, må vi dele opp column i 7 og E (om column er 7E) og bruke write_c for å skrive riktig kommando ut fra hva lower column og higher column er i tabell 8.1 - command table
+	//Slik pekerne til oled er definert, mÃ¥ vi dele opp column i 7 og E (om column er 7E) og bruke write_c for Ã¥ skrive riktig kommando ut fra hva lower column og higher column er i tabell 8.1 - command table
 }
 
 void oled_goto_pos(uint8_t page, uint8_t col){
@@ -62,18 +66,18 @@ void oled_print_char(char myChar){
 
 	int i = 0;
 	for(i=0; i<5; i++){
-		oled_write_data(pgm_read_byte(&font5[number][i])); //siden vi må aksessere programminnet, må vi bruke pgm_read_byte
+		oled_write_data(pgm_read_byte(&font5[number][i])); //siden vi mÃ¥ aksessere programminnet, mÃ¥ vi bruke pgm_read_byte
 	}
 }
 
-void oled_print(char* myString, uint8_t page, uint8_t col){ //har med page og col her så jeg slipper å bruke oled_goto_pos før jeg vil printe noe
+void oled_print(char* myString, uint8_t page, uint8_t col){ //har med page og col her sÃ¥ jeg slipper Ã¥ bruke oled_goto_pos fÃ¸r jeg vil printe noe
 	oled_goto_pos(page,col);
 	int i = 0;
 	int xPosition = col;
 	printf("%i", strlen((myString)));
 	int j = 0;
 	for (i = 0; i < strlen(myString); i++){
-		if(5*j + xPosition > 123){ //OM VI ENDRER FONT SIZE FRA FONT5, MÅ VI ENDRE 5*i OGSÅ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		if(5*j + xPosition > 123){ //OM VI ENDRER FONT SIZE FRA FONT5, MÃ… VI ENDRE 5*i OGSÃ…!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			oled_goto_pos(++page,0);
 			xPosition = 0;
 			j = 0;
