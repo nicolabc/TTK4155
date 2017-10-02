@@ -16,6 +16,8 @@ menu.c
 
 oled.c
 
+spi.c
+
 sram.c
 
 uart.c

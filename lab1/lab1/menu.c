@@ -49,7 +49,7 @@ void menu_init(void){
 	//currentSelection = DER PILEN DIN PEKER NÅ
 	currentSelection = newgame;
 	
-	defineMenuEntries(newgame,"Fuck me up fam",highscore,NULL,easy,NULL);
+	defineMenuEntries(newgame,"New Game",highscore,NULL,easy,NULL);
 		defineMenuEntries(easy,"Easy",normal,NULL,NULL,newgame);
 		defineMenuEntries(normal, "Normal", hard, easy, NULL,newgame);
 		defineMenuEntries(hard,"Hard",NULL,normal,NULL,newgame);
@@ -64,7 +64,7 @@ void menu_init(void){
 		
 	
 	defineMenuEntries(credits,"Credits",NULL,options, developers, NULL);
-		defineMenuEntries(developers,"Daniel Tavakoli,,,Nicolas Carbone,,,Byggern Autumn 2017",NULL,NULL,NULL,credits);
+		defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
 		
 }
 

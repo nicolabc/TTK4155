@@ -13,6 +13,7 @@
 #include "uart.h"
 #include "fonts.h"
 #include "oled.h"
+#include "MCP2515.h"
 
 volatile uint8_t PAGE;
 volatile uint8_t COL;
@@ -56,10 +57,6 @@ void SRAM_test(void)
 void sram_write_data(uint8_t data){
     volatile char *ext_sram = (char *) (0x1800);
     ext_sram[128*PAGE+COL] = data;
-	
-	//Inkrementerer kolonnen for hver gang vi skriver, og om kolonnen går utenfor oled, så resetter vi kolonnen og øker page
-	
-    //Inkrementere peker for double bufferen
 }
 
 void sram_goto_page(uint8_t newPage){
@@ -76,31 +73,22 @@ void sram_save_char(char myChar){
 	int i = 0;
 	
 	//IF-SETNINGER FOR DE NYE CHARACTERENE VI LAGER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	/*
-	if(asciValue == 198){
-		for(i=0; i<5; i++){
-			oled_write_data(pgm_read_byte(&font5[95][i])); //95 fordi Æ er 95. element i font5-lista
-		}
-	}
-	*/
 	for(i=0; i<5; i++){
 		if(asciValue == 198){ //Æ
-			//oled_write_data(pgm_read_byte(&font5[95][i]));
 			sram_write_data(pgm_read_byte(&font5[95][i]));
 			COL++;
 		}
 		else if(asciValue == 230){ //æ
-			//oled_write_data(pgm_read_byte(&font5[96][i]));
+			
 			sram_write_data(pgm_read_byte(&font5[96][i]));
 			COL++;
 		}
 		else if(asciValue == 168){
-			//oled_write_data(pgm_read_byte(&font5[97][i])); //siden ¨ ikke er i fonts, bruker vi denne til å lage smiley
+			//siden ¨ ikke er i fonts, bruker vi denne til å lage smiley
 			sram_write_data(pgm_read_byte(&font5[97][i]));
 			COL++;
 		}
 		else{
-			//oled_write_data(pgm_read_byte(&font5[number][i])); //siden vi må aksessere programminnet, må vi bruke pgm_read_byte
 			sram_write_data(pgm_read_byte(&font5[number][i]));
 			COL++;
 		}
@@ -113,9 +101,10 @@ void sram_save_string(char* myString, uint8_t page, uint8_t col){
 	int xPosition = COL;
 	int characterNr = 0;
 	int colCounter = 0;
+
+	//kode for å gå til neste linje (page) om col er nærme slutten av pagen, horisontalt sett
 	for (characterNr = 0; characterNr < strlen(myString); characterNr++){
 		if((5*colCounter + xPosition) > 123){ //OM VI ENDRER FONT SIZE FRA FONT5, MÅ VI ENDRE 5*colCounter OGSÅ, og vi må endre oled_print_char sine for-løkke-lengder!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    		//oled_goto_pos(++PAGE,0);
     		++PAGE;
 			COL = 0;
 			xPosition = 0;

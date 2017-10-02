@@ -37,21 +37,17 @@
 int main(void)
 {
 	
-	USART_Init ( MYUBRR );
+	USART_Init(MYUBRR);
 	extMem_init(); 
 	avr_init();
 	adc_init();
 	oled_init();
 	oled_clear_screen();
 	menu_init();
-	//SRAM_test();
 	
-	saveMenu();
-	oled_refresh();
+	//oled_refresh(); //Usikkert om denne trengs eller ikke fordi forrige initialisering huskes i SRAM
 	
-	//int a = 'æ';
-	//printf("Bokstaven ¨ %i", a);
-	printf("PAGE:  %i    COL:    %i  \n", PAGE,COL);
+	printf("Tâz");
 	while(1){
 		
 		if(joy_doesDirectionChange()){

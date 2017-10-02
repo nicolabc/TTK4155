@@ -44,6 +44,7 @@ C_SRCS +=  \
 ../lab1.c \
 ../menu.c \
 ../oled.c \
+../spi.c \
 ../sram.c \
 ../uart.c
 
@@ -62,6 +63,7 @@ joy.o \
 lab1.o \
 menu.o \
 oled.o \
+spi.o \
 sram.o \
 uart.o
 
@@ -73,6 +75,7 @@ joy.o \
 lab1.o \
 menu.o \
 oled.o \
+spi.o \
 sram.o \
 uart.o
 
@@ -84,6 +87,7 @@ joy.d \
 lab1.d \
 menu.d \
 oled.d \
+spi.d \
 sram.d \
 uart.d
 
@@ -95,6 +99,7 @@ joy.d \
 lab1.d \
 menu.d \
 oled.d \
+spi.d \
 sram.d \
 uart.d
 
@@ -112,6 +117,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 
