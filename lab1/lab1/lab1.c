@@ -46,30 +46,19 @@ int main(void)
 	menu_init();
 	//SRAM_test();
 	
+	saveMenu();
+	oled_refresh();
 	
-	//oled_goto_pos(0,0);
-	
-	//oled_print("Chase a check, never     chase a bitch            Mask on, fuck it mask offMask on, fuck it mask off <--", 0,0);
-	//oled_print(currentHead->name,5,10);
-	printMenu();
+	//int a = 'æ';
+	//printf("Bokstaven ¨ %i", a);
+	printf("PAGE:  %i    COL:    %i  \n", PAGE,COL);
 	while(1){
-		//printf("V:   %i \n", adc_read(2));
-		//printf("H:   %i \n", adc_read(3));
-	
-	/*	
-		if(){//Knapp endrer seg -- knappeendringsfunksjon(getdirectionY())){ //Evt ha x-direction som å velge og gå tilbake (kan ha funksjon som returnerer all directions)
-			
-			//printMenu(currentHead);
-			
-		}
 		
-		*/
-	
-		//printMenu();
 		if(joy_doesDirectionChange()){
-			printMenu();
-			}
-		printf("Y:    %i    %i \n",joy_getDirectionY(adc_read(1)),adc_read(1));
+			saveMenu();
+			oled_refresh();
+		}
+		//printf("Y:    %i    %i \n",joy_getDirectionY(adc_read(1)),adc_read(1));
 
 	}
 	

@@ -13,17 +13,17 @@ typedef struct node{
 	char* name;
 	struct node* next;
 	struct node* previous;
-	struct node* submenuHead;
-	struct node* parentmenuHead;
+	struct node* child; //om vi er i startsiden, så er f.eks. Easy en child. Child peker på øverste element i undermenyen til parent
+	struct node* parent; //om vi er i easy-siden, så er startsiden parent
 } node_t;
 
 extern node_t* currentSelection; //Deklarerer med extern
 extern node_t* currentHead;		//Definisjonen ligger i .c filen
 
 void menu_init(void);
-void defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* submenuHead, node_t* parentmenuHead);
+void defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent);//, node_t* parent);
 void updateCurrentSelection(void);
-void printMenu(void);
+void saveMenu(void);
 
 
 

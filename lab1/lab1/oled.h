@@ -10,7 +10,9 @@
 #define OLED_H_
 
 void write_c(uint8_t command);
-void oled_write_data(uint8_t data);
+//void oled_write_data(uint8_t data);
+void oled_write_data(uint8_t data, uint8_t page, uint8_t col);
+void oled_refresh(void);
 void oled_init();
 void oled_goto_page(uint8_t page);
 void oled_goto_column(uint8_t column);

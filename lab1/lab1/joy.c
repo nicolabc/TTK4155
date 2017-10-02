@@ -22,10 +22,10 @@ int joy_getPercent(int raw){
 
 int joy_getDirectionX(int raw){
 	
-	if (raw > 120 && raw < 135){
+	if (raw > 28 && raw < 228){
 		return NEUTRAL;
 	}
-	else if(raw >= 135){
+	else if(raw >= 228){
 		return RIGHT;
 	}
 	return LEFT;
@@ -33,10 +33,10 @@ int joy_getDirectionX(int raw){
 
 int joy_getDirectionY(int raw){
 
-	if (raw > 108 && raw < 147){ //127.5+-19.5
+	if (raw > 8 && raw < 248){ //127.5+-19.5
 		return NEUTRAL;
 	}
-	else if(raw >= 147){
+	else if(raw >= 248){
 		return UP;
 	}
 	return DOWN;
@@ -94,14 +94,14 @@ int joy_doesDirectionChange(void){
 			}
 			break;
 		case RIGHT:
-			if(currentSelection->submenuHead != NULL){
-				currentSelection = currentSelection->submenuHead;
+			if(currentSelection->child != NULL){
+				currentSelection = currentSelection->child;
 				currentHead = currentSelection;
 			}
 			break;
 		case LEFT:
-			if(currentSelection->parentmenuHead != NULL){
-				currentSelection = currentSelection->parentmenuHead;
+			if(currentSelection->parent != NULL){
+				currentSelection = currentSelection->parent;
 				currentHead = currentSelection;
 			}
 			break;
