@@ -12,6 +12,18 @@ v1.00       2003/12/11  Initial release
 
 Copyright 2003 Kimberly Otten Software Consulting
 */
+#include <avr/io.h>
+#include <stdio.h>
+
+//Copy/paste funksjoner fra slides. Må bestemme hva retur-type og parametre skal være
+uint8_t mcp2515_init();
+void mcp2515_write(uint8_t byte);
+void mcp2515_request_to_send();
+void mcp2515_bit_modify();
+void mcp2515_reset();
+uint8_t mcp2515_read_status();
+uint8_t mcp2515_read(uint8_t address);
+
 
 // Define MCP2515 register addresses
 
@@ -153,6 +165,8 @@ Copyright 2003 Kimberly Otten Software Consulting
 #define MCP_ERRIF		0x20
 #define MCP_WAKIF		0x40
 #define MCP_MERRF		0x80
+
+#define MCP_TXB0SIDH		0x31
 
 
 

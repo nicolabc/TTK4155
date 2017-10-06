@@ -21,9 +21,9 @@ extern node_t* currentSelection; //Deklarerer med extern
 extern node_t* currentHead;		//Definisjonen ligger i .c filen
 
 void menu_init(void);
-void defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent);//, node_t* parent);
+void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent);//, node_t* parent);
 void updateCurrentSelection(void);
-void saveMenu(void);
+void menu_save(void);
 
 
 

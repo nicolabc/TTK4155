@@ -42,6 +42,7 @@ C_SRCS +=  \
 ../externalmemory.c \
 ../joy.c \
 ../lab1.c \
+../MCP2515.c \
 ../menu.c \
 ../oled.c \
 ../spi.c \
@@ -61,6 +62,7 @@ avr.o \
 externalmemory.o \
 joy.o \
 lab1.o \
+MCP2515.o \
 menu.o \
 oled.o \
 spi.o \
@@ -73,6 +75,7 @@ avr.o \
 externalmemory.o \
 joy.o \
 lab1.o \
+MCP2515.o \
 menu.o \
 oled.o \
 spi.o \
@@ -85,6 +88,7 @@ avr.d \
 externalmemory.d \
 joy.d \
 lab1.d \
+MCP2515.d \
 menu.d \
 oled.d \
 spi.d \
@@ -97,6 +101,7 @@ avr.d \
 externalmemory.d \
 joy.d \
 lab1.d \
+MCP2515.d \
 menu.d \
 oled.d \
 spi.d \
@@ -117,6 +122,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

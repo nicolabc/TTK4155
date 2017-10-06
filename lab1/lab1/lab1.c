@@ -24,6 +24,8 @@
 #include "oled.h"
 #include "joy.h"
 #include "menu.h"
+#include "spi.h"
+#include "MCP2515.h"
 //#include "fonts.h"
 
 #define FOSC 4915200// Clock Speed
@@ -44,14 +46,30 @@ int main(void)
 	oled_init();
 	oled_clear_screen();
 	menu_init();
+	spi_MasterInit();
 	
 	//oled_refresh(); //Usikkert om denne trengs eller ikke fordi forrige initialisering huskes i SRAM
 	
+	printf("Tâz1\n");
+	spi_MasterTransmit(MCP_WRITE, 1); //Velger instruction
+	
+	spi_MasterTransmit(MCP_TXB0SIDH , 1); //Velger adresse 0b00110001
+	
+	spi_MasterTransmit(0xAA, 0); //Velger data som sendes
+	
+	while(1){
+			spi_MasterTransmit(MCP_READ, 1);
+			spi_MasterTransmit(MCP_TXB0SIDH, 1);
+			uint8_t returnedData = spi_MasterTransmit(0x00, 0);
+			
+			printf("Returnert verdi %02X\n", returnedData);
+			_delay_ms(1000);
+	}
 	printf("Tâz");
 	while(1){
 		
 		if(joy_doesDirectionChange()){
-			saveMenu();
+			menu_save();
 			oled_refresh();
 		}
 		//printf("Y:    %i    %i \n",joy_getDirectionY(adc_read(1)),adc_read(1));
@@ -62,3 +80,12 @@ int main(void)
 
 
 }
+
+void writeToRegister(uint8_t register, uint8_t data){
+	spi_MasterTransmit(MCP_WRITE, 1); //Velger instruction
+	
+	spi_MasterTransmit(register , 1); //Velger adresse 0b00110001
+	
+	spi_MasterTransmit(data, 0); //Velger data som sendes
+}
+

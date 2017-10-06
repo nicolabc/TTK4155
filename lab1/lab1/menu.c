@@ -49,26 +49,26 @@ void menu_init(void){
 	//currentSelection = DER PILEN DIN PEKER NÅ
 	currentSelection = newgame;
 	
-	defineMenuEntries(newgame,"New Game",highscore,NULL,easy,NULL);
-		defineMenuEntries(easy,"Easy",normal,NULL,NULL,newgame);
-		defineMenuEntries(normal, "Normal", hard, easy, NULL,newgame);
-		defineMenuEntries(hard,"Hard",NULL,normal,NULL,newgame);
+	menu_defineMenuEntries(newgame,"New Game",highscore,NULL,easy,NULL);
+		menu_defineMenuEntries(easy,"Easy",normal,NULL,NULL,newgame);
+		menu_defineMenuEntries(normal, "Normal", hard, easy, NULL,newgame);
+		menu_defineMenuEntries(hard,"Hard",NULL,normal,NULL,newgame);
 	
-	defineMenuEntries(highscore,"Highscore",options,newgame,NULL,NULL);
+	menu_defineMenuEntries(highscore,"Highscore",options,newgame,NULL,NULL);
 	
-	defineMenuEntries(options,"Options",credits,highscore,sensitivity,NULL);
-		defineMenuEntries(sensitivity, "Sensitivity", sound, NULL, NULL, options);
-		defineMenuEntries(sound, "Sound", NULL, sensitivity, sound_on, options);
-			defineMenuEntries(sound_on, "Sound on", sound_off, NULL, NULL, sound);
-			defineMenuEntries(sound_off, "Sound off", NULL, sound_on, NULL, sound);
+	menu_defineMenuEntries(options,"Options",credits,highscore,sensitivity,NULL);
+		menu_defineMenuEntries(sensitivity, "Sensitivity", sound, NULL, NULL, options);
+		menu_defineMenuEntries(sound, "Sound", NULL, sensitivity, sound_on, options);
+			menu_defineMenuEntries(sound_on, "Sound on", sound_off, NULL, NULL, sound);
+			menu_defineMenuEntries(sound_off, "Sound off", NULL, sound_on, NULL, sound);
 		
 	
-	defineMenuEntries(credits,"Credits",NULL,options, developers, NULL);
-		defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
+	menu_defineMenuEntries(credits,"Credits",NULL,options, developers, NULL);
+		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
 		
 }
 
-void defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
+void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
 	myNode->name = nodeName;
 	myNode->previous = previous;
 	myNode->next = next;
@@ -77,7 +77,7 @@ void defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* pre
 }
 
 
-void saveMenu(void){ //Argument node_t* firstNode?
+void menu_save(void){ //Argument node_t* firstNode?
 	
 	node_t* temp = malloc(sizeof(node_t)); //For å iterere gjennom den lenkede listen
 	temp = currentHead;
