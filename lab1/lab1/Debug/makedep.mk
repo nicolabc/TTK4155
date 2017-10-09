@@ -6,6 +6,8 @@ adc.c
 
 avr.c
 
+can.c
+
 externalmemory.c
 
 joy.c

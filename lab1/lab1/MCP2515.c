@@ -95,3 +95,48 @@ uint8_t mcp2515_read_status(){
 }
 
 
+/*
+//Om vi ønsker å utvide can_send_message. Med denne kan vi sjekke om et transmit buffer er tomt, og dermed skrive til dette bufferet. 
+int mcp2515_is_transmit_buffer_empty(int whichTransmitBuffer){
+	uint8_t statusReg = mcp2515_read_status();
+	if(whichTransmitBuffer == 0){ //TXB0 buffer
+		if(statusReg){
+			
+		}
+		
+	}
+	
+	else if (whichTransmitBuffer == 1){ //TXB1 buffer
+		spi_MasterTransmit(0b10000010);
+	}
+	else{ //TXB2 buffer
+		spi_MasterTransmit(0b10000100);
+	}
+}
+*/
+
+void mcp2515_bit_modify(uint8_t regAdr, uint8_t maskBits, uint8_t data){ //se s. 68
+	clear_bit(PORTB,PB4); //Setter SS lav
+
+	spi_MasterTransmit(MCP_BITMOD);
+	spi_MasterTransmit(regAdr);
+	spi_MasterTransmit(maskBits);
+	spi_MasterTransmit(data);
+
+	set_bit(PORTB,PB4); //Setter SS høy
+}
+
+
+/*
+Eksempel på hva bitmodify gjør:
+0000 0011 (adressen til MCP_TXB0CTRL, det er et eksempel på et register vi vil modifisere)
+0110 0001 (registeret vårt sin verdi, hva registeret inneholder ved start)
+1011 0011 (dataen vi sender inn)
+1101 0010 (mask)
+
+
+0011 0101 (mask)
+XX10 X0X1 (data)
+1111 1111 (reg, før bit modify)
+0110 1011 (reg, etter bit modify), 6B
+*/

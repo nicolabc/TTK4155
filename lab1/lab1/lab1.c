@@ -51,33 +51,26 @@ int main(void)
 	
 	
 
-
 	//LESER A
 	while(1){
 		uint8_t data;
 
-		
+		data = mcp2515_read(MCP_TXB0CTRL);
 
-		mcp2515_write(MCP_TXB0SIDH, 0x40);
-		
-	
-		data = mcp2515_read(MCP_TXB0SIDH);
-	
-
-		printf("Returnert verdi %02X\n", data); //printer verdien vi leser fra registeret i hex
+		printf("Returnert verdi %02X\n", mcp2515_read_status()); //printer verdien vi leser fra registeret i hex
 		_delay_ms(1000);
 	}
 	
 	
 	
 	//OPPDATERER OLED-SKJERMEN NÅR NOE JOYSTICKEN FLYTTES
-	/*while(1){
+	while(1){
 		
 		if(joy_doesDirectionChange()){
 			menu_save();
 			oled_refresh();
 		}
-	}*/
+	}
 	
 }
 

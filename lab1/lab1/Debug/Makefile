@@ -39,6 +39,7 @@ SUBDIRS :=
 C_SRCS +=  \
 ../adc.c \
 ../avr.c \
+../can.c \
 ../externalmemory.c \
 ../joy.c \
 ../lab1.c \
@@ -59,6 +60,7 @@ ASM_SRCS +=
 OBJS +=  \
 adc.o \
 avr.o \
+can.o \
 externalmemory.o \
 joy.o \
 lab1.o \
@@ -72,6 +74,7 @@ uart.o
 OBJS_AS_ARGS +=  \
 adc.o \
 avr.o \
+can.o \
 externalmemory.o \
 joy.o \
 lab1.o \
@@ -85,6 +88,7 @@ uart.o
 C_DEPS +=  \
 adc.d \
 avr.d \
+can.d \
 externalmemory.d \
 joy.d \
 lab1.d \
@@ -98,6 +102,7 @@ uart.d
 C_DEPS_AS_ARGS +=  \
 adc.d \
 avr.d \
+can.d \
 externalmemory.d \
 joy.d \
 lab1.d \
@@ -122,6 +127,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

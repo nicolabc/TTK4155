@@ -121,6 +121,12 @@
     <Compile Include="avr.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="can.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="can.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="externalmemory.c">
       <SubType>compile</SubType>
     </Compile>
