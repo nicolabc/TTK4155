@@ -11,7 +11,7 @@
  #define set_bit( reg, bit ) (reg |= (1 << bit))
  #define clear_bit( reg, bit ) (reg &= ~(1 << bit))
 
-void spi_MasterInit(void){
+void spi_init(void){
     /* Set MOSI and SCK output, all others input */
     DDRB |= (1<<DDB5)|(1<<DDB7);
 	DDRB &= ~(1 << DDB6);
@@ -22,13 +22,29 @@ void spi_MasterInit(void){
 	set_bit(PORTB, PB4);
 	
 }
+
+//Med denne må vi sette SS lav/høy før/etter mastertransmit starter/slutter
+void spi_MasterTransmit(char cData) { //keepLow holds the SS* signal low so the transmission continues
+	
+	/* Start transmission */
+	SPDR = cData;
+	/* Wait for transmission complete. Interrupt flag in SPSR is set (SPIF). */
+	while(!(SPSR & (1<<SPIF)));
+	
+	
+}
+
+
+//ANNEN VERSJON AV MASTERTRANSMIT. VERSJONEN VI BRUKER HAR KEEPLOW, MEN I DENNE MASTERTRANSMIT VILLE VI HELLER SATT SS LAV OG HØY MANUELT FØR VI KALLER PÅ DENNE VERSJONEN
+//Torjus som foreslo.
+/*
 uint8_t spi_MasterTransmit(char cData, uint8_t keepLow) { //keepLow holds the SS* signal low so the transmission continues
 	//Sette SS* lav
 	clear_bit(PORTB,PB4);
 	
-	/* Start transmission */
+	// * Start transmission * /
     SPDR = cData;
-    /* Wait for transmission complete. Interrupt flag in SPSR is set (SPIF). */
+    // * Wait for transmission complete. Interrupt flag in SPSR is set (SPIF). * /
     while(!(SPSR & (1<<SPIF)));
 	
 	if(!keepLow){ //All transmissions are done. Slave is deselected
@@ -37,39 +53,23 @@ uint8_t spi_MasterTransmit(char cData, uint8_t keepLow) { //keepLow holds the SS
 	return SPDR;
 	 
 }
+*/
 
-uint8_t spi_read(){
-	return SPDR;
-}
 
-uint8_t spi_MasterRead(uint8_t mcp_address){
-	//Sette SS* lav
-	clear_bit(PORTB,PB4);
+
+//Trenger ikke denne, fordi MasterTransmitAndReceive gjør det samme
+uint8_t spi_MasterRead(){
+	//Setter SS lav utenfor funksjonen, altså setter vi SS lav inni mcp2515_read
+
+	spi_MasterTransmit(0x00);
 	
-	/* Start transmission */
-	SPDR = MCP_READ; //Choose the instruction read
-	/* Wait for transmission complete. Interrupt flag in SPSR is set (SPIF). */
-	while(!(SPSR & (1<<SPIF)));
-	
-	
-	/* Start transmission */
-	SPDR = mcp_address; //Choose which address to read from
-	/* Wait for transmission complete. Interrupt flag in SPSR is set (SPIF). */
-	while(!(SPSR & (1<<SPIF)));
-	
-	
-	/* Start transmission */
-	SPDR = 0x00; //Don't care
-	/* Wait for transmission complete. Interrupt flag in SPSR is set (SPIF). */
-	while(!(SPSR & (1<<SPIF)));
-	
-	
-	//All transmissions are done. Slave is deselected
-	set_bit(PORTB, PB4);
-	
+	//Setter SS høy utenfor funksjonen, altså setter vi SS høy igjen inni mcp2515_read
+
 	return SPDR;
 	
 }
+
+
 /*
 spiSend(0b00000010);
 spiSend(0b00110001);
