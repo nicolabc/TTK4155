@@ -26,14 +26,10 @@ void avr_init(void){
 	set_bit(PORTB, PB2); //Setter pullup resistor for PB2
 	
 	
-	////////UNCOMMENT DET UNDER OM VI ØNSKER INTERRUPT TIL JOYSTICK
 	
-	//cli(); //Clear interrupt enable
-	//set_bit(EMCUCR,ISC2)
-	//EMCUCR |= (1<<ISC2);// Rising edge interrupt trigger s.85 atmega162 datasheet
-	//set_bit(SREG, I); //Enable global interrupt
-	//set_bit(GICR,INT2);
-	//GICR |= (1<<INT2);	// Enable External Interrupt 2
-	//sei();				// Enable Global Interrupt
+	cli(); //Clear interrupt enable
+	clear_bit(EMCUCR, ISC2); // Falling edge interrupt trigger s.85 atmega162 datasheet
+	set_bit(GICR,INT2); //Enable External Interrupt 2
+	sei(); // Enable Global Interrupt
 	
 }

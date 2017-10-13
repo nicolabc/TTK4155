@@ -57,7 +57,7 @@ uint8_t spi_MasterTransmit(char cData, uint8_t keepLow) { //keepLow holds the SS
 
 
 
-//Trenger ikke denne, fordi MasterTransmitAndReceive gjør det samme
+//Egentlig ikke nødvendig med denne funksjonen, fordi MasterTransmit gjør det samme, men vi beholder den for lesbarhet av koden
 uint8_t spi_MasterRead(){
 	//Setter SS lav utenfor funksjonen, altså setter vi SS lav inni mcp2515_read
 
@@ -70,13 +70,3 @@ uint8_t spi_MasterRead(){
 }
 
 
-/*
-spiSend(0b00000010);
-spiSend(0b00110001);
-spiSend(data);
-
-spiSend(0b00000011);
-spiSend(0b00110001);
-spiSend(DC);
-data = SPDR;
-*/

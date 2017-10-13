@@ -24,15 +24,6 @@ void mcp2515_request_to_send(int whichBuffer);
 uint8_t mcp2515_read_status();
 void mcp2515_bit_modify(uint8_t regAdr, uint8_t maskBits, uint8_t data);
 
-//Copy/paste funksjoner fra slides. Må bestemme hva retur-type og parametre skal være
-
-
-
-
-
-
-
-
 
 // Define MCP2515 register addresses
 
@@ -175,8 +166,8 @@ void mcp2515_bit_modify(uint8_t regAdr, uint8_t maskBits, uint8_t data);
 #define MCP_WAKIF		0x40
 #define MCP_MERRF		0x80
 
-#define MCP_TXB0SIDH		0x31
+#define MCP_TXB0SIDH	0x31
 
-
+#define MCP_TXREQ		0x08
 
 #endif

@@ -4,6 +4,8 @@
  * Created: 06.10.2017 11:02:08
  *  Author: danieta
  */ 
+#define F_CPU 4915200 
+#include <util/delay.h>
 #include "MCP2515.h"
 #include "spi.h"
 
@@ -45,15 +47,14 @@ uint8_t mcp2515_init(){
 	uint8_t value;
 	spi_init(); //Initialize SPI
 	mcp2515_reset(); // Send reset-command
+	_delay_us(8); //oscillatoren er i reset modus i 128 klokkesykluser. trenger derav en delay
 	
-	//Self-test
+	//Self-test to check if system is in config mode
 	value = mcp2515_read(MCP_CANSTAT); 
 	if((value & MODE_MASK)  != MODE_CONFIG) {
-		printf("MCP2515 is NOT in configuration	mode after reset!\n");
 		return 1;
 	}
 	// More initialization
-	printf("MCP2515 IS in configuration mode after reset!\n");
 	return 0;
 }
 
@@ -124,6 +125,24 @@ void mcp2515_bit_modify(uint8_t regAdr, uint8_t maskBits, uint8_t data){ //se s.
 	spi_MasterTransmit(data);
 
 	set_bit(PORTB,PB4); //Setter SS høy
+}
+
+void loadTxBuffer(uint16_t identifier, uint8_t *data, uint8_t lengthOfData){
+	clear_bit(PORTB, PB4);
+	
+	// Check that lengthOfData is not bigger than 8
+	
+	spi_MasterTransmit(MCP_LOAD_TX0);
+	//spi_MasterTransmit(first 8 of id)
+	//spi_MasterTransmitt(last bits id)
+	
+	set_bit(PORTB, PB4);
+	clear_bit(PORTB, PB4);
+	spi_MasterTransmit(MCP_LOAD_TX0 + 1);
+	for(int i = 0; i < lengthOfData; i++){
+		spi_MasterTransmit(data[i]);
+	}
+	clear_bit(PORTB, PB4);
 }
 
 
