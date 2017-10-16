@@ -37,18 +37,18 @@ SUBDIRS :=
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
+../../../lib/can.c \
+../../../lib/MCP2515.c \
+../../../lib/spi.c \
+../../../lib/uart.c \
 ../adc.c \
 ../avr.c \
-../can.c \
 ../externalmemory.c \
 ../joy.c \
 ../lab1.c \
-../MCP2515.c \
 ../menu.c \
 ../oled.c \
-../spi.c \
-../sram.c \
-../uart.c
+../sram.c
 
 
 PREPROCESSING_SRCS += 
@@ -58,60 +58,60 @@ ASM_SRCS +=
 
 
 OBJS +=  \
+can.o \
+MCP2515.o \
+spi.o \
+uart.o \
 adc.o \
 avr.o \
-can.o \
 externalmemory.o \
 joy.o \
 lab1.o \
-MCP2515.o \
 menu.o \
 oled.o \
-spi.o \
-sram.o \
-uart.o
+sram.o
 
 OBJS_AS_ARGS +=  \
+can.o \
+MCP2515.o \
+spi.o \
+uart.o \
 adc.o \
 avr.o \
-can.o \
 externalmemory.o \
 joy.o \
 lab1.o \
-MCP2515.o \
 menu.o \
 oled.o \
-spi.o \
-sram.o \
-uart.o
+sram.o
 
 C_DEPS +=  \
+can.d \
+MCP2515.d \
+spi.d \
+uart.d \
 adc.d \
 avr.d \
-can.d \
 externalmemory.d \
 joy.d \
 lab1.d \
-MCP2515.d \
 menu.d \
 oled.d \
-spi.d \
-sram.d \
-uart.d
+sram.d
 
 C_DEPS_AS_ARGS +=  \
+can.d \
+MCP2515.d \
+spi.d \
+uart.d \
 adc.d \
 avr.d \
-can.d \
 externalmemory.d \
 joy.d \
 lab1.d \
-MCP2515.d \
 menu.d \
 oled.d \
-spi.d \
-sram.d \
-uart.d
+sram.d
 
 OUTPUT_FILE_PATH +=lab1.elf
 
@@ -151,6 +151,13 @@ LINKER_SCRIPT_DEP+=
 
 
 
+
+./%.o: ../../../lib/%.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 4.8.1
+	$(QUOTE)C:\Program Files (x86)\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.1061\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega162 -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
 
 ./%.o: .././%.c
 	@echo Building file: $<

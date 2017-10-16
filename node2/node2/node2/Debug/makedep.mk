@@ -2,27 +2,13 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
-..\..\lib\can.c
+..\..\..\lib\can.c
 
-..\..\lib\MCP2515.c
+..\..\..\lib\MCP2515.c
 
-..\..\lib\spi.c
+..\..\..\lib\spi.c
 
-..\..\lib\uart.c
+..\..\..\lib\uart.c
 
-adc.c
-
-avr.c
-
-externalmemory.c
-
-joy.c
-
-lab1.c
-
-menu.c
-
-oled.c
-
-sram.c
+node2.c
 

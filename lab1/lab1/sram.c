@@ -10,10 +10,10 @@
 #include <stdio.h>
 #include <string.h>
 #include "sram.h"
-#include "uart.h"
+#include "../../lib/uart.h"
 #include "fonts.h"
 #include "oled.h"
-#include "MCP2515.h"
+#include "../../lib/MCP2515.h"
 
 volatile uint8_t PAGE;
 volatile uint8_t COL;

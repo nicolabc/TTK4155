@@ -16,7 +16,7 @@
 #define F_CPU 4915200
 
 #include "util/delay.h"
-#include "uart.h"
+#include "../../lib/uart.h"
 #include "sram.h"
 #include "adc.h"
 #include "externalmemory.h"
@@ -24,9 +24,9 @@
 #include "oled.h"
 #include "joy.h"
 #include "menu.h"
-#include "spi.h"
-#include "MCP2515.h"
-#include "can.h"
+#include "../../lib/spi.h"
+#include "../../lib/MCP2515.h"
+#include "../../lib/can.h"
 //#include "fonts.h"
 
 #define FOSC 4915200// Clock Speed

@@ -17,8 +17,9 @@ lab1.d lab1.o: .././lab1.c \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\util\delay.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\util\delay_basic.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\math.h \
- .././uart.h .././sram.h .././adc.h .././externalmemory.h .././avr.h \
- .././oled.h .././joy.h .././menu.h .././spi.h .././MCP2515.h .././can.h
+ .././../../lib/uart.h .././sram.h .././adc.h .././externalmemory.h \
+ .././avr.h .././oled.h .././joy.h .././menu.h .././../../lib/spi.h \
+ .././../../lib/MCP2515.h .././../../lib/can.h
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdint.h:
 
@@ -56,7 +57,7 @@ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-g
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\math.h:
 
-.././uart.h:
+.././../../lib/uart.h:
 
 .././sram.h:
 
@@ -72,8 +73,8 @@ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-g
 
 .././menu.h:
 
-.././spi.h:
+.././../../lib/spi.h:
 
-.././MCP2515.h:
+.././../../lib/MCP2515.h:
 
-.././can.h:
+.././../../lib/can.h:

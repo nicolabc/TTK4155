@@ -100,6 +100,24 @@ Discarded input sections
 
  .data          0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5/crtm162.o
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5/crtm162.o
+ .text          0x00000000        0x0 can.o
+ .data          0x00000000        0x0 can.o
+ .bss           0x00000000        0x0 can.o
+ .text          0x00000000        0x0 MCP2515.o
+ .data          0x00000000        0x0 MCP2515.o
+ .bss           0x00000000        0x0 MCP2515.o
+ .rodata.str1.1
+                0x00000000       0x39 MCP2515.o
+ .text.mcp2515_read_status
+                0x00000000       0x34 MCP2515.o
+ .text.loadTxBuffer
+                0x00000000       0x56 MCP2515.o
+ .text          0x00000000        0x0 spi.o
+ .data          0x00000000        0x0 spi.o
+ .bss           0x00000000        0x0 spi.o
+ .text          0x00000000        0x0 uart.o
+ .data          0x00000000        0x0 uart.o
+ .bss           0x00000000        0x0 uart.o
  .text          0x00000000        0x0 adc.o
  .data          0x00000000        0x0 adc.o
  .bss           0x00000000        0x0 adc.o
@@ -109,9 +127,6 @@ Discarded input sections
  .text          0x00000000        0x0 avr.o
  .data          0x00000000        0x0 avr.o
  .bss           0x00000000        0x0 avr.o
- .text          0x00000000        0x0 can.o
- .data          0x00000000        0x0 can.o
- .bss           0x00000000        0x0 can.o
  .text          0x00000000        0x0 externalmemory.o
  .data          0x00000000        0x0 externalmemory.o
  .bss           0x00000000        0x0 externalmemory.o
@@ -125,15 +140,6 @@ Discarded input sections
  .text          0x00000000        0x0 lab1.o
  .data          0x00000000        0x0 lab1.o
  .bss           0x00000000        0x0 lab1.o
- .text          0x00000000        0x0 MCP2515.o
- .data          0x00000000        0x0 MCP2515.o
- .bss           0x00000000        0x0 MCP2515.o
- .rodata.str1.1
-                0x00000000       0x39 MCP2515.o
- .text.mcp2515_read_status
-                0x00000000       0x34 MCP2515.o
- .text.loadTxBuffer
-                0x00000000       0x56 MCP2515.o
  .text          0x00000000        0x0 menu.o
  .data          0x00000000        0x0 menu.o
  .bss           0x00000000        0x0 menu.o
@@ -145,9 +151,6 @@ Discarded input sections
  .text.write_c  0x00000000        0x6 oled.o
  .text.oled_goto_page
                 0x00000000        0x8 oled.o
- .text          0x00000000        0x0 spi.o
- .data          0x00000000        0x0 spi.o
- .bss           0x00000000        0x0 spi.o
  .text          0x00000000        0x0 sram.o
  .data          0x00000000        0x0 sram.o
  .bss           0x00000000        0x0 sram.o
@@ -159,9 +162,6 @@ Discarded input sections
                 0x00000000      0x17c sram.o
  .progmem.data.font8
                 0x00000000      0x2f8 sram.o
- .text          0x00000000        0x0 uart.o
- .data          0x00000000        0x0 uart.o
- .bss           0x00000000        0x0 uart.o
  .text          0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libm.a(addsf3.o)
  .data          0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libm.a(addsf3.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libm.a(addsf3.o)
@@ -472,18 +472,18 @@ Linker script and memory map
 
 Address of section .data set to 0x800100
 LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5/crtm162.o
+LOAD can.o
+LOAD MCP2515.o
+LOAD spi.o
+LOAD uart.o
 LOAD adc.o
 LOAD avr.o
-LOAD can.o
 LOAD externalmemory.o
 LOAD joy.o
 LOAD lab1.o
-LOAD MCP2515.o
 LOAD menu.o
 LOAD oled.o
-LOAD spi.o
 LOAD sram.o
-LOAD uart.o
 START GROUP
 LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libm.a
 END GROUP
@@ -672,113 +672,113 @@ END GROUP
                 0x00000294                __vector_20
                 0x00000298                . = ALIGN (0x2)
  *(.text.*)
- .text.adc_init
-                0x00000298        0x4 adc.o
-                0x00000298                adc_init
- .text.adc_read
-                0x0000029c       0x12 adc.o
-                0x0000029c                adc_read
- .text.avr_init
-                0x000002ae       0x1a avr.o
-                0x000002ae                avr_init
  .text.can_init
-                0x000002c8       0x3a can.o
-                0x000002c8                can_init
+                0x00000298       0x3a can.o
+                0x00000298                can_init
  .text.can_send_message
-                0x00000302       0xa6 can.o
-                0x00000302                can_send_message
+                0x000002d2       0xa6 can.o
+                0x000002d2                can_send_message
  .text.can_receive_message
-                0x000003a8      0x114 can.o
-                0x000003a8                can_receive_message
- .text.extMem_init
-                0x000004bc        0xe externalmemory.o
-                0x000004bc                extMem_init
- .text.joy_getDirectionX
-                0x000004ca       0x24 joy.o
-                0x000004ca                joy_getDirectionX
- .text.joy_getDirectionY
-                0x000004ee       0x24 joy.o
-                0x000004ee                joy_getDirectionY
- .text.joy_doesDirectionChange
-                0x00000512      0x132 joy.o
-                0x00000512                joy_doesDirectionChange
- .text.main     0x00000644      0x112 lab1.o
-                0x00000644                main
- .text.__vector_3
-                0x00000756       0x28 lab1.o
-                0x00000756                __vector_3
+                0x00000378      0x114 can.o
+                0x00000378                can_receive_message
  .text.mcp2515_read
-                0x0000077e       0x1c MCP2515.o
-                0x0000077e                mcp2515_read
+                0x0000048c       0x1c MCP2515.o
+                0x0000048c                mcp2515_read
  .text.mcp2515_write
-                0x0000079a       0x24 MCP2515.o
-                0x0000079a                mcp2515_write
+                0x000004a8       0x24 MCP2515.o
+                0x000004a8                mcp2515_write
  .text.mcp2515_reset
-                0x000007be        0xc MCP2515.o
-                0x000007be                mcp2515_reset
+                0x000004cc        0xc MCP2515.o
+                0x000004cc                mcp2515_reset
  .text.mcp2515_init
-                0x000007ca       0x24 MCP2515.o
-                0x000007ca                mcp2515_init
+                0x000004d8       0x24 MCP2515.o
+                0x000004d8                mcp2515_init
  .text.mcp2515_request_to_send
-                0x000007ee       0x24 MCP2515.o
-                0x000007ee                mcp2515_request_to_send
+                0x000004fc       0x24 MCP2515.o
+                0x000004fc                mcp2515_request_to_send
  .text.mcp2515_bit_modify
-                0x00000812       0x30 MCP2515.o
-                0x00000812                mcp2515_bit_modify
- .text.menu_init
-                0x00000842      0x2b0 menu.o
-                0x00000842                menu_init
- .text.menu_save
-                0x00000af2       0x68 menu.o
-                0x00000af2                menu_save
- .text.oled_goto_column
-                0x00000b5a       0x14 oled.o
-                0x00000b5a                oled_goto_column
- .text.oled_goto_pos
-                0x00000b6e        0xe oled.o
-                0x00000b6e                oled_goto_pos
- .text.oled_refresh
-                0x00000b7c       0x5c oled.o
-                0x00000b7c                oled_refresh
- .text.oled_clear_screen
-                0x00000bd8       0x32 oled.o
-                0x00000bd8                oled_clear_screen
- .text.oled_init
-                0x00000c0a       0x64 oled.o
-                0x00000c0a                oled_init
+                0x00000520       0x30 MCP2515.o
+                0x00000520                mcp2515_bit_modify
  .text.spi_init
-                0x00000c6e       0x12 spi.o
-                0x00000c6e                spi_init
+                0x00000550       0x12 spi.o
+                0x00000550                spi_init
  .text.spi_MasterTransmit
-                0x00000c80        0x8 spi.o
-                0x00000c80                spi_MasterTransmit
+                0x00000562        0x8 spi.o
+                0x00000562                spi_MasterTransmit
  .text.spi_MasterRead
-                0x00000c88        0xa spi.o
-                0x00000c88                spi_MasterRead
- .text.sram_write_data
-                0x00000c92       0x1a sram.o
-                0x00000c92                sram_write_data
- .text.sram_goto_page
-                0x00000cac        0x6 sram.o
-                0x00000cac                sram_goto_page
- .text.sram_goto_column
-                0x00000cb2        0x6 sram.o
-                0x00000cb2                sram_goto_column
- .text.sram_save_char
-                0x00000cb8       0xc4 sram.o
-                0x00000cb8                sram_save_char
- .text.sram_save_string
-                0x00000d7c       0xa6 sram.o
-                0x00000d7c                sram_save_string
+                0x0000056a        0xa spi.o
+                0x0000056a                spi_MasterRead
  .text.USART_Transmit
-                0x00000e22        0x8 uart.o
-                0x00000e22                USART_Transmit
+                0x00000574        0x8 uart.o
+                0x00000574                USART_Transmit
  .text.USART_Receive
-                0x00000e2a        0x8 uart.o
-                0x00000e2a                USART_Receive
+                0x0000057c        0x8 uart.o
+                0x0000057c                USART_Receive
  .text.USART_Init
-                0x00000e32       0x16 uart.o
-                0x00000e32                USART_Init
+                0x00000584       0x16 uart.o
+                0x00000584                USART_Init
+ .text.adc_init
+                0x0000059a        0x4 adc.o
+                0x0000059a                adc_init
+ .text.adc_read
+                0x0000059e       0x12 adc.o
+                0x0000059e                adc_read
+ .text.avr_init
+                0x000005b0       0x1a avr.o
+                0x000005b0                avr_init
+ .text.extMem_init
+                0x000005ca        0xe externalmemory.o
+                0x000005ca                extMem_init
+ .text.joy_getDirectionX
+                0x000005d8       0x24 joy.o
+                0x000005d8                joy_getDirectionX
+ .text.joy_getDirectionY
+                0x000005fc       0x24 joy.o
+                0x000005fc                joy_getDirectionY
+ .text.joy_doesDirectionChange
+                0x00000620      0x132 joy.o
+                0x00000620                joy_doesDirectionChange
+ .text.main     0x00000752      0x112 lab1.o
+                0x00000752                main
+ .text.__vector_3
+                0x00000864       0x28 lab1.o
+                0x00000864                __vector_3
+ .text.menu_init
+                0x0000088c      0x2b0 menu.o
+                0x0000088c                menu_init
+ .text.menu_save
+                0x00000b3c       0x68 menu.o
+                0x00000b3c                menu_save
+ .text.oled_goto_column
+                0x00000ba4       0x14 oled.o
+                0x00000ba4                oled_goto_column
+ .text.oled_goto_pos
+                0x00000bb8        0xe oled.o
+                0x00000bb8                oled_goto_pos
+ .text.oled_refresh
+                0x00000bc6       0x5c oled.o
+                0x00000bc6                oled_refresh
+ .text.oled_clear_screen
+                0x00000c22       0x32 oled.o
+                0x00000c22                oled_clear_screen
+ .text.oled_init
+                0x00000c54       0x64 oled.o
+                0x00000c54                oled_init
+ .text.sram_write_data
+                0x00000cb8       0x1a sram.o
+                0x00000cb8                sram_write_data
+ .text.sram_goto_page
+                0x00000cd2        0x6 sram.o
+                0x00000cd2                sram_goto_page
+ .text.sram_goto_column
+                0x00000cd8        0x6 sram.o
+                0x00000cd8                sram_goto_column
+ .text.sram_save_char
+                0x00000cde       0xc4 sram.o
+                0x00000cde                sram_save_char
+ .text.sram_save_string
+                0x00000da2       0xa6 sram.o
+                0x00000da2                sram_save_string
  .text.avr-libc
                 0x00000e48      0x24e c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(malloc.o)
                 0x00000e48                malloc
@@ -941,19 +941,19 @@ END GROUP
 
 .comment        0x00000000       0x5c
  *(.comment)
- .comment       0x00000000       0x30 adc.o
+ .comment       0x00000000       0x30 can.o
                                  0x31 (size before relaxing)
+ .comment       0x00000000       0x31 MCP2515.o
+ .comment       0x00000000       0x31 spi.o
+ .comment       0x00000000       0x31 uart.o
+ .comment       0x00000000       0x31 adc.o
  .comment       0x00000000       0x31 avr.o
- .comment       0x00000000       0x31 can.o
  .comment       0x00000000       0x31 externalmemory.o
  .comment       0x00000000       0x31 joy.o
  .comment       0x00000000       0x31 lab1.o
- .comment       0x00000000       0x31 MCP2515.o
  .comment       0x00000000       0x31 menu.o
  .comment       0x00000000       0x31 oled.o
- .comment       0x00000000       0x31 spi.o
  .comment       0x00000000       0x31 sram.o
- .comment       0x00000000       0x31 uart.o
  .comment       0x00000000       0x31 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(malloc.o)
  .comment       0x00000000       0x31 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(fdevopen.o)
  .comment       0x00000000       0x31 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(iob.o)
@@ -982,131 +982,131 @@ END GROUP
 .debug_aranges  0x00000000      0x280
  *(.debug_aranges)
  .debug_aranges
-                0x00000000       0x28 adc.o
+                0x00000000       0x30 can.o
  .debug_aranges
-                0x00000028       0x20 avr.o
+                0x00000030       0x58 MCP2515.o
  .debug_aranges
-                0x00000048       0x30 can.o
+                0x00000088       0x30 spi.o
  .debug_aranges
-                0x00000078       0x20 externalmemory.o
+                0x000000b8       0x30 uart.o
  .debug_aranges
-                0x00000098       0x40 joy.o
+                0x000000e8       0x28 adc.o
  .debug_aranges
-                0x000000d8       0x28 lab1.o
+                0x00000110       0x20 avr.o
  .debug_aranges
-                0x00000100       0x58 MCP2515.o
+                0x00000130       0x20 externalmemory.o
  .debug_aranges
-                0x00000158       0x30 menu.o
+                0x00000150       0x40 joy.o
  .debug_aranges
-                0x00000188       0x50 oled.o
+                0x00000190       0x28 lab1.o
  .debug_aranges
-                0x000001d8       0x30 spi.o
+                0x000001b8       0x30 menu.o
  .debug_aranges
-                0x00000208       0x48 sram.o
+                0x000001e8       0x50 oled.o
  .debug_aranges
-                0x00000250       0x30 uart.o
+                0x00000238       0x48 sram.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
 .debug_info     0x00000000     0x290b
  *(.debug_info .gnu.linkonce.wi.*)
- .debug_info    0x00000000      0x1aa adc.o
- .debug_info    0x000001aa       0x8a avr.o
- .debug_info    0x00000234      0x3cd can.o
- .debug_info    0x00000601       0x8a externalmemory.o
- .debug_info    0x0000068b      0x36f joy.o
- .debug_info    0x000009fa      0x414 lab1.o
- .debug_info    0x00000e0e      0x4a1 MCP2515.o
- .debug_info    0x000012af      0x7fa menu.o
- .debug_info    0x00001aa9      0x758 oled.o
- .debug_info    0x00002201       0xdb spi.o
- .debug_info    0x000022dc      0x44e sram.o
- .debug_info    0x0000272a      0x1e1 uart.o
+ .debug_info    0x00000000      0x3cd can.o
+ .debug_info    0x000003cd      0x4a1 MCP2515.o
+ .debug_info    0x0000086e       0xdb spi.o
+ .debug_info    0x00000949      0x1e1 uart.o
+ .debug_info    0x00000b2a      0x1aa adc.o
+ .debug_info    0x00000cd4       0x8a avr.o
+ .debug_info    0x00000d5e       0x8a externalmemory.o
+ .debug_info    0x00000de8      0x36f joy.o
+ .debug_info    0x00001157      0x414 lab1.o
+ .debug_info    0x0000156b      0x7fa menu.o
+ .debug_info    0x00001d65      0x758 oled.o
+ .debug_info    0x000024bd      0x44e sram.o
 
 .debug_abbrev   0x00000000      0xf9e
  *(.debug_abbrev)
- .debug_abbrev  0x00000000      0x139 adc.o
- .debug_abbrev  0x00000139       0x51 avr.o
- .debug_abbrev  0x0000018a      0x1a8 can.o
- .debug_abbrev  0x00000332       0x51 externalmemory.o
- .debug_abbrev  0x00000383      0x18b joy.o
- .debug_abbrev  0x0000050e      0x1c7 lab1.o
- .debug_abbrev  0x000006d5      0x224 MCP2515.o
- .debug_abbrev  0x000008f9      0x15f menu.o
- .debug_abbrev  0x00000a58      0x1f5 oled.o
- .debug_abbrev  0x00000c4d       0xa9 spi.o
- .debug_abbrev  0x00000cf6      0x186 sram.o
- .debug_abbrev  0x00000e7c      0x122 uart.o
+ .debug_abbrev  0x00000000      0x1a8 can.o
+ .debug_abbrev  0x000001a8      0x224 MCP2515.o
+ .debug_abbrev  0x000003cc       0xa9 spi.o
+ .debug_abbrev  0x00000475      0x122 uart.o
+ .debug_abbrev  0x00000597      0x139 adc.o
+ .debug_abbrev  0x000006d0       0x51 avr.o
+ .debug_abbrev  0x00000721       0x51 externalmemory.o
+ .debug_abbrev  0x00000772      0x18b joy.o
+ .debug_abbrev  0x000008fd      0x1c7 lab1.o
+ .debug_abbrev  0x00000ac4      0x15f menu.o
+ .debug_abbrev  0x00000c23      0x1f5 oled.o
+ .debug_abbrev  0x00000e18      0x186 sram.o
 
-.debug_line     0x00000000      0xea0
+.debug_line     0x00000000      0xecf
  *(.debug_line .debug_line.* .debug_line_end)
- .debug_line    0x00000000      0x144 adc.o
- .debug_line    0x00000144       0xb0 avr.o
- .debug_line    0x000001f4      0x132 can.o
- .debug_line    0x00000326       0xb5 externalmemory.o
- .debug_line    0x000003db      0x12a joy.o
- .debug_line    0x00000505      0x160 lab1.o
- .debug_line    0x00000665      0x1ea MCP2515.o
- .debug_line    0x0000084f      0x1e7 menu.o
- .debug_line    0x00000a36      0x159 oled.o
- .debug_line    0x00000b8f       0xd5 spi.o
- .debug_line    0x00000c64      0x159 sram.o
- .debug_line    0x00000dbd       0xe3 uart.o
+ .debug_line    0x00000000      0x13a can.o
+ .debug_line    0x0000013a      0x1f2 MCP2515.o
+ .debug_line    0x0000032c       0xdd spi.o
+ .debug_line    0x00000409       0xeb uart.o
+ .debug_line    0x000004f4      0x144 adc.o
+ .debug_line    0x00000638       0xb0 avr.o
+ .debug_line    0x000006e8       0xb5 externalmemory.o
+ .debug_line    0x0000079d      0x12a joy.o
+ .debug_line    0x000008c7      0x16f lab1.o
+ .debug_line    0x00000a36      0x1e7 menu.o
+ .debug_line    0x00000c1d      0x159 oled.o
+ .debug_line    0x00000d76      0x159 sram.o
 
 .debug_frame    0x00000000      0x638
  *(.debug_frame)
- .debug_frame   0x00000000       0x34 adc.o
- .debug_frame   0x00000034       0x24 avr.o
- .debug_frame   0x00000058       0xb0 can.o
- .debug_frame   0x00000108       0x24 externalmemory.o
- .debug_frame   0x0000012c       0x78 joy.o
- .debug_frame   0x000001a4       0x58 lab1.o
- .debug_frame   0x000001fc       0xe8 MCP2515.o
- .debug_frame   0x000002e4       0xc8 menu.o
- .debug_frame   0x000003ac       0xb8 oled.o
- .debug_frame   0x00000464       0x44 spi.o
- .debug_frame   0x000004a8      0x14c sram.o
- .debug_frame   0x000005f4       0x44 uart.o
+ .debug_frame   0x00000000       0xb0 can.o
+ .debug_frame   0x000000b0       0xe8 MCP2515.o
+ .debug_frame   0x00000198       0x44 spi.o
+ .debug_frame   0x000001dc       0x44 uart.o
+ .debug_frame   0x00000220       0x34 adc.o
+ .debug_frame   0x00000254       0x24 avr.o
+ .debug_frame   0x00000278       0x24 externalmemory.o
+ .debug_frame   0x0000029c       0x78 joy.o
+ .debug_frame   0x00000314       0x58 lab1.o
+ .debug_frame   0x0000036c       0xc8 menu.o
+ .debug_frame   0x00000434       0xb8 oled.o
+ .debug_frame   0x000004ec      0x14c sram.o
 
-.debug_str      0x00000000      0x925
+.debug_str      0x00000000      0x945
  *(.debug_str)
- .debug_str     0x00000000      0x197 adc.o
+ .debug_str     0x00000000      0x1d4 can.o
+                                0x217 (size before relaxing)
+ .debug_str     0x000001d4      0x120 MCP2515.o
+                                0x2c8 (size before relaxing)
+ .debug_str     0x000002f4       0x19 spi.o
+                                0x180 (size before relaxing)
+ .debug_str     0x0000030d       0x63 uart.o
+                                0x1a9 (size before relaxing)
+ .debug_str     0x00000370       0x7d adc.o
                                 0x1d0 (size before relaxing)
- .debug_str     0x00000197       0x48 avr.o
+ .debug_str     0x000003ed       0x48 avr.o
                                 0x150 (size before relaxing)
- .debug_str     0x000001df       0xfd can.o
-                                0x20f (size before relaxing)
- .debug_str     0x000002dc       0x22 externalmemory.o
+ .debug_str     0x00000435       0x22 externalmemory.o
                                 0x15e (size before relaxing)
- .debug_str     0x000002fe      0x174 joy.o
+ .debug_str     0x00000457      0x174 joy.o
                                 0x2af (size before relaxing)
- .debug_str     0x00000472      0x122 lab1.o
+ .debug_str     0x000005cb      0x117 lab1.o
                                 0x332 (size before relaxing)
- .debug_str     0x00000594       0xcd MCP2515.o
-                                0x2c0 (size before relaxing)
- .debug_str     0x00000661       0xba menu.o
+ .debug_str     0x000006e2       0xba menu.o
                                 0x26e (size before relaxing)
- .debug_str     0x0000071b       0xb9 oled.o
+ .debug_str     0x0000079c       0xb9 oled.o
                                 0x22a (size before relaxing)
- .debug_str     0x000007d4       0x11 spi.o
-                                0x178 (size before relaxing)
- .debug_str     0x000007e5       0xf0 sram.o
+ .debug_str     0x00000855       0xf0 sram.o
                                 0x297 (size before relaxing)
- .debug_str     0x000008d5       0x50 uart.o
-                                0x1a1 (size before relaxing)
 
 .debug_loc      0x00000000     0x1d9d
  *(.debug_loc)
- .debug_loc     0x00000000       0x32 adc.o
- .debug_loc     0x00000032      0x2b4 can.o
- .debug_loc     0x000002e6      0x28d joy.o
- .debug_loc     0x00000573      0x130 lab1.o
- .debug_loc     0x000006a3      0x38e MCP2515.o
- .debug_loc     0x00000a31      0xb6d menu.o
- .debug_loc     0x0000159e      0x236 oled.o
- .debug_loc     0x000017d4      0x5a3 sram.o
- .debug_loc     0x00001d77       0x26 uart.o
+ .debug_loc     0x00000000      0x2b4 can.o
+ .debug_loc     0x000002b4      0x38e MCP2515.o
+ .debug_loc     0x00000642       0x26 uart.o
+ .debug_loc     0x00000668       0x32 adc.o
+ .debug_loc     0x0000069a      0x28d joy.o
+ .debug_loc     0x00000927      0x130 lab1.o
+ .debug_loc     0x00000a57      0xb6d menu.o
+ .debug_loc     0x000015c4      0x236 oled.o
+ .debug_loc     0x000017fa      0x5a3 sram.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -1128,18 +1128,18 @@ END GROUP
 
 .debug_ranges   0x00000000      0x208
  *(.debug_ranges)
- .debug_ranges  0x00000000       0x18 adc.o
- .debug_ranges  0x00000018       0x10 avr.o
- .debug_ranges  0x00000028       0x20 can.o
- .debug_ranges  0x00000048       0x10 externalmemory.o
- .debug_ranges  0x00000058       0x30 joy.o
- .debug_ranges  0x00000088       0x30 lab1.o
- .debug_ranges  0x000000b8       0x48 MCP2515.o
- .debug_ranges  0x00000100       0x20 menu.o
- .debug_ranges  0x00000120       0x40 oled.o
- .debug_ranges  0x00000160       0x20 spi.o
- .debug_ranges  0x00000180       0x68 sram.o
- .debug_ranges  0x000001e8       0x20 uart.o
+ .debug_ranges  0x00000000       0x20 can.o
+ .debug_ranges  0x00000020       0x48 MCP2515.o
+ .debug_ranges  0x00000068       0x20 spi.o
+ .debug_ranges  0x00000088       0x20 uart.o
+ .debug_ranges  0x000000a8       0x18 adc.o
+ .debug_ranges  0x000000c0       0x10 avr.o
+ .debug_ranges  0x000000d0       0x10 externalmemory.o
+ .debug_ranges  0x000000e0       0x30 joy.o
+ .debug_ranges  0x00000110       0x30 lab1.o
+ .debug_ranges  0x00000140       0x20 menu.o
+ .debug_ranges  0x00000160       0x40 oled.o
+ .debug_ranges  0x000001a0       0x68 sram.o
 
 .debug_macro
  *(.debug_macro)
