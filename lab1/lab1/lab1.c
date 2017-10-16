@@ -38,9 +38,6 @@
 
 volatile int RECEIVE_BUFFER_INTERRUPT = 0;
 
-ISR(INT2_vect){
-	RECEIVE_BUFFER_INTERRUPT = 1;
-}
 
 int main(void)
 {
@@ -56,33 +53,48 @@ int main(void)
 	
 	
 	
+	can_msg melding;
+	melding.id = 5;
+	melding.length = 8;
+	melding.data[0] = (uint8_t)('S');
+	melding.data[1] = (uint8_t)('K');
+	melding.data[2] = (uint8_t)('R');
+	melding.data[3] = (uint8_t)('R');
+	melding.data[4] = (uint8_t)('R');
+	melding.data[5] = (uint8_t)('R');
+	melding.data[6] = (uint8_t)('A');
+	melding.data[7] = (uint8_t)('A');
 	
-	
+	printf("NY\n");
 	while(1)
 	{
-		can_msg melding;
-		melding.id = 5;
-		melding.length = 1;
-		melding.data[0] = (uint8_t)('Q');
+		
 		
 		//_delay_ms(3000); //for å sjekke om interrupten blir høy
 		
-		can_send_message(melding.id, melding.data, melding.length);
+		can_send_message(&melding);
 		can_msg mottatt;
 		
-		if(RECEIVE_BUFFER_INTERRUPT){
-			mottatt = can_receive_message();
+		if(RECEIVE_BUFFER_INTERRUPT){ //Mulig å lage det som en funskjon i ettertid
 			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten
-			RECEIVE_BUFFER_INTERRUPT = 0; //clearer interruptflagget 
-			char mottatt_data_char = mottatt.data[0];
+			mottatt = can_receive_message();		
 			
-			printf("ID: %i  LENGTH: %i   DATA  %c \n", mottatt.id , mottatt.length, mottatt_data_char);
+			char mottatt_data_char0 = mottatt.data[0];
+			char mottatt_data_char1 = mottatt.data[1];
+			char mottatt_data_char2 = mottatt.data[2];
+			char mottatt_data_char3 = mottatt.data[3];
+			char mottatt_data_char4 = mottatt.data[4];
+			char mottatt_data_char5 = mottatt.data[5];
+			char mottatt_data_char6 = mottatt.data[6];
+			char mottatt_data_char7 = mottatt.data[7];
+						
+			printf("ID: %i  LENGTH: %i   ALL DATA  %c    %c   %c    %c    %c    %c    %c    %c\n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6, mottatt_data_char7);
+			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten. Må gjøres to ganger
+			RECEIVE_BUFFER_INTERRUPT = 0; //clearer interruptflagget
 			
+			melding.id = 6;
+						
 		}
-		
-		//printf("CANSTAT: %x\n",mcp2515_read(MCP_CANSTAT));
-		//printf("CANINTF: %x\n",mcp2515_read(MCP_CANINTF));
-		
 		
 		if(joy_doesDirectionChange()){
 			menu_save();
@@ -92,22 +104,9 @@ int main(void)
 	
 	
 	
-	//mcp2515_write(MCP_TXB0SIDH, 0x10);
-	/*mcp2515_request_to_send(0);
-	while(1){
-		uint8_t data;
-
-		data = mcp2515_read(MCP_TXB0CTRL);
-
-		printf("Returnert verdi %02X\n", data); //printer verdien vi leser fra registeret i hex
-		_delay_ms(1000);
-	}
-	
-	
-	
-	*/
-	
 }
 
-//Neste gang: sjekke med oscilloskop hva som skjer med interrupt-pinen på mcp2515 for å sjekke om RECEIVE_BUFFER_INTERRUPT blir lav igjen. Om den ikke blir lav igjen, må vi fikse på et register eller noe
+ISR(INT2_vect){
+	RECEIVE_BUFFER_INTERRUPT = 1;
+}
 

@@ -29,28 +29,27 @@
 	mcp2515_bit_modify(MCP_CANCTRL, 0b11100000, 0b01000000);
  }
 
-void can_send_message(unsigned int identifier, uint8_t *message, uint8_t lengthOfData){
+void can_send_message(can_msg* send){//unsigned int identifier, uint8_t *message, uint8_t lengthOfData
 	
 	while((mcp2515_read(MCP_TXB0CTRL) & MCP_TXREQ)){ //så lenge transfer buffer 0 er fullt, vil MCP_TXREQ være høy, og vi er stuck i whilen. Når det er tomt, vil vi gå ut av whilen
-		printf("Fuckyou\n");
 	}
 	
 	//Left shifter 5 ganger for å lagre riktig i SID bufferregistrene
-	mcp2515_write(MCP_TXB0SIDH+1, identifier<<5); //lagrer identifieren til messagen inn i første transferbuffer. Går fint å overskrive det som ligger der fordi det er 0 som må ligge der for standard identifier (ikke extended)
+	mcp2515_write(MCP_TXB0SIDH+1, send->id<<5); //lagrer identifieren til messagen inn i første transferbuffer. Går fint å overskrive det som ligger der fordi det er 0 som må ligge der for standard identifier (ikke extended)
 	
 	 //Right shift 3 ganger for å flytte de 8 høyeste bit'ene til de 8 laveste, så de lagres i SIDH
-	mcp2515_write(MCP_TXB0SIDH, identifier>>3); //lagrer identifieren til messagen inn i første transferbuffer
+	mcp2515_write(MCP_TXB0SIDH, send->id>>3); //lagrer identifieren til messagen inn i første transferbuffer
 	
-	mcp2515_write(MCP_TXB0SIDH+4, lengthOfData); //lagrer datalengden i txb0dlc. plusser på 4 for å komme til txb0dlc (se tabell s. 63)
+	mcp2515_write(MCP_TXB0SIDH+4, send->length); //lagrer datalengden i txb0dlc. plusser på 4 for å komme til txb0dlc (se tabell s. 63)
 
 	//lagrer nå meldinga i TXB0D0-TXB0D6 (s. 63)
-	if(lengthOfData>8){
+	if(send->length>8){
 		printf("Length of data too big.");
 		return;
 	}
 	int byte = 0;
-	for (byte = 0; byte < lengthOfData; byte++){
-		mcp2515_write(MCP_TXB0SIDH+5+byte, message[byte]);
+	for (byte = 0; byte < send->length; byte++){
+		mcp2515_write(MCP_TXB0SIDH+5+byte, send->data[byte]);
 	}
 
 	mcp2515_request_to_send(0); //sender RTS signal til TXB0 nå

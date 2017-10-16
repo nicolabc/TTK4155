@@ -19,7 +19,7 @@ typedef struct can_message {
 } can_msg;
 
 void can_init();
-void can_send_message(unsigned int identifier, uint8_t *message, uint8_t lengthOfData);
+void can_send_message(can_msg* send);
 can_msg can_receive_message();
 
 
