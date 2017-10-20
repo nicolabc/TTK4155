@@ -14,7 +14,7 @@
 
 #include "menu.h"
 #include "oled.h"
-#include "joy.h"
+#include "../../lib/joy.h"
 #include "sram.h"
 
 node_t* currentSelection;

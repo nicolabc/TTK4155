@@ -38,13 +38,13 @@ SUBDIRS :=
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../../../lib/can.c \
+../../../lib/joy.c \
 ../../../lib/MCP2515.c \
 ../../../lib/spi.c \
 ../../../lib/uart.c \
 ../adc.c \
 ../avr.c \
 ../externalmemory.c \
-../joy.c \
 ../lab1.c \
 ../menu.c \
 ../multiboardInfo.c \
@@ -60,13 +60,13 @@ ASM_SRCS +=
 
 OBJS +=  \
 can.o \
+joy.o \
 MCP2515.o \
 spi.o \
 uart.o \
 adc.o \
 avr.o \
 externalmemory.o \
-joy.o \
 lab1.o \
 menu.o \
 multiboardInfo.o \
@@ -75,13 +75,13 @@ sram.o
 
 OBJS_AS_ARGS +=  \
 can.o \
+joy.o \
 MCP2515.o \
 spi.o \
 uart.o \
 adc.o \
 avr.o \
 externalmemory.o \
-joy.o \
 lab1.o \
 menu.o \
 multiboardInfo.o \
@@ -90,13 +90,13 @@ sram.o
 
 C_DEPS +=  \
 can.d \
+joy.d \
 MCP2515.d \
 spi.d \
 uart.d \
 adc.d \
 avr.d \
 externalmemory.d \
-joy.d \
 lab1.d \
 menu.d \
 multiboardInfo.d \
@@ -105,13 +105,13 @@ sram.d
 
 C_DEPS_AS_ARGS +=  \
 can.d \
+joy.d \
 MCP2515.d \
 spi.d \
 uart.d \
 adc.d \
 avr.d \
 externalmemory.d \
-joy.d \
 lab1.d \
 menu.d \
 multiboardInfo.d \

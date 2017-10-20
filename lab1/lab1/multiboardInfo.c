@@ -5,7 +5,7 @@
  *  Author: nicolabc
  */ 
 #include "../../lib/can.h"
-#include "joy.h"
+#include "../../lib/joy.h"
 #include "adc.h"
 
 int multiboardInfo_update(can_msg* yourMessage){

@@ -117,6 +117,14 @@
       <SubType>compile</SubType>
       <Link>can.h</Link>
     </Compile>
+    <Compile Include="..\..\lib\joy.c">
+      <SubType>compile</SubType>
+      <Link>joy.c</Link>
+    </Compile>
+    <Compile Include="..\..\lib\joy.h">
+      <SubType>compile</SubType>
+      <Link>joy.h</Link>
+    </Compile>
     <Compile Include="..\..\lib\MCP2515.c">
       <SubType>compile</SubType>
       <Link>MCP2515.c</Link>
@@ -160,12 +168,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="fonts.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="joy.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="joy.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="lab1.c">

@@ -22,11 +22,11 @@
 #include "externalmemory.h"
 #include "avr.h"
 #include "oled.h"
-#include "joy.h"
 #include "menu.h"
 #include "../../lib/spi.h"
 #include "../../lib/MCP2515.h"
 #include "../../lib/can.h"
+#include "../../lib/joy.h"
 #include "multiboardInfo.h"
 //#include "fonts.h"
 

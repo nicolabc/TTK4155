@@ -4,6 +4,8 @@
 
 ..\..\lib\can.c
 
+..\..\lib\joy.c
+
 ..\..\lib\MCP2515.c
 
 ..\..\lib\spi.c
@@ -15,8 +17,6 @@ adc.c
 avr.c
 
 externalmemory.c
-
-joy.c
 
 lab1.c
 

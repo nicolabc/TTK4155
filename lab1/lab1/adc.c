@@ -12,7 +12,7 @@
 
 #include "util/delay.h"
 #include "adc.h"
-#include "joy.h"
+#include "../../lib/joy.h"
 
 /*
 void adc_init(void){
