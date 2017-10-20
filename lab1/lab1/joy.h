@@ -23,8 +23,6 @@ struct joystickinfo {
 	int dir;
 } joystick;
 
-
-
 int joy_getPercent(int raw);
 
 int joy_getDirectionX(int raw);
@@ -34,5 +32,7 @@ int joy_getDirectionY(int raw);
 int joy_readButton(int button);
 
 int joy_doesDirectionChange(void);
+
+//int joy_sendMultiboardInfo(can_msg *yourMessage);
 
 #endif /* JOY_H_ */

@@ -14,6 +14,7 @@
 #include "../../../lib/MCP2515.h"
 #include "../../../lib/can.h"
 
+
 //Fra node 1
 #define F_CPU 16000000
 #define FOSC 16000000// Clock Speed
@@ -57,30 +58,29 @@ int main(void)
 		//sjekker om receive bufre inneholder noe. se s. 69 i mcp2515
 		volatile uint8_t statusReg = mcp2515_read_status();
 		
-	//	printf("statusReg: %x \n", statusReg);
+		//printf("statusReg: %x \n", statusReg);
 		
 		if(test_bit(statusReg, 0)){ //Mulig å lage det som en funskjon i ettertid
 
 			can_receive_message(&mottatt);		
 			
-			char mottatt_data_char0 = mottatt.data[0];
-			char mottatt_data_char1 = mottatt.data[1];
-			char mottatt_data_char2 = mottatt.data[2];
-			char mottatt_data_char3 = mottatt.data[3];
-			char mottatt_data_char4 = mottatt.data[4];
-			char mottatt_data_char5 = mottatt.data[5];
-			char mottatt_data_char6 = mottatt.data[6];
-			char mottatt_data_char7 = mottatt.data[7];
+			int mottatt_data_char0 = mottatt.data[0];
+			int mottatt_data_char1 = mottatt.data[1];
+			int mottatt_data_char2 = mottatt.data[2];
+			int mottatt_data_char3 = mottatt.data[3];
+			int mottatt_data_char4 = mottatt.data[4];
+			int mottatt_data_char5 = mottatt.data[5];
+			int mottatt_data_char6 = mottatt.data[6];
 						
 
 
-			printf("ID: %i  LENGTH: %i   ALL DATA  %c    %c   %c    %c    %c    %c    %c    %c\n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6, mottatt_data_char7);
+			printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
 			RECEIVE_BUFFER_INTERRUPT = 0; //clearer interruptflagget
 			
 			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten
 						
 		}
-
+		
 
 		
     }

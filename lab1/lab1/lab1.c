@@ -73,8 +73,8 @@ int main(void)
 	menu_init();
 	can_init();
 	
-	can_msg melding;
-	melding.id = 6;
+	can_msg yourMessage;
+	/*melding.id = 6;
 	melding.length = 8;
 	
 	melding.data[0] = (uint8_t)('s');
@@ -85,21 +85,26 @@ int main(void)
 	melding.data[5] = (uint8_t)('d');
 	melding.data[6] = (uint8_t)('e');
 	melding.data[7] = (uint8_t)('n');
+	*/
+	//joy_sendMultiboardInfo(&melding);
 	
-	for(int i = 0; i < 10; i++){
-		
-		can_send_message(&melding);
-		melding.data[0] += 1;
-		_delay_ms(200);
-	}
+	
+
 	
 	while(1)
 	{
-		
-		
-		
-		//printf("Sent msg\n");
-		//_delay_ms(100);
+		yourMessage.id = 1; //Her bestemmer vi at en ID som 1 vil være en melding fra joysticken
+		yourMessage.length = 7;
+		yourMessage.data[0] = adc_read(0); //sender inn x-verdien til joysticken først. Denne verdien er mellom -100 og 100
+		yourMessage.data[1] = adc_read(1); //y-verdien til joystick
+		yourMessage.data[2] = joy_readButton(2); //leser joystick-knappen (L3 på ps4)
+		yourMessage.data[3] = joy_readButton(0); //leser venstre knapp
+		yourMessage.data[4] = joy_readButton(1); //leser høyre knapp
+		yourMessage.data[5] = adc_read(2); //Venstre slider
+		yourMessage.data[6] = adc_read(3); //Høyre slider	
+		can_send_message(&yourMessage);
+		printf("Sent msg\n");
+		_delay_ms(100);
 	
 		
 		//uint8_t statreg = mcp2515_read_status();

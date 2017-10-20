@@ -14,7 +14,7 @@
 
 typedef struct can_message {
 	unsigned int id;
-	char data[8];
+	int data[8];
 	uint8_t length;
 } can_msg;
 

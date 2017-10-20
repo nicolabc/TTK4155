@@ -85,10 +85,12 @@ uint8_t mcp2515_read_status(){
 	statusRegister = spi_MasterRead(); //disse to skal være like hverandre, se s. 69
 	statusRegister2 = spi_MasterRead(); //disse to skal være like hverandre, se s. 69
 
+	/*
+	//kun for å sjekke om begge registrene har samme data i seg. egentlig ikke nødvendig.
 	if(statusRegister != statusRegister2){
 		printf("Status registers in mcp2515_read_status() not identical.\n");
 		return 0;
-	}
+	}*/
 
 	set_bit(PORTB,SS); //Setter SS høy
 
