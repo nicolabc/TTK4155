@@ -177,6 +177,12 @@
     <Compile Include="menu.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="multiboardInfo.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="multiboardInfo.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="oled.c">
       <SubType>compile</SubType>
     </Compile>

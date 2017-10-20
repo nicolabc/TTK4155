@@ -22,6 +22,8 @@ lab1.c
 
 menu.c
 
+multiboardInfo.c
+
 oled.c
 
 sram.c

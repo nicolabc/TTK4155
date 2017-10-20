@@ -11,21 +11,21 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
   3 .comment      0000005c  00000000  00000000  000017c0  2**0
                   CONTENTS, READONLY
-  4 .debug_aranges 00000290  00000000  00000000  0000181c  2**0
+  4 .debug_aranges 000002b0  00000000  00000000  0000181c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00002a57  00000000  00000000  00001aac  2**0
+  5 .debug_info   00002b2b  00000000  00000000  00001acc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 0000100b  00000000  00000000  00004503  2**0
+  6 .debug_abbrev 000010c2  00000000  00000000  000045f7  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000f40  00000000  00000000  0000550e  2**0
+  7 .debug_line   00000fb5  00000000  00000000  000056b9  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000654  00000000  00000000  00006450  2**2
+  8 .debug_frame  00000684  00000000  00000000  00006670  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000008c8  00000000  00000000  00006aa4  2**0
+  9 .debug_str    000008d9  00000000  00000000  00006cf4  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00001dfe  00000000  00000000  0000736c  2**0
+ 10 .debug_loc    00001e63  00000000  00000000  000075cd  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000200  00000000  00000000  0000916a  2**0
+ 11 .debug_ranges 00000210  00000000  00000000  00009430  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -34,7 +34,7 @@ Disassembly of section .text:
        0:	0c 94 2d 01 	jmp	0x25a	; 0x25a <__ctors_end>
        4:	0c 94 4a 01 	jmp	0x294	; 0x294 <__bad_interrupt>
        8:	0c 94 4a 01 	jmp	0x294	; 0x294 <__bad_interrupt>
-       c:	0c 94 ab 03 	jmp	0x756	; 0x756 <__vector_3>
+       c:	0c 94 73 03 	jmp	0x6e6	; 0x6e6 <__vector_3>
       10:	0c 94 4a 01 	jmp	0x294	; 0x294 <__bad_interrupt>
       14:	0c 94 4a 01 	jmp	0x294	; 0x294 <__bad_interrupt>
       18:	0c 94 4a 01 	jmp	0x294	; 0x294 <__bad_interrupt>
@@ -1235,7 +1235,7 @@ int main(void)
 	oled_clear_screen();
      6b0:	0e 94 8a 05 	call	0xb14	; 0xb14 <oled_clear_screen>
 	menu_init();
-     6b4:	0e 94 bf 03 	call	0x77e	; 0x77e <menu_init>
+     6b4:	0e 94 87 03 	call	0x70e	; 0x70e <menu_init>
 	can_init();
      6b8:	0e 94 4c 01 	call	0x298	; 0x298 <can_init>
 	
@@ -1243,694 +1243,692 @@ int main(void)
 	
 	while(1)
 	{
-		yourMessage.id = 1; //Her bestemmer vi at en ID som 1 vil være en melding fra joysticken
-     6bc:	01 e0       	ldi	r16, 0x01	; 1
-     6be:	10 e0       	ldi	r17, 0x00	; 0
-		yourMessage.length = 7;
-     6c0:	0f 2e       	mov	r0, r31
-     6c2:	f7 e0       	ldi	r31, 0x07	; 7
-     6c4:	ff 2e       	mov	r15, r31
-     6c6:	f0 2d       	mov	r31, r0
-	
-
-	
-	while(1)
-	{
-		yourMessage.id = 1; //Her bestemmer vi at en ID som 1 vil være en melding fra joysticken
-     6c8:	1a 83       	std	Y+2, r17	; 0x02
-     6ca:	09 83       	std	Y+1, r16	; 0x01
-		yourMessage.length = 7;
-     6cc:	fb 8a       	std	Y+19, r15	; 0x13
-		yourMessage.data[0] = adc_read(0); //sender inn x-verdien til joysticken først. Denne verdien er mellom -100 og 100
-     6ce:	80 e0       	ldi	r24, 0x00	; 0
-     6d0:	0e 94 46 02 	call	0x48c	; 0x48c <adc_read>
-     6d4:	90 e0       	ldi	r25, 0x00	; 0
-     6d6:	9c 83       	std	Y+4, r25	; 0x04
-     6d8:	8b 83       	std	Y+3, r24	; 0x03
-		yourMessage.data[1] = adc_read(1); //y-verdien til joystick
-     6da:	81 e0       	ldi	r24, 0x01	; 1
-     6dc:	0e 94 46 02 	call	0x48c	; 0x48c <adc_read>
-     6e0:	90 e0       	ldi	r25, 0x00	; 0
-     6e2:	9e 83       	std	Y+6, r25	; 0x06
-     6e4:	8d 83       	std	Y+5, r24	; 0x05
-		yourMessage.data[2] = joy_readButton(2); //leser joystick-knappen (L3 på ps4)
-     6e6:	82 e0       	ldi	r24, 0x02	; 2
-     6e8:	90 e0       	ldi	r25, 0x00	; 0
-     6ea:	0e 94 87 02 	call	0x50e	; 0x50e <joy_readButton>
-     6ee:	98 87       	std	Y+8, r25	; 0x08
-     6f0:	8f 83       	std	Y+7, r24	; 0x07
-		yourMessage.data[3] = joy_readButton(0); //leser venstre knapp
-     6f2:	80 e0       	ldi	r24, 0x00	; 0
-     6f4:	90 e0       	ldi	r25, 0x00	; 0
-     6f6:	0e 94 87 02 	call	0x50e	; 0x50e <joy_readButton>
-     6fa:	9a 87       	std	Y+10, r25	; 0x0a
-     6fc:	89 87       	std	Y+9, r24	; 0x09
-		yourMessage.data[4] = joy_readButton(1); //leser høyre knapp
-     6fe:	c8 01       	movw	r24, r16
-     700:	0e 94 87 02 	call	0x50e	; 0x50e <joy_readButton>
-     704:	9c 87       	std	Y+12, r25	; 0x0c
-     706:	8b 87       	std	Y+11, r24	; 0x0b
-		yourMessage.data[5] = adc_read(2); //Venstre slider
-     708:	82 e0       	ldi	r24, 0x02	; 2
-     70a:	0e 94 46 02 	call	0x48c	; 0x48c <adc_read>
-     70e:	90 e0       	ldi	r25, 0x00	; 0
-     710:	9e 87       	std	Y+14, r25	; 0x0e
-     712:	8d 87       	std	Y+13, r24	; 0x0d
-		yourMessage.data[6] = adc_read(3); //Høyre slider	
-     714:	83 e0       	ldi	r24, 0x03	; 3
-     716:	0e 94 46 02 	call	0x48c	; 0x48c <adc_read>
-     71a:	90 e0       	ldi	r25, 0x00	; 0
-     71c:	98 8b       	std	Y+16, r25	; 0x10
-     71e:	8f 87       	std	Y+15, r24	; 0x0f
+		multiboardInfo_update(&yourMessage);
+     6bc:	ce 01       	movw	r24, r28
+     6be:	01 96       	adiw	r24, 0x01	; 1
+     6c0:	0e 94 13 05 	call	0xa26	; 0xa26 <multiboardInfo_update>
 		can_send_message(&yourMessage);
-     720:	ce 01       	movw	r24, r28
-     722:	01 96       	adiw	r24, 0x01	; 1
-     724:	0e 94 69 01 	call	0x2d2	; 0x2d2 <can_send_message>
+     6c4:	ce 01       	movw	r24, r28
+     6c6:	01 96       	adiw	r24, 0x01	; 1
+     6c8:	0e 94 69 01 	call	0x2d2	; 0x2d2 <can_send_message>
 		printf("Sent msg\n");
-     728:	87 e3       	ldi	r24, 0x37	; 55
-     72a:	91 e0       	ldi	r25, 0x01	; 1
-     72c:	0e 94 23 08 	call	0x1046	; 0x1046 <puts>
-	#else
-		//round up by default
-		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
-	#endif
-
-	__builtin_avr_delay_cycles(__ticks_dc);
-     730:	2f ef       	ldi	r18, 0xFF	; 255
-     732:	8f e7       	ldi	r24, 0x7F	; 127
-     734:	91 e0       	ldi	r25, 0x01	; 1
-     736:	21 50       	subi	r18, 0x01	; 1
-     738:	80 40       	sbci	r24, 0x00	; 0
-     73a:	90 40       	sbci	r25, 0x00	; 0
-     73c:	e1 f7       	brne	.-8      	; 0x736 <main+0xb2>
-     73e:	00 c0       	rjmp	.+0      	; 0x740 <main+0xbc>
-     740:	00 c0       	rjmp	.+0      	; 0x742 <main+0xbe>
+     6cc:	87 e3       	ldi	r24, 0x37	; 55
+     6ce:	91 e0       	ldi	r25, 0x01	; 1
+     6d0:	0e 94 23 08 	call	0x1046	; 0x1046 <puts>
 			
 			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten
 						
 		}
 		_delay_ms(500);*/
 		if(joy_doesDirectionChange()){
-     742:	0e 94 a9 02 	call	0x552	; 0x552 <joy_doesDirectionChange>
-     746:	89 2b       	or	r24, r25
-     748:	09 f4       	brne	.+2      	; 0x74c <main+0xc8>
-     74a:	be cf       	rjmp	.-132    	; 0x6c8 <main+0x44>
+     6d4:	0e 94 a9 02 	call	0x552	; 0x552 <joy_doesDirectionChange>
+     6d8:	89 2b       	or	r24, r25
+     6da:	81 f3       	breq	.-32     	; 0x6bc <main+0x38>
 			menu_save();
-     74c:	0e 94 17 05 	call	0xa2e	; 0xa2e <menu_save>
+     6dc:	0e 94 df 04 	call	0x9be	; 0x9be <menu_save>
 			oled_refresh();
-     750:	0e 94 5c 05 	call	0xab8	; 0xab8 <oled_refresh>
-     754:	b9 cf       	rjmp	.-142    	; 0x6c8 <main+0x44>
+     6e0:	0e 94 5c 05 	call	0xab8	; 0xab8 <oled_refresh>
+     6e4:	eb cf       	rjmp	.-42     	; 0x6bc <main+0x38>
 
-00000756 <__vector_3>:
+000006e6 <__vector_3>:
 	
 	
 	
 }
 
 ISR(INT2_vect){
-     756:	1f 92       	push	r1
-     758:	0f 92       	push	r0
-     75a:	0f b6       	in	r0, 0x3f	; 63
-     75c:	0f 92       	push	r0
-     75e:	11 24       	eor	r1, r1
-     760:	8f 93       	push	r24
-     762:	9f 93       	push	r25
+     6e6:	1f 92       	push	r1
+     6e8:	0f 92       	push	r0
+     6ea:	0f b6       	in	r0, 0x3f	; 63
+     6ec:	0f 92       	push	r0
+     6ee:	11 24       	eor	r1, r1
+     6f0:	8f 93       	push	r24
+     6f2:	9f 93       	push	r25
 	RECEIVE_BUFFER_INTERRUPT = 1;
-     764:	81 e0       	ldi	r24, 0x01	; 1
-     766:	90 e0       	ldi	r25, 0x00	; 0
-     768:	90 93 e5 01 	sts	0x01E5, r25
-     76c:	80 93 e4 01 	sts	0x01E4, r24
+     6f4:	81 e0       	ldi	r24, 0x01	; 1
+     6f6:	90 e0       	ldi	r25, 0x00	; 0
+     6f8:	90 93 e5 01 	sts	0x01E5, r25
+     6fc:	80 93 e4 01 	sts	0x01E4, r24
 }
-     770:	9f 91       	pop	r25
-     772:	8f 91       	pop	r24
-     774:	0f 90       	pop	r0
-     776:	0f be       	out	0x3f, r0	; 63
-     778:	0f 90       	pop	r0
-     77a:	1f 90       	pop	r1
-     77c:	18 95       	reti
+     700:	9f 91       	pop	r25
+     702:	8f 91       	pop	r24
+     704:	0f 90       	pop	r0
+     706:	0f be       	out	0x3f, r0	; 63
+     708:	0f 90       	pop	r0
+     70a:	1f 90       	pop	r1
+     70c:	18 95       	reti
 
-0000077e <menu_init>:
+0000070e <menu_init>:
 
 node_t* currentSelection;
 node_t* currentHead;
 node_t* developers;
 
 void menu_init(void){
-     77e:	2f 92       	push	r2
-     780:	3f 92       	push	r3
-     782:	4f 92       	push	r4
-     784:	5f 92       	push	r5
-     786:	6f 92       	push	r6
-     788:	7f 92       	push	r7
-     78a:	8f 92       	push	r8
-     78c:	9f 92       	push	r9
-     78e:	af 92       	push	r10
-     790:	bf 92       	push	r11
-     792:	cf 92       	push	r12
-     794:	df 92       	push	r13
-     796:	ef 92       	push	r14
-     798:	ff 92       	push	r15
-     79a:	0f 93       	push	r16
-     79c:	1f 93       	push	r17
-     79e:	cf 93       	push	r28
-     7a0:	df 93       	push	r29
-     7a2:	00 d0       	rcall	.+0      	; 0x7a4 <menu_init+0x26>
-     7a4:	00 d0       	rcall	.+0      	; 0x7a6 <menu_init+0x28>
-     7a6:	00 d0       	rcall	.+0      	; 0x7a8 <menu_init+0x2a>
-     7a8:	cd b7       	in	r28, 0x3d	; 61
-     7aa:	de b7       	in	r29, 0x3e	; 62
+     70e:	2f 92       	push	r2
+     710:	3f 92       	push	r3
+     712:	4f 92       	push	r4
+     714:	5f 92       	push	r5
+     716:	6f 92       	push	r6
+     718:	7f 92       	push	r7
+     71a:	8f 92       	push	r8
+     71c:	9f 92       	push	r9
+     71e:	af 92       	push	r10
+     720:	bf 92       	push	r11
+     722:	cf 92       	push	r12
+     724:	df 92       	push	r13
+     726:	ef 92       	push	r14
+     728:	ff 92       	push	r15
+     72a:	0f 93       	push	r16
+     72c:	1f 93       	push	r17
+     72e:	cf 93       	push	r28
+     730:	df 93       	push	r29
+     732:	00 d0       	rcall	.+0      	; 0x734 <menu_init+0x26>
+     734:	00 d0       	rcall	.+0      	; 0x736 <menu_init+0x28>
+     736:	00 d0       	rcall	.+0      	; 0x738 <menu_init+0x2a>
+     738:	cd b7       	in	r28, 0x3d	; 61
+     73a:	de b7       	in	r29, 0x3e	; 62
 	
 	
 	node_t* newgame = malloc(sizeof(node_t)); //For å allokere nok minne av størrelse node_t
-     7ac:	8a e0       	ldi	r24, 0x0A	; 10
-     7ae:	90 e0       	ldi	r25, 0x00	; 0
-     7b0:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
-     7b4:	9e 83       	std	Y+6, r25	; 0x06
-     7b6:	8d 83       	std	Y+5, r24	; 0x05
+     73c:	8a e0       	ldi	r24, 0x0A	; 10
+     73e:	90 e0       	ldi	r25, 0x00	; 0
+     740:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
+     744:	9e 83       	std	Y+6, r25	; 0x06
+     746:	8d 83       	std	Y+5, r24	; 0x05
 		node_t* easy = malloc(sizeof(node_t));
-     7b8:	8a e0       	ldi	r24, 0x0A	; 10
-     7ba:	90 e0       	ldi	r25, 0x00	; 0
-     7bc:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
-     7c0:	4c 01       	movw	r8, r24
+     748:	8a e0       	ldi	r24, 0x0A	; 10
+     74a:	90 e0       	ldi	r25, 0x00	; 0
+     74c:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
+     750:	4c 01       	movw	r8, r24
 		node_t* normal = malloc(sizeof(node_t));
-     7c2:	8a e0       	ldi	r24, 0x0A	; 10
-     7c4:	90 e0       	ldi	r25, 0x00	; 0
-     7c6:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
-     7ca:	5c 01       	movw	r10, r24
+     752:	8a e0       	ldi	r24, 0x0A	; 10
+     754:	90 e0       	ldi	r25, 0x00	; 0
+     756:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
+     75a:	5c 01       	movw	r10, r24
 		node_t* hard = malloc(sizeof(node_t));
-     7cc:	8a e0       	ldi	r24, 0x0A	; 10
-     7ce:	90 e0       	ldi	r25, 0x00	; 0
-     7d0:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
-     7d4:	9a 83       	std	Y+2, r25	; 0x02
-     7d6:	89 83       	std	Y+1, r24	; 0x01
+     75c:	8a e0       	ldi	r24, 0x0A	; 10
+     75e:	90 e0       	ldi	r25, 0x00	; 0
+     760:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
+     764:	9a 83       	std	Y+2, r25	; 0x02
+     766:	89 83       	std	Y+1, r24	; 0x01
 	
 	node_t* highscore = malloc(sizeof(node_t));
-     7d8:	8a e0       	ldi	r24, 0x0A	; 10
-     7da:	90 e0       	ldi	r25, 0x00	; 0
-     7dc:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
-     7e0:	6c 01       	movw	r12, r24
+     768:	8a e0       	ldi	r24, 0x0A	; 10
+     76a:	90 e0       	ldi	r25, 0x00	; 0
+     76c:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
+     770:	6c 01       	movw	r12, r24
 	node_t* options = malloc(sizeof(node_t));
-     7e2:	8a e0       	ldi	r24, 0x0A	; 10
-     7e4:	90 e0       	ldi	r25, 0x00	; 0
-     7e6:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
-     7ea:	8c 01       	movw	r16, r24
+     772:	8a e0       	ldi	r24, 0x0A	; 10
+     774:	90 e0       	ldi	r25, 0x00	; 0
+     776:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
+     77a:	8c 01       	movw	r16, r24
 		node_t* sound = malloc(sizeof(node_t));
-     7ec:	8a e0       	ldi	r24, 0x0A	; 10
-     7ee:	90 e0       	ldi	r25, 0x00	; 0
-     7f0:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
-     7f4:	7c 01       	movw	r14, r24
+     77c:	8a e0       	ldi	r24, 0x0A	; 10
+     77e:	90 e0       	ldi	r25, 0x00	; 0
+     780:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
+     784:	7c 01       	movw	r14, r24
 			node_t* sound_on = malloc(sizeof(node_t));
-     7f6:	8a e0       	ldi	r24, 0x0A	; 10
-     7f8:	90 e0       	ldi	r25, 0x00	; 0
-     7fa:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
-     7fe:	2c 01       	movw	r4, r24
+     786:	8a e0       	ldi	r24, 0x0A	; 10
+     788:	90 e0       	ldi	r25, 0x00	; 0
+     78a:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
+     78e:	2c 01       	movw	r4, r24
 			node_t* sound_off = malloc(sizeof(node_t));
-     800:	8a e0       	ldi	r24, 0x0A	; 10
-     802:	90 e0       	ldi	r25, 0x00	; 0
-     804:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
-     808:	9c 83       	std	Y+4, r25	; 0x04
-     80a:	8b 83       	std	Y+3, r24	; 0x03
+     790:	8a e0       	ldi	r24, 0x0A	; 10
+     792:	90 e0       	ldi	r25, 0x00	; 0
+     794:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
+     798:	9c 83       	std	Y+4, r25	; 0x04
+     79a:	8b 83       	std	Y+3, r24	; 0x03
 		node_t* sensitivity = malloc(sizeof(node_t));
-     80c:	8a e0       	ldi	r24, 0x0A	; 10
-     80e:	90 e0       	ldi	r25, 0x00	; 0
-     810:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
-     814:	3c 01       	movw	r6, r24
+     79c:	8a e0       	ldi	r24, 0x0A	; 10
+     79e:	90 e0       	ldi	r25, 0x00	; 0
+     7a0:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
+     7a4:	3c 01       	movw	r6, r24
 	
 	node_t* credits = malloc(sizeof(node_t));
-     816:	8a e0       	ldi	r24, 0x0A	; 10
-     818:	90 e0       	ldi	r25, 0x00	; 0
-     81a:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
-     81e:	1c 01       	movw	r2, r24
+     7a6:	8a e0       	ldi	r24, 0x0A	; 10
+     7a8:	90 e0       	ldi	r25, 0x00	; 0
+     7aa:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
+     7ae:	1c 01       	movw	r2, r24
 		developers = malloc(sizeof(node_t));
-     820:	8a e0       	ldi	r24, 0x0A	; 10
-     822:	90 e0       	ldi	r25, 0x00	; 0
-     824:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
-     828:	9c 01       	movw	r18, r24
-     82a:	90 93 ed 01 	sts	0x01ED, r25
-     82e:	80 93 ec 01 	sts	0x01EC, r24
+     7b0:	8a e0       	ldi	r24, 0x0A	; 10
+     7b2:	90 e0       	ldi	r25, 0x00	; 0
+     7b4:	0e 94 9d 06 	call	0xd3a	; 0xd3a <malloc>
+     7b8:	9c 01       	movw	r18, r24
+     7ba:	90 93 ed 01 	sts	0x01ED, r25
+     7be:	80 93 ec 01 	sts	0x01EC, r24
 	
 	currentHead = malloc(sizeof(node_t));
 	currentSelection = malloc(sizeof(node_t));
 	
 	
 	currentHead = newgame;
-     832:	8d 81       	ldd	r24, Y+5	; 0x05
-     834:	9e 81       	ldd	r25, Y+6	; 0x06
-     836:	90 93 ef 01 	sts	0x01EF, r25
-     83a:	80 93 ee 01 	sts	0x01EE, r24
+     7c2:	8d 81       	ldd	r24, Y+5	; 0x05
+     7c4:	9e 81       	ldd	r25, Y+6	; 0x06
+     7c6:	90 93 ef 01 	sts	0x01EF, r25
+     7ca:	80 93 ee 01 	sts	0x01EE, r24
 	//currentSelection = DER PILEN DIN PEKER NÅ
 	currentSelection = newgame;
-     83e:	90 93 eb 01 	sts	0x01EB, r25
-     842:	80 93 ea 01 	sts	0x01EA, r24
+     7ce:	90 93 eb 01 	sts	0x01EB, r25
+     7d2:	80 93 ea 01 	sts	0x01EA, r24
 		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
 		
 }
 
 void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
 	myNode->name = nodeName;
-     846:	80 e4       	ldi	r24, 0x40	; 64
-     848:	91 e0       	ldi	r25, 0x01	; 1
-     84a:	ad 81       	ldd	r26, Y+5	; 0x05
-     84c:	be 81       	ldd	r27, Y+6	; 0x06
-     84e:	11 96       	adiw	r26, 0x01	; 1
-     850:	9c 93       	st	X, r25
-     852:	8e 93       	st	-X, r24
+     7d6:	80 e4       	ldi	r24, 0x40	; 64
+     7d8:	91 e0       	ldi	r25, 0x01	; 1
+     7da:	ad 81       	ldd	r26, Y+5	; 0x05
+     7dc:	be 81       	ldd	r27, Y+6	; 0x06
+     7de:	11 96       	adiw	r26, 0x01	; 1
+     7e0:	9c 93       	st	X, r25
+     7e2:	8e 93       	st	-X, r24
 	myNode->previous = previous;
-     854:	15 96       	adiw	r26, 0x05	; 5
-     856:	1c 92       	st	X, r1
-     858:	1e 92       	st	-X, r1
-     85a:	14 97       	sbiw	r26, 0x04	; 4
+     7e4:	15 96       	adiw	r26, 0x05	; 5
+     7e6:	1c 92       	st	X, r1
+     7e8:	1e 92       	st	-X, r1
+     7ea:	14 97       	sbiw	r26, 0x04	; 4
 	myNode->next = next;
-     85c:	13 96       	adiw	r26, 0x03	; 3
-     85e:	dc 92       	st	X, r13
-     860:	ce 92       	st	-X, r12
-     862:	12 97       	sbiw	r26, 0x02	; 2
+     7ec:	13 96       	adiw	r26, 0x03	; 3
+     7ee:	dc 92       	st	X, r13
+     7f0:	ce 92       	st	-X, r12
+     7f2:	12 97       	sbiw	r26, 0x02	; 2
 	myNode->child = child;
-     864:	17 96       	adiw	r26, 0x07	; 7
-     866:	9c 92       	st	X, r9
-     868:	8e 92       	st	-X, r8
-     86a:	16 97       	sbiw	r26, 0x06	; 6
+     7f4:	17 96       	adiw	r26, 0x07	; 7
+     7f6:	9c 92       	st	X, r9
+     7f8:	8e 92       	st	-X, r8
+     7fa:	16 97       	sbiw	r26, 0x06	; 6
 	myNode->parent = parent;
-     86c:	19 96       	adiw	r26, 0x09	; 9
-     86e:	1c 92       	st	X, r1
-     870:	1e 92       	st	-X, r1
-     872:	18 97       	sbiw	r26, 0x08	; 8
+     7fc:	19 96       	adiw	r26, 0x09	; 9
+     7fe:	1c 92       	st	X, r1
+     800:	1e 92       	st	-X, r1
+     802:	18 97       	sbiw	r26, 0x08	; 8
 		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
 		
 }
 
 void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
 	myNode->name = nodeName;
-     874:	89 e4       	ldi	r24, 0x49	; 73
-     876:	91 e0       	ldi	r25, 0x01	; 1
-     878:	f4 01       	movw	r30, r8
-     87a:	91 83       	std	Z+1, r25	; 0x01
-     87c:	80 83       	st	Z, r24
+     804:	89 e4       	ldi	r24, 0x49	; 73
+     806:	91 e0       	ldi	r25, 0x01	; 1
+     808:	f4 01       	movw	r30, r8
+     80a:	91 83       	std	Z+1, r25	; 0x01
+     80c:	80 83       	st	Z, r24
 	myNode->previous = previous;
-     87e:	15 82       	std	Z+5, r1	; 0x05
-     880:	14 82       	std	Z+4, r1	; 0x04
+     80e:	15 82       	std	Z+5, r1	; 0x05
+     810:	14 82       	std	Z+4, r1	; 0x04
 	myNode->next = next;
-     882:	b3 82       	std	Z+3, r11	; 0x03
-     884:	a2 82       	std	Z+2, r10	; 0x02
+     812:	b3 82       	std	Z+3, r11	; 0x03
+     814:	a2 82       	std	Z+2, r10	; 0x02
 	myNode->child = child;
-     886:	17 82       	std	Z+7, r1	; 0x07
-     888:	16 82       	std	Z+6, r1	; 0x06
+     816:	17 82       	std	Z+7, r1	; 0x07
+     818:	16 82       	std	Z+6, r1	; 0x06
 	myNode->parent = parent;
-     88a:	b1 87       	std	Z+9, r27	; 0x09
-     88c:	a0 87       	std	Z+8, r26	; 0x08
+     81a:	b1 87       	std	Z+9, r27	; 0x09
+     81c:	a0 87       	std	Z+8, r26	; 0x08
 		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
 		
 }
 
 void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
 	myNode->name = nodeName;
-     88e:	8e e4       	ldi	r24, 0x4E	; 78
-     890:	91 e0       	ldi	r25, 0x01	; 1
-     892:	d5 01       	movw	r26, r10
-     894:	11 96       	adiw	r26, 0x01	; 1
-     896:	9c 93       	st	X, r25
-     898:	8e 93       	st	-X, r24
+     81e:	8e e4       	ldi	r24, 0x4E	; 78
+     820:	91 e0       	ldi	r25, 0x01	; 1
+     822:	d5 01       	movw	r26, r10
+     824:	11 96       	adiw	r26, 0x01	; 1
+     826:	9c 93       	st	X, r25
+     828:	8e 93       	st	-X, r24
 	myNode->previous = previous;
-     89a:	15 96       	adiw	r26, 0x05	; 5
-     89c:	9c 92       	st	X, r9
-     89e:	8e 92       	st	-X, r8
-     8a0:	14 97       	sbiw	r26, 0x04	; 4
+     82a:	15 96       	adiw	r26, 0x05	; 5
+     82c:	9c 92       	st	X, r9
+     82e:	8e 92       	st	-X, r8
+     830:	14 97       	sbiw	r26, 0x04	; 4
 	myNode->next = next;
-     8a2:	e9 81       	ldd	r30, Y+1	; 0x01
-     8a4:	fa 81       	ldd	r31, Y+2	; 0x02
-     8a6:	13 96       	adiw	r26, 0x03	; 3
-     8a8:	fc 93       	st	X, r31
-     8aa:	ee 93       	st	-X, r30
-     8ac:	12 97       	sbiw	r26, 0x02	; 2
+     832:	e9 81       	ldd	r30, Y+1	; 0x01
+     834:	fa 81       	ldd	r31, Y+2	; 0x02
+     836:	13 96       	adiw	r26, 0x03	; 3
+     838:	fc 93       	st	X, r31
+     83a:	ee 93       	st	-X, r30
+     83c:	12 97       	sbiw	r26, 0x02	; 2
 	myNode->child = child;
-     8ae:	17 96       	adiw	r26, 0x07	; 7
-     8b0:	1c 92       	st	X, r1
-     8b2:	1e 92       	st	-X, r1
-     8b4:	16 97       	sbiw	r26, 0x06	; 6
+     83e:	17 96       	adiw	r26, 0x07	; 7
+     840:	1c 92       	st	X, r1
+     842:	1e 92       	st	-X, r1
+     844:	16 97       	sbiw	r26, 0x06	; 6
 	myNode->parent = parent;
-     8b6:	8d 81       	ldd	r24, Y+5	; 0x05
-     8b8:	9e 81       	ldd	r25, Y+6	; 0x06
-     8ba:	19 96       	adiw	r26, 0x09	; 9
-     8bc:	9c 93       	st	X, r25
-     8be:	8e 93       	st	-X, r24
-     8c0:	18 97       	sbiw	r26, 0x08	; 8
+     846:	8d 81       	ldd	r24, Y+5	; 0x05
+     848:	9e 81       	ldd	r25, Y+6	; 0x06
+     84a:	19 96       	adiw	r26, 0x09	; 9
+     84c:	9c 93       	st	X, r25
+     84e:	8e 93       	st	-X, r24
+     850:	18 97       	sbiw	r26, 0x08	; 8
 		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
 		
 }
 
 void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
 	myNode->name = nodeName;
-     8c2:	85 e5       	ldi	r24, 0x55	; 85
-     8c4:	91 e0       	ldi	r25, 0x01	; 1
-     8c6:	91 83       	std	Z+1, r25	; 0x01
-     8c8:	80 83       	st	Z, r24
+     852:	85 e5       	ldi	r24, 0x55	; 85
+     854:	91 e0       	ldi	r25, 0x01	; 1
+     856:	91 83       	std	Z+1, r25	; 0x01
+     858:	80 83       	st	Z, r24
 	myNode->previous = previous;
-     8ca:	b5 82       	std	Z+5, r11	; 0x05
-     8cc:	a4 82       	std	Z+4, r10	; 0x04
+     85a:	b5 82       	std	Z+5, r11	; 0x05
+     85c:	a4 82       	std	Z+4, r10	; 0x04
 	myNode->next = next;
-     8ce:	13 82       	std	Z+3, r1	; 0x03
-     8d0:	12 82       	std	Z+2, r1	; 0x02
+     85e:	13 82       	std	Z+3, r1	; 0x03
+     860:	12 82       	std	Z+2, r1	; 0x02
 	myNode->child = child;
-     8d2:	17 82       	std	Z+7, r1	; 0x07
-     8d4:	16 82       	std	Z+6, r1	; 0x06
+     862:	17 82       	std	Z+7, r1	; 0x07
+     864:	16 82       	std	Z+6, r1	; 0x06
 	myNode->parent = parent;
-     8d6:	ad 81       	ldd	r26, Y+5	; 0x05
-     8d8:	be 81       	ldd	r27, Y+6	; 0x06
-     8da:	b1 87       	std	Z+9, r27	; 0x09
-     8dc:	a0 87       	std	Z+8, r26	; 0x08
+     866:	ad 81       	ldd	r26, Y+5	; 0x05
+     868:	be 81       	ldd	r27, Y+6	; 0x06
+     86a:	b1 87       	std	Z+9, r27	; 0x09
+     86c:	a0 87       	std	Z+8, r26	; 0x08
 		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
 		
 }
 
 void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
 	myNode->name = nodeName;
-     8de:	8a e5       	ldi	r24, 0x5A	; 90
-     8e0:	91 e0       	ldi	r25, 0x01	; 1
-     8e2:	f6 01       	movw	r30, r12
-     8e4:	91 83       	std	Z+1, r25	; 0x01
-     8e6:	80 83       	st	Z, r24
+     86e:	8a e5       	ldi	r24, 0x5A	; 90
+     870:	91 e0       	ldi	r25, 0x01	; 1
+     872:	f6 01       	movw	r30, r12
+     874:	91 83       	std	Z+1, r25	; 0x01
+     876:	80 83       	st	Z, r24
 	myNode->previous = previous;
-     8e8:	b5 83       	std	Z+5, r27	; 0x05
-     8ea:	a4 83       	std	Z+4, r26	; 0x04
+     878:	b5 83       	std	Z+5, r27	; 0x05
+     87a:	a4 83       	std	Z+4, r26	; 0x04
 	myNode->next = next;
-     8ec:	13 83       	std	Z+3, r17	; 0x03
-     8ee:	02 83       	std	Z+2, r16	; 0x02
+     87c:	13 83       	std	Z+3, r17	; 0x03
+     87e:	02 83       	std	Z+2, r16	; 0x02
 	myNode->child = child;
-     8f0:	17 82       	std	Z+7, r1	; 0x07
-     8f2:	16 82       	std	Z+6, r1	; 0x06
+     880:	17 82       	std	Z+7, r1	; 0x07
+     882:	16 82       	std	Z+6, r1	; 0x06
 	myNode->parent = parent;
-     8f4:	11 86       	std	Z+9, r1	; 0x09
-     8f6:	10 86       	std	Z+8, r1	; 0x08
+     884:	11 86       	std	Z+9, r1	; 0x09
+     886:	10 86       	std	Z+8, r1	; 0x08
 		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
 		
 }
 
 void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
 	myNode->name = nodeName;
-     8f8:	84 e6       	ldi	r24, 0x64	; 100
-     8fa:	91 e0       	ldi	r25, 0x01	; 1
-     8fc:	d8 01       	movw	r26, r16
-     8fe:	11 96       	adiw	r26, 0x01	; 1
-     900:	9c 93       	st	X, r25
-     902:	8e 93       	st	-X, r24
+     888:	84 e6       	ldi	r24, 0x64	; 100
+     88a:	91 e0       	ldi	r25, 0x01	; 1
+     88c:	d8 01       	movw	r26, r16
+     88e:	11 96       	adiw	r26, 0x01	; 1
+     890:	9c 93       	st	X, r25
+     892:	8e 93       	st	-X, r24
 	myNode->previous = previous;
-     904:	15 96       	adiw	r26, 0x05	; 5
-     906:	dc 92       	st	X, r13
-     908:	ce 92       	st	-X, r12
-     90a:	14 97       	sbiw	r26, 0x04	; 4
+     894:	15 96       	adiw	r26, 0x05	; 5
+     896:	dc 92       	st	X, r13
+     898:	ce 92       	st	-X, r12
+     89a:	14 97       	sbiw	r26, 0x04	; 4
 	myNode->next = next;
-     90c:	13 96       	adiw	r26, 0x03	; 3
-     90e:	3c 92       	st	X, r3
-     910:	2e 92       	st	-X, r2
-     912:	12 97       	sbiw	r26, 0x02	; 2
+     89c:	13 96       	adiw	r26, 0x03	; 3
+     89e:	3c 92       	st	X, r3
+     8a0:	2e 92       	st	-X, r2
+     8a2:	12 97       	sbiw	r26, 0x02	; 2
 	myNode->child = child;
-     914:	17 96       	adiw	r26, 0x07	; 7
-     916:	7c 92       	st	X, r7
-     918:	6e 92       	st	-X, r6
-     91a:	16 97       	sbiw	r26, 0x06	; 6
+     8a4:	17 96       	adiw	r26, 0x07	; 7
+     8a6:	7c 92       	st	X, r7
+     8a8:	6e 92       	st	-X, r6
+     8aa:	16 97       	sbiw	r26, 0x06	; 6
 	myNode->parent = parent;
-     91c:	19 96       	adiw	r26, 0x09	; 9
-     91e:	1c 92       	st	X, r1
-     920:	1e 92       	st	-X, r1
-     922:	18 97       	sbiw	r26, 0x08	; 8
+     8ac:	19 96       	adiw	r26, 0x09	; 9
+     8ae:	1c 92       	st	X, r1
+     8b0:	1e 92       	st	-X, r1
+     8b2:	18 97       	sbiw	r26, 0x08	; 8
 		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
 		
 }
 
 void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
 	myNode->name = nodeName;
-     924:	8c e6       	ldi	r24, 0x6C	; 108
-     926:	91 e0       	ldi	r25, 0x01	; 1
-     928:	f3 01       	movw	r30, r6
-     92a:	91 83       	std	Z+1, r25	; 0x01
-     92c:	80 83       	st	Z, r24
+     8b4:	8c e6       	ldi	r24, 0x6C	; 108
+     8b6:	91 e0       	ldi	r25, 0x01	; 1
+     8b8:	f3 01       	movw	r30, r6
+     8ba:	91 83       	std	Z+1, r25	; 0x01
+     8bc:	80 83       	st	Z, r24
 	myNode->previous = previous;
-     92e:	15 82       	std	Z+5, r1	; 0x05
-     930:	14 82       	std	Z+4, r1	; 0x04
+     8be:	15 82       	std	Z+5, r1	; 0x05
+     8c0:	14 82       	std	Z+4, r1	; 0x04
 	myNode->next = next;
-     932:	f3 82       	std	Z+3, r15	; 0x03
-     934:	e2 82       	std	Z+2, r14	; 0x02
+     8c2:	f3 82       	std	Z+3, r15	; 0x03
+     8c4:	e2 82       	std	Z+2, r14	; 0x02
 	myNode->child = child;
-     936:	17 82       	std	Z+7, r1	; 0x07
-     938:	16 82       	std	Z+6, r1	; 0x06
+     8c6:	17 82       	std	Z+7, r1	; 0x07
+     8c8:	16 82       	std	Z+6, r1	; 0x06
 	myNode->parent = parent;
-     93a:	11 87       	std	Z+9, r17	; 0x09
-     93c:	00 87       	std	Z+8, r16	; 0x08
+     8ca:	11 87       	std	Z+9, r17	; 0x09
+     8cc:	00 87       	std	Z+8, r16	; 0x08
 		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
 		
 }
 
 void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
 	myNode->name = nodeName;
-     93e:	88 e7       	ldi	r24, 0x78	; 120
-     940:	91 e0       	ldi	r25, 0x01	; 1
-     942:	d7 01       	movw	r26, r14
-     944:	11 96       	adiw	r26, 0x01	; 1
-     946:	9c 93       	st	X, r25
-     948:	8e 93       	st	-X, r24
+     8ce:	88 e7       	ldi	r24, 0x78	; 120
+     8d0:	91 e0       	ldi	r25, 0x01	; 1
+     8d2:	d7 01       	movw	r26, r14
+     8d4:	11 96       	adiw	r26, 0x01	; 1
+     8d6:	9c 93       	st	X, r25
+     8d8:	8e 93       	st	-X, r24
 	myNode->previous = previous;
-     94a:	15 96       	adiw	r26, 0x05	; 5
-     94c:	7c 92       	st	X, r7
-     94e:	6e 92       	st	-X, r6
-     950:	14 97       	sbiw	r26, 0x04	; 4
+     8da:	15 96       	adiw	r26, 0x05	; 5
+     8dc:	7c 92       	st	X, r7
+     8de:	6e 92       	st	-X, r6
+     8e0:	14 97       	sbiw	r26, 0x04	; 4
 	myNode->next = next;
-     952:	13 96       	adiw	r26, 0x03	; 3
-     954:	1c 92       	st	X, r1
-     956:	1e 92       	st	-X, r1
-     958:	12 97       	sbiw	r26, 0x02	; 2
+     8e2:	13 96       	adiw	r26, 0x03	; 3
+     8e4:	1c 92       	st	X, r1
+     8e6:	1e 92       	st	-X, r1
+     8e8:	12 97       	sbiw	r26, 0x02	; 2
 	myNode->child = child;
-     95a:	17 96       	adiw	r26, 0x07	; 7
-     95c:	5c 92       	st	X, r5
-     95e:	4e 92       	st	-X, r4
-     960:	16 97       	sbiw	r26, 0x06	; 6
+     8ea:	17 96       	adiw	r26, 0x07	; 7
+     8ec:	5c 92       	st	X, r5
+     8ee:	4e 92       	st	-X, r4
+     8f0:	16 97       	sbiw	r26, 0x06	; 6
 	myNode->parent = parent;
-     962:	19 96       	adiw	r26, 0x09	; 9
-     964:	1c 93       	st	X, r17
-     966:	0e 93       	st	-X, r16
-     968:	18 97       	sbiw	r26, 0x08	; 8
+     8f2:	19 96       	adiw	r26, 0x09	; 9
+     8f4:	1c 93       	st	X, r17
+     8f6:	0e 93       	st	-X, r16
+     8f8:	18 97       	sbiw	r26, 0x08	; 8
 		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
 		
 }
 
 void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
 	myNode->name = nodeName;
-     96a:	8e e7       	ldi	r24, 0x7E	; 126
-     96c:	91 e0       	ldi	r25, 0x01	; 1
-     96e:	f2 01       	movw	r30, r4
-     970:	91 83       	std	Z+1, r25	; 0x01
-     972:	80 83       	st	Z, r24
+     8fa:	8e e7       	ldi	r24, 0x7E	; 126
+     8fc:	91 e0       	ldi	r25, 0x01	; 1
+     8fe:	f2 01       	movw	r30, r4
+     900:	91 83       	std	Z+1, r25	; 0x01
+     902:	80 83       	st	Z, r24
 	myNode->previous = previous;
-     974:	15 82       	std	Z+5, r1	; 0x05
-     976:	14 82       	std	Z+4, r1	; 0x04
+     904:	15 82       	std	Z+5, r1	; 0x05
+     906:	14 82       	std	Z+4, r1	; 0x04
 	myNode->next = next;
-     978:	8b 81       	ldd	r24, Y+3	; 0x03
-     97a:	9c 81       	ldd	r25, Y+4	; 0x04
-     97c:	93 83       	std	Z+3, r25	; 0x03
-     97e:	82 83       	std	Z+2, r24	; 0x02
+     908:	8b 81       	ldd	r24, Y+3	; 0x03
+     90a:	9c 81       	ldd	r25, Y+4	; 0x04
+     90c:	93 83       	std	Z+3, r25	; 0x03
+     90e:	82 83       	std	Z+2, r24	; 0x02
 	myNode->child = child;
-     980:	17 82       	std	Z+7, r1	; 0x07
-     982:	16 82       	std	Z+6, r1	; 0x06
+     910:	17 82       	std	Z+7, r1	; 0x07
+     912:	16 82       	std	Z+6, r1	; 0x06
 	myNode->parent = parent;
-     984:	f1 86       	std	Z+9, r15	; 0x09
-     986:	e0 86       	std	Z+8, r14	; 0x08
+     914:	f1 86       	std	Z+9, r15	; 0x09
+     916:	e0 86       	std	Z+8, r14	; 0x08
 		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
 		
 }
 
 void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
 	myNode->name = nodeName;
-     988:	87 e8       	ldi	r24, 0x87	; 135
-     98a:	91 e0       	ldi	r25, 0x01	; 1
-     98c:	ab 81       	ldd	r26, Y+3	; 0x03
-     98e:	bc 81       	ldd	r27, Y+4	; 0x04
-     990:	11 96       	adiw	r26, 0x01	; 1
-     992:	9c 93       	st	X, r25
-     994:	8e 93       	st	-X, r24
+     918:	87 e8       	ldi	r24, 0x87	; 135
+     91a:	91 e0       	ldi	r25, 0x01	; 1
+     91c:	ab 81       	ldd	r26, Y+3	; 0x03
+     91e:	bc 81       	ldd	r27, Y+4	; 0x04
+     920:	11 96       	adiw	r26, 0x01	; 1
+     922:	9c 93       	st	X, r25
+     924:	8e 93       	st	-X, r24
 	myNode->previous = previous;
-     996:	15 96       	adiw	r26, 0x05	; 5
-     998:	5c 92       	st	X, r5
-     99a:	4e 92       	st	-X, r4
-     99c:	14 97       	sbiw	r26, 0x04	; 4
+     926:	15 96       	adiw	r26, 0x05	; 5
+     928:	5c 92       	st	X, r5
+     92a:	4e 92       	st	-X, r4
+     92c:	14 97       	sbiw	r26, 0x04	; 4
 	myNode->next = next;
-     99e:	13 96       	adiw	r26, 0x03	; 3
-     9a0:	1c 92       	st	X, r1
-     9a2:	1e 92       	st	-X, r1
-     9a4:	12 97       	sbiw	r26, 0x02	; 2
+     92e:	13 96       	adiw	r26, 0x03	; 3
+     930:	1c 92       	st	X, r1
+     932:	1e 92       	st	-X, r1
+     934:	12 97       	sbiw	r26, 0x02	; 2
 	myNode->child = child;
-     9a6:	17 96       	adiw	r26, 0x07	; 7
-     9a8:	1c 92       	st	X, r1
-     9aa:	1e 92       	st	-X, r1
-     9ac:	16 97       	sbiw	r26, 0x06	; 6
+     936:	17 96       	adiw	r26, 0x07	; 7
+     938:	1c 92       	st	X, r1
+     93a:	1e 92       	st	-X, r1
+     93c:	16 97       	sbiw	r26, 0x06	; 6
 	myNode->parent = parent;
-     9ae:	19 96       	adiw	r26, 0x09	; 9
-     9b0:	fc 92       	st	X, r15
-     9b2:	ee 92       	st	-X, r14
-     9b4:	18 97       	sbiw	r26, 0x08	; 8
+     93e:	19 96       	adiw	r26, 0x09	; 9
+     940:	fc 92       	st	X, r15
+     942:	ee 92       	st	-X, r14
+     944:	18 97       	sbiw	r26, 0x08	; 8
 		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
 		
 }
 
 void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
 	myNode->name = nodeName;
-     9b6:	81 e9       	ldi	r24, 0x91	; 145
-     9b8:	91 e0       	ldi	r25, 0x01	; 1
-     9ba:	f1 01       	movw	r30, r2
-     9bc:	91 83       	std	Z+1, r25	; 0x01
-     9be:	80 83       	st	Z, r24
+     946:	81 e9       	ldi	r24, 0x91	; 145
+     948:	91 e0       	ldi	r25, 0x01	; 1
+     94a:	f1 01       	movw	r30, r2
+     94c:	91 83       	std	Z+1, r25	; 0x01
+     94e:	80 83       	st	Z, r24
 	myNode->previous = previous;
-     9c0:	15 83       	std	Z+5, r17	; 0x05
-     9c2:	04 83       	std	Z+4, r16	; 0x04
+     950:	15 83       	std	Z+5, r17	; 0x05
+     952:	04 83       	std	Z+4, r16	; 0x04
 	myNode->next = next;
-     9c4:	13 82       	std	Z+3, r1	; 0x03
-     9c6:	12 82       	std	Z+2, r1	; 0x02
+     954:	13 82       	std	Z+3, r1	; 0x03
+     956:	12 82       	std	Z+2, r1	; 0x02
 	myNode->child = child;
-     9c8:	37 83       	std	Z+7, r19	; 0x07
-     9ca:	26 83       	std	Z+6, r18	; 0x06
+     958:	37 83       	std	Z+7, r19	; 0x07
+     95a:	26 83       	std	Z+6, r18	; 0x06
 	myNode->parent = parent;
-     9cc:	11 86       	std	Z+9, r1	; 0x09
-     9ce:	10 86       	std	Z+8, r1	; 0x08
+     95c:	11 86       	std	Z+9, r1	; 0x09
+     95e:	10 86       	std	Z+8, r1	; 0x08
 		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
 		
 }
 
 void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
 	myNode->name = nodeName;
-     9d0:	89 e9       	ldi	r24, 0x99	; 153
-     9d2:	91 e0       	ldi	r25, 0x01	; 1
-     9d4:	d9 01       	movw	r26, r18
-     9d6:	11 96       	adiw	r26, 0x01	; 1
-     9d8:	9c 93       	st	X, r25
-     9da:	8e 93       	st	-X, r24
+     960:	89 e9       	ldi	r24, 0x99	; 153
+     962:	91 e0       	ldi	r25, 0x01	; 1
+     964:	d9 01       	movw	r26, r18
+     966:	11 96       	adiw	r26, 0x01	; 1
+     968:	9c 93       	st	X, r25
+     96a:	8e 93       	st	-X, r24
 	myNode->previous = previous;
-     9dc:	15 96       	adiw	r26, 0x05	; 5
-     9de:	1c 92       	st	X, r1
-     9e0:	1e 92       	st	-X, r1
-     9e2:	14 97       	sbiw	r26, 0x04	; 4
+     96c:	15 96       	adiw	r26, 0x05	; 5
+     96e:	1c 92       	st	X, r1
+     970:	1e 92       	st	-X, r1
+     972:	14 97       	sbiw	r26, 0x04	; 4
 	myNode->next = next;
-     9e4:	13 96       	adiw	r26, 0x03	; 3
-     9e6:	1c 92       	st	X, r1
-     9e8:	1e 92       	st	-X, r1
-     9ea:	12 97       	sbiw	r26, 0x02	; 2
+     974:	13 96       	adiw	r26, 0x03	; 3
+     976:	1c 92       	st	X, r1
+     978:	1e 92       	st	-X, r1
+     97a:	12 97       	sbiw	r26, 0x02	; 2
 	myNode->child = child;
-     9ec:	17 96       	adiw	r26, 0x07	; 7
-     9ee:	1c 92       	st	X, r1
-     9f0:	1e 92       	st	-X, r1
-     9f2:	16 97       	sbiw	r26, 0x06	; 6
+     97c:	17 96       	adiw	r26, 0x07	; 7
+     97e:	1c 92       	st	X, r1
+     980:	1e 92       	st	-X, r1
+     982:	16 97       	sbiw	r26, 0x06	; 6
 	myNode->parent = parent;
-     9f4:	19 96       	adiw	r26, 0x09	; 9
-     9f6:	3c 92       	st	X, r3
-     9f8:	2e 92       	st	-X, r2
-     9fa:	18 97       	sbiw	r26, 0x08	; 8
+     984:	19 96       	adiw	r26, 0x09	; 9
+     986:	3c 92       	st	X, r3
+     988:	2e 92       	st	-X, r2
+     98a:	18 97       	sbiw	r26, 0x08	; 8
 		
 	
 	menu_defineMenuEntries(credits,"Credits",NULL,options, developers, NULL);
 		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
 		
 }
-     9fc:	26 96       	adiw	r28, 0x06	; 6
-     9fe:	0f b6       	in	r0, 0x3f	; 63
-     a00:	f8 94       	cli
-     a02:	de bf       	out	0x3e, r29	; 62
-     a04:	0f be       	out	0x3f, r0	; 63
-     a06:	cd bf       	out	0x3d, r28	; 61
-     a08:	df 91       	pop	r29
-     a0a:	cf 91       	pop	r28
-     a0c:	1f 91       	pop	r17
-     a0e:	0f 91       	pop	r16
-     a10:	ff 90       	pop	r15
-     a12:	ef 90       	pop	r14
-     a14:	df 90       	pop	r13
-     a16:	cf 90       	pop	r12
-     a18:	bf 90       	pop	r11
-     a1a:	af 90       	pop	r10
-     a1c:	9f 90       	pop	r9
-     a1e:	8f 90       	pop	r8
-     a20:	7f 90       	pop	r7
-     a22:	6f 90       	pop	r6
-     a24:	5f 90       	pop	r5
-     a26:	4f 90       	pop	r4
-     a28:	3f 90       	pop	r3
-     a2a:	2f 90       	pop	r2
-     a2c:	08 95       	ret
+     98c:	26 96       	adiw	r28, 0x06	; 6
+     98e:	0f b6       	in	r0, 0x3f	; 63
+     990:	f8 94       	cli
+     992:	de bf       	out	0x3e, r29	; 62
+     994:	0f be       	out	0x3f, r0	; 63
+     996:	cd bf       	out	0x3d, r28	; 61
+     998:	df 91       	pop	r29
+     99a:	cf 91       	pop	r28
+     99c:	1f 91       	pop	r17
+     99e:	0f 91       	pop	r16
+     9a0:	ff 90       	pop	r15
+     9a2:	ef 90       	pop	r14
+     9a4:	df 90       	pop	r13
+     9a6:	cf 90       	pop	r12
+     9a8:	bf 90       	pop	r11
+     9aa:	af 90       	pop	r10
+     9ac:	9f 90       	pop	r9
+     9ae:	8f 90       	pop	r8
+     9b0:	7f 90       	pop	r7
+     9b2:	6f 90       	pop	r6
+     9b4:	5f 90       	pop	r5
+     9b6:	4f 90       	pop	r4
+     9b8:	3f 90       	pop	r3
+     9ba:	2f 90       	pop	r2
+     9bc:	08 95       	ret
 
-00000a2e <menu_save>:
+000009be <menu_save>:
 	myNode->child = child;
 	myNode->parent = parent;
 }
 
 
 void menu_save(void){ //Argument node_t* firstNode?
-     a2e:	1f 93       	push	r17
-     a30:	cf 93       	push	r28
-     a32:	df 93       	push	r29
+     9be:	1f 93       	push	r17
+     9c0:	cf 93       	push	r28
+     9c2:	df 93       	push	r29
 	
 	node_t* temp = malloc(sizeof(node_t)); //For å iterere gjennom den lenkede listen
 	temp = currentHead;
-     a34:	c0 91 ee 01 	lds	r28, 0x01EE
-     a38:	d0 91 ef 01 	lds	r29, 0x01EF
+     9c4:	c0 91 ee 01 	lds	r28, 0x01EE
+     9c8:	d0 91 ef 01 	lds	r29, 0x01EF
 	
 	int page = 0;
 	while(temp->previous!=NULL){ //Itererer oss bakover til første node i listen
-     a3c:	8c 81       	ldd	r24, Y+4	; 0x04
-     a3e:	9d 81       	ldd	r25, Y+5	; 0x05
-     a40:	00 97       	sbiw	r24, 0x00	; 0
-     a42:	11 f0       	breq	.+4      	; 0xa48 <menu_save+0x1a>
+     9cc:	8c 81       	ldd	r24, Y+4	; 0x04
+     9ce:	9d 81       	ldd	r25, Y+5	; 0x05
+     9d0:	00 97       	sbiw	r24, 0x00	; 0
+     9d2:	11 f0       	breq	.+4      	; 0x9d8 <menu_save+0x1a>
 		temp = temp->previous;
-     a44:	ec 01       	movw	r28, r24
-     a46:	fa cf       	rjmp	.-12     	; 0xa3c <menu_save+0xe>
+     9d4:	ec 01       	movw	r28, r24
+     9d6:	fa cf       	rjmp	.-12     	; 0x9cc <menu_save+0xe>
 	}
 	while(temp!= NULL){ //Mens noden eksisterer
-     a48:	20 97       	sbiw	r28, 0x00	; 0
-     a4a:	09 f1       	breq	.+66     	; 0xa8e <menu_save+0x60>
-     a4c:	10 e0       	ldi	r17, 0x00	; 0
+     9d8:	20 97       	sbiw	r28, 0x00	; 0
+     9da:	09 f1       	breq	.+66     	; 0xa1e <menu_save+0x60>
+     9dc:	10 e0       	ldi	r17, 0x00	; 0
 		
 		
 		if(currentSelection == temp && currentSelection != developers){
-     a4e:	80 91 ea 01 	lds	r24, 0x01EA
-     a52:	90 91 eb 01 	lds	r25, 0x01EB
-     a56:	8c 17       	cp	r24, r28
-     a58:	9d 07       	cpc	r25, r29
-     a5a:	69 f4       	brne	.+26     	; 0xa76 <menu_save+0x48>
-     a5c:	20 91 ec 01 	lds	r18, 0x01EC
-     a60:	30 91 ed 01 	lds	r19, 0x01ED
-     a64:	82 17       	cp	r24, r18
-     a66:	93 07       	cpc	r25, r19
-     a68:	31 f0       	breq	.+12     	; 0xa76 <menu_save+0x48>
+     9de:	80 91 ea 01 	lds	r24, 0x01EA
+     9e2:	90 91 eb 01 	lds	r25, 0x01EB
+     9e6:	8c 17       	cp	r24, r28
+     9e8:	9d 07       	cpc	r25, r29
+     9ea:	69 f4       	brne	.+26     	; 0xa06 <menu_save+0x48>
+     9ec:	20 91 ec 01 	lds	r18, 0x01EC
+     9f0:	30 91 ed 01 	lds	r19, 0x01ED
+     9f4:	82 17       	cp	r24, r18
+     9f6:	93 07       	cpc	r25, r19
+     9f8:	31 f0       	breq	.+12     	; 0xa06 <menu_save+0x48>
 			sram_save_string("-->",page,0); //Burde pilen hardkodes et sted slik eller legges rett etter skriften?
-     a6a:	40 e0       	ldi	r20, 0x00	; 0
-     a6c:	61 2f       	mov	r22, r17
-     a6e:	8f ed       	ldi	r24, 0xDF	; 223
-     a70:	91 e0       	ldi	r25, 0x01	; 1
-     a72:	0e 94 4a 06 	call	0xc94	; 0xc94 <sram_save_string>
+     9fa:	40 e0       	ldi	r20, 0x00	; 0
+     9fc:	61 2f       	mov	r22, r17
+     9fe:	8f ed       	ldi	r24, 0xDF	; 223
+     a00:	91 e0       	ldi	r25, 0x01	; 1
+     a02:	0e 94 4a 06 	call	0xc94	; 0xc94 <sram_save_string>
 		}
 		sram_save_string(temp->name, page,20);
-     a76:	44 e1       	ldi	r20, 0x14	; 20
-     a78:	61 2f       	mov	r22, r17
-     a7a:	88 81       	ld	r24, Y
-     a7c:	99 81       	ldd	r25, Y+1	; 0x01
-     a7e:	0e 94 4a 06 	call	0xc94	; 0xc94 <sram_save_string>
+     a06:	44 e1       	ldi	r20, 0x14	; 20
+     a08:	61 2f       	mov	r22, r17
+     a0a:	88 81       	ld	r24, Y
+     a0c:	99 81       	ldd	r25, Y+1	; 0x01
+     a0e:	0e 94 4a 06 	call	0xc94	; 0xc94 <sram_save_string>
 		
 		temp = temp->next;
-     a82:	0a 80       	ldd	r0, Y+2	; 0x02
-     a84:	db 81       	ldd	r29, Y+3	; 0x03
-     a86:	c0 2d       	mov	r28, r0
-     a88:	1f 5f       	subi	r17, 0xFF	; 255
+     a12:	0a 80       	ldd	r0, Y+2	; 0x02
+     a14:	db 81       	ldd	r29, Y+3	; 0x03
+     a16:	c0 2d       	mov	r28, r0
+     a18:	1f 5f       	subi	r17, 0xFF	; 255
 	
 	int page = 0;
 	while(temp->previous!=NULL){ //Itererer oss bakover til første node i listen
 		temp = temp->previous;
 	}
 	while(temp!= NULL){ //Mens noden eksisterer
-     a8a:	20 97       	sbiw	r28, 0x00	; 0
-     a8c:	01 f7       	brne	.-64     	; 0xa4e <menu_save+0x20>
+     a1a:	20 97       	sbiw	r28, 0x00	; 0
+     a1c:	01 f7       	brne	.-64     	; 0x9de <menu_save+0x20>
 		sram_save_string(temp->name, page,20);
 		
 		temp = temp->next;
 		page++;
 	}
-     a8e:	df 91       	pop	r29
-     a90:	cf 91       	pop	r28
-     a92:	1f 91       	pop	r17
+     a1e:	df 91       	pop	r29
+     a20:	cf 91       	pop	r28
+     a22:	1f 91       	pop	r17
+     a24:	08 95       	ret
+
+00000a26 <multiboardInfo_update>:
+ */ 
+#include "../../lib/can.h"
+#include "joy.h"
+#include "adc.h"
+
+int multiboardInfo_update(can_msg* yourMessage){
+     a26:	cf 93       	push	r28
+     a28:	df 93       	push	r29
+     a2a:	ec 01       	movw	r28, r24
+	
+	yourMessage->id = 1; //Her bestemmer vi at en ID som 1 vil være en melding fra joysticken
+     a2c:	81 e0       	ldi	r24, 0x01	; 1
+     a2e:	90 e0       	ldi	r25, 0x00	; 0
+     a30:	99 83       	std	Y+1, r25	; 0x01
+     a32:	88 83       	st	Y, r24
+	yourMessage->length = 7;
+     a34:	87 e0       	ldi	r24, 0x07	; 7
+     a36:	8a 8b       	std	Y+18, r24	; 0x12
+	yourMessage->data[0] = adc_read(0); //sender inn x-verdien til joysticken først. Denne verdien er mellom -100 og 100
+     a38:	80 e0       	ldi	r24, 0x00	; 0
+     a3a:	0e 94 46 02 	call	0x48c	; 0x48c <adc_read>
+     a3e:	90 e0       	ldi	r25, 0x00	; 0
+     a40:	9b 83       	std	Y+3, r25	; 0x03
+     a42:	8a 83       	std	Y+2, r24	; 0x02
+	yourMessage->data[1] = adc_read(1); //y-verdien til joystick
+     a44:	81 e0       	ldi	r24, 0x01	; 1
+     a46:	0e 94 46 02 	call	0x48c	; 0x48c <adc_read>
+     a4a:	90 e0       	ldi	r25, 0x00	; 0
+     a4c:	9d 83       	std	Y+5, r25	; 0x05
+     a4e:	8c 83       	std	Y+4, r24	; 0x04
+	yourMessage->data[2] = joy_readButton(2); //leser joystick-knappen (L3 på ps4)
+     a50:	82 e0       	ldi	r24, 0x02	; 2
+     a52:	90 e0       	ldi	r25, 0x00	; 0
+     a54:	0e 94 87 02 	call	0x50e	; 0x50e <joy_readButton>
+     a58:	9f 83       	std	Y+7, r25	; 0x07
+     a5a:	8e 83       	std	Y+6, r24	; 0x06
+	yourMessage->data[3] = joy_readButton(0); //leser venstre knapp
+     a5c:	80 e0       	ldi	r24, 0x00	; 0
+     a5e:	90 e0       	ldi	r25, 0x00	; 0
+     a60:	0e 94 87 02 	call	0x50e	; 0x50e <joy_readButton>
+     a64:	99 87       	std	Y+9, r25	; 0x09
+     a66:	88 87       	std	Y+8, r24	; 0x08
+	yourMessage->data[4] = joy_readButton(1); //leser høyre knapp
+     a68:	81 e0       	ldi	r24, 0x01	; 1
+     a6a:	90 e0       	ldi	r25, 0x00	; 0
+     a6c:	0e 94 87 02 	call	0x50e	; 0x50e <joy_readButton>
+     a70:	9b 87       	std	Y+11, r25	; 0x0b
+     a72:	8a 87       	std	Y+10, r24	; 0x0a
+	yourMessage->data[5] = adc_read(2); //Venstre slider
+     a74:	82 e0       	ldi	r24, 0x02	; 2
+     a76:	0e 94 46 02 	call	0x48c	; 0x48c <adc_read>
+     a7a:	90 e0       	ldi	r25, 0x00	; 0
+     a7c:	9d 87       	std	Y+13, r25	; 0x0d
+     a7e:	8c 87       	std	Y+12, r24	; 0x0c
+	yourMessage->data[6] = adc_read(3); //Høyre slider
+     a80:	83 e0       	ldi	r24, 0x03	; 3
+     a82:	0e 94 46 02 	call	0x48c	; 0x48c <adc_read>
+     a86:	90 e0       	ldi	r25, 0x00	; 0
+     a88:	9f 87       	std	Y+15, r25	; 0x0f
+     a8a:	8e 87       	std	Y+14, r24	; 0x0e
+	
+	return 1;
+     a8c:	81 e0       	ldi	r24, 0x01	; 1
+     a8e:	90 e0       	ldi	r25, 0x00	; 0
+     a90:	df 91       	pop	r29
+     a92:	cf 91       	pop	r28
      a94:	08 95       	ret
 
 00000a96 <oled_goto_column>:

@@ -12,7 +12,7 @@
 #include <avr/io.h>
 #include <stdio.h>
 
-typedef struct can_message {
+typedef struct {
 	unsigned int id;
 	int data[8];
 	uint8_t length;

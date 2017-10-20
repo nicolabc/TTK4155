@@ -33,6 +33,6 @@ int joy_readButton(int button);
 
 int joy_doesDirectionChange(void);
 
-//int joy_sendMultiboardInfo(can_msg *yourMessage);
+//int joy_updateMultiboardInfo(can_msg *yourMessage);
 
 #endif /* JOY_H_ */

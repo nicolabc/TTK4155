@@ -47,6 +47,7 @@ C_SRCS +=  \
 ../joy.c \
 ../lab1.c \
 ../menu.c \
+../multiboardInfo.c \
 ../oled.c \
 ../sram.c
 
@@ -68,6 +69,7 @@ externalmemory.o \
 joy.o \
 lab1.o \
 menu.o \
+multiboardInfo.o \
 oled.o \
 sram.o
 
@@ -82,6 +84,7 @@ externalmemory.o \
 joy.o \
 lab1.o \
 menu.o \
+multiboardInfo.o \
 oled.o \
 sram.o
 
@@ -96,6 +99,7 @@ externalmemory.d \
 joy.d \
 lab1.d \
 menu.d \
+multiboardInfo.d \
 oled.d \
 sram.d
 
@@ -110,6 +114,7 @@ externalmemory.d \
 joy.d \
 lab1.d \
 menu.d \
+multiboardInfo.d \
 oled.d \
 sram.d
 
@@ -127,6 +132,8 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
 
 
 
