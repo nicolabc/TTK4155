@@ -27,11 +27,13 @@
 	mcp2515_write(MCP_RXM1SIDL, 0b00000000);
 	
 	//setter i normal mode, s. 60
-	mcp2515_bit_modify(MCP_CANCTRL, 0b11100000, 0b01000000);
+	mcp2515_bit_modify(MCP_CANCTRL, 0b11100000, 0b00000000);
 	
+	#ifdef __AVR__ATmega162__
 	cli();
 	GICR |= (1 << INT2);
 	sei();
+	#endif
 	
  }
 

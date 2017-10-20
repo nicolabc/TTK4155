@@ -86,7 +86,7 @@ uint8_t mcp2515_read_status(){
 	statusRegister2 = spi_MasterRead(); //disse to skal være like hverandre, se s. 69
 
 	if(statusRegister != statusRegister2){
-		printf("Status registers in mcp2515_read_status() not identical.");
+		printf("Status registers in mcp2515_read_status() not identical.\n");
 		return 0;
 	}
 

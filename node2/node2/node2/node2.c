@@ -50,19 +50,18 @@ int main(void)
     while(1)
     {
 		
-		can_send_message(&melding);
+	//	can_send_message(&melding);
 		can_msg mottatt;
 		
 		
 		//sjekker om receive bufre inneholder noe. se s. 69 i mcp2515
-		uint8_t statusReg = mcp2515_read_status();
+		volatile uint8_t statusReg = mcp2515_read_status();
 		
-		printf("statusReg: %x \n", statusReg);
+	//	printf("statusReg: %x \n", statusReg);
 		
-		if (test_bit(statusReg, 0))
-		{
-			printf("Mottatt melding på receive buffer 0");
-			mottatt = can_receive_message();
+		if(test_bit(statusReg, 0)){ //Mulig å lage det som en funskjon i ettertid
+
+			can_receive_message(&mottatt);		
 			
 			char mottatt_data_char0 = mottatt.data[0];
 			char mottatt_data_char1 = mottatt.data[1];
@@ -72,18 +71,17 @@ int main(void)
 			char mottatt_data_char5 = mottatt.data[5];
 			char mottatt_data_char6 = mottatt.data[6];
 			char mottatt_data_char7 = mottatt.data[7];
-				
+						
+
+
 			printf("ID: %i  LENGTH: %i   ALL DATA  %c    %c   %c    %c    %c    %c    %c    %c\n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6, mottatt_data_char7);
-		
+			RECEIVE_BUFFER_INTERRUPT = 0; //clearer interruptflagget
 			
+			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten
+						
 		}
-		/*
-		if (test_bit(statusReg, 1))
-		{
-			printf("Mottatt melding på receive buffer 1");
-		}*/
-		
-	
+
+
 		
     }
 	
