@@ -7,6 +7,7 @@
 
  #include "can.h"
  #include "MCP2515.h"
+ #include <avr/interrupt.h>
 
  #define set_bit( reg, bit ) (reg |= (1 << bit))
  #define clear_bit( reg, bit ) (reg &= ~(1 << bit))
@@ -25,8 +26,13 @@
 	mcp2515_write(MCP_RXM1SIDH, 0b00000000);
 	mcp2515_write(MCP_RXM1SIDL, 0b00000000);
 	
-	//setter i loopback mode, s. 60
+	//setter i normal mode, s. 60
 	mcp2515_bit_modify(MCP_CANCTRL, 0b11100000, 0b01000000);
+	
+	cli();
+	GICR |= (1 << INT2);
+	sei();
+	
  }
 
 void can_send_message(can_msg* send){//unsigned int identifier, uint8_t *message, uint8_t lengthOfData
@@ -55,11 +61,10 @@ void can_send_message(can_msg* send){//unsigned int identifier, uint8_t *message
 	mcp2515_request_to_send(0); //sender RTS signal til TXB0 nå
 }
 
-can_msg can_receive_message(){
-	can_msg wholeMessage;
-	wholeMessage.id = 0;
-	wholeMessage.length = 0;
-	wholeMessage.data[0] = 0b00000000;
+int can_receive_message(can_msg *wholeMessage){
+	wholeMessage->id = 0;
+	wholeMessage->length = 0;
+	wholeMessage->data[0] = 0b00000000;
 	
 	if (mcp2515_read(MCP_CANINTF) & MCP_RX0IF){ //om rx0if er høy, altså interrupt pinnen er høy, betyr det at receive buffer nr 0 har fått inn ny data
 		unsigned int idH = mcp2515_read(MCP_RXB0SIDH);
@@ -72,21 +77,21 @@ can_msg can_receive_message(){
 		uint8_t length = mcp2515_read(MCP_RXB0SIDH+4); //leser av rxb0dlc
 		if (length > 8){
 			printf("Length > 8, not allowed.");
-			return wholeMessage;
+			return 0;
 		}
 		
 		//leser nå av rxb0d0 til rxb0d7 (avhengig av hvor lang meldinga vi har mottatt er), og lagrer det i arrayet message
 		int byte = 0;
 		//lagrer alt i en struct
 		for (byte = 0; byte < length; byte++){
-			wholeMessage.data[byte] = mcp2515_read(MCP_RXB0SIDH+5+byte);
+			wholeMessage->data[byte] = mcp2515_read(MCP_RXB0SIDH+5+byte);
 		}
 		
 		
-		wholeMessage.id = id;
-		wholeMessage.length = length;
+		wholeMessage->id = id;
+		wholeMessage->length = length;
 	}
-	return wholeMessage;
+	return 1;
 }
 
 

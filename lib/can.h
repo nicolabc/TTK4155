@@ -14,13 +14,13 @@
 
 typedef struct can_message {
 	unsigned int id;
-	uint8_t data[8];
+	char data[8];
 	uint8_t length;
 } can_msg;
 
 void can_init();
 void can_send_message(can_msg* send);
-can_msg can_receive_message();
+int can_receive_message(can_msg *wholeMessage);
 
 //Burde implementeres. Sjekk error-flagg på error-register i mcp2515, og om et error-flagg er høyt; returner 1. Er egentlig bare if-setninger
 int can_error(); //returnerer 1 om vi har en error, 0 hvis ikke

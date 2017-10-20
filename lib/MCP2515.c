@@ -4,7 +4,7 @@
  * Created: 06.10.2017 11:02:08
  *  Author: danieta
  */ 
-//#define F_CPU 4915200 Denne skal være unødvendig, kommenterer ut i tilfelle (er nå på node 2)
+
 #include <avr/io.h>
 #include <util/delay.h>
 #include "MCP2515.h"
@@ -48,8 +48,7 @@ uint8_t mcp2515_init(){
 	uint8_t value;
 	spi_init(); //Initialize SPI
 	mcp2515_reset(); // Send reset-command
-	_delay_us(8); //oscillatoren er i reset modus i 128 klokkesykluser. trenger derav en delay
-	
+	_delay_us(10); //oscillatoren er i reset modus i 128 klokkesykluser. trenger derav en delay
 	//Self-test to check if system is in config mode
 	value = mcp2515_read(MCP_CANSTAT); 
 	if((value & MODE_MASK)  != MODE_CONFIG) {

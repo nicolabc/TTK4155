@@ -15,7 +15,13 @@ Copyright 2003 Kimberly Otten Software Consulting
 #include <avr/io.h>
 #include <stdio.h>
 
+#if __AVR_ATmega162__
+	#define F_CPU 4915200
 
+#elif __AVR_ATmega2560__
+	#define F_CPU 16000000
+
+#endif
 
 uint8_t mcp2515_read(uint8_t address);
 void mcp2515_write(uint8_t address, uint8_t data);
