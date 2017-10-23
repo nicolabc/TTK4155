@@ -52,7 +52,7 @@ int main(void)
 	melding.data[6] = (uint8_t)('7');
 	melding.data[7] = (uint8_t)('8');
 	
-	
+	int mottatt_data_char0 = 50; //startposisjon
     while(1)
     {
 		
@@ -69,7 +69,7 @@ int main(void)
 
 			can_receive_message(&mottatt);		
 			
-			int mottatt_data_char0 = mottatt.data[0]; //X-akse
+			mottatt_data_char0 = mottatt.data[0]; //X-akse
 			int mottatt_data_char1 = mottatt.data[1];
 			int mottatt_data_char2 = mottatt.data[2];
 			int mottatt_data_char3 = mottatt.data[3];
@@ -88,7 +88,7 @@ int main(void)
 			
 					
 		}
-		servo_positionUpdate(255);
+		servo_positionUpdate(mottatt_data_char0);
 
 		
     }
