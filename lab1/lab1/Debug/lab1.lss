@@ -11,21 +11,21 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
   3 .comment      0000005c  00000000  00000000  000017c0  2**0
                   CONTENTS, READONLY
-  4 .debug_aranges 000002b0  00000000  00000000  0000181c  2**0
+  4 .debug_aranges 000002a0  00000000  00000000  0000181c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00002b2b  00000000  00000000  00001acc  2**0
+  5 .debug_info   000029c5  00000000  00000000  00001abc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 000010c2  00000000  00000000  000045f7  2**0
+  6 .debug_abbrev 0000106d  00000000  00000000  00004481  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000ff5  00000000  00000000  000056b9  2**0
+  7 .debug_line   00000fcb  00000000  00000000  000054ee  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000684  00000000  00000000  000066b0  2**2
+  8 .debug_frame  0000065c  00000000  00000000  000064bc  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    000008e1  00000000  00000000  00006d34  2**0
+  9 .debug_str    000008d2  00000000  00000000  00006b18  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00001e63  00000000  00000000  00007615  2**0
+ 10 .debug_loc    00001d2d  00000000  00000000  000073ea  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000210  00000000  00000000  00009478  2**0
+ 11 .debug_ranges 00000200  00000000  00000000  00009117  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -348,42 +348,42 @@ Disassembly of section .text:
      294:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000298 <can_init>:
- #define set_bit( reg, bit ) (reg |= (1 << bit))
  #define clear_bit( reg, bit ) (reg &= ~(1 << bit))
 
 
  void can_init(){
 	mcp2515_init(); //denne kaller på reset, som setter systemet i config mode
-     298:	0e 94 c2 02 	call	0x584	; 0x584 <mcp2515_init>
 	
+     298:	0e 94 c2 02 	call	0x584	; 0x584 <mcp2515_init>
 	
 	//aktiverer interrupts (interrupt enable) for transmit og receive buffers, s.51
 	mcp2515_bit_modify(MCP_CANINTE, 0b00000011, 0b00000011); 
+	
      29c:	43 e0       	ldi	r20, 0x03	; 3
      29e:	63 e0       	ldi	r22, 0x03	; 3
      2a0:	8b e2       	ldi	r24, 0x2B	; 43
      2a2:	0e 94 e6 02 	call	0x5cc	; 0x5cc <mcp2515_bit_modify>
-	
 	//Setter alle maske-bitene i standard identifier til 0, fordi da slippes alle messages gjennom. s. 35 (register 4-14 til 4-17), og s. 32, table 4-2
 	mcp2515_write(MCP_RXM0SIDH, 0b00000000);
+	mcp2515_write(MCP_RXM0SIDL, 0b00000000);
      2a6:	60 e0       	ldi	r22, 0x00	; 0
      2a8:	80 e2       	ldi	r24, 0x20	; 32
      2aa:	0e 94 aa 02 	call	0x554	; 0x554 <mcp2515_write>
-	mcp2515_write(MCP_RXM0SIDL, 0b00000000);
+	mcp2515_write(MCP_RXM1SIDH, 0b00000000);
      2ae:	60 e0       	ldi	r22, 0x00	; 0
      2b0:	81 e2       	ldi	r24, 0x21	; 33
      2b2:	0e 94 aa 02 	call	0x554	; 0x554 <mcp2515_write>
-	mcp2515_write(MCP_RXM1SIDH, 0b00000000);
+	mcp2515_write(MCP_RXM1SIDL, 0b00000000);
      2b6:	60 e0       	ldi	r22, 0x00	; 0
      2b8:	84 e2       	ldi	r24, 0x24	; 36
      2ba:	0e 94 aa 02 	call	0x554	; 0x554 <mcp2515_write>
-	mcp2515_write(MCP_RXM1SIDL, 0b00000000);
+	
      2be:	60 e0       	ldi	r22, 0x00	; 0
      2c0:	85 e2       	ldi	r24, 0x25	; 37
      2c2:	0e 94 aa 02 	call	0x554	; 0x554 <mcp2515_write>
-	
-	//setter i normal mode, s. 60
-	mcp2515_bit_modify(MCP_CANCTRL, 0b11100000, 0b00000000);
+	//setter i loopback mode, s. 60
+	mcp2515_bit_modify(MCP_CANCTRL, 0b11100000, 0b01000000);
+ }
      2c6:	40 e0       	ldi	r20, 0x00	; 0
      2c8:	60 ee       	ldi	r22, 0xE0	; 224
      2ca:	8f e0       	ldi	r24, 0x0F	; 15
@@ -391,12 +391,12 @@ Disassembly of section .text:
      2d0:	08 95       	ret
 
 000002d2 <can_send_message>:
-	sei();
-	#endif
+	}
 	
- }
-
-void can_send_message(can_msg* send){//unsigned int identifier, uint8_t *message, uint8_t lengthOfData
+	//Left shifter 5 ganger for å lagre riktig i SID bufferregistrene
+	mcp2515_write(MCP_TXB0SIDH+1, send->id<<5); //lagrer identifieren til messagen inn i første transferbuffer. Går fint å overskrive det som ligger der fordi det er 0 som må ligge der for standard identifier (ikke extended)
+	
+	 //Right shift 3 ganger for å flytte de 8 høyeste bit'ene til de 8 laveste, så de lagres i SIDH
      2d2:	ef 92       	push	r14
      2d4:	ff 92       	push	r15
      2d6:	0f 93       	push	r16
@@ -404,16 +404,16 @@ void can_send_message(can_msg* send){//unsigned int identifier, uint8_t *message
      2da:	cf 93       	push	r28
      2dc:	df 93       	push	r29
      2de:	7c 01       	movw	r14, r24
+	mcp2515_write(MCP_TXB0SIDH, send->id>>3); //lagrer identifieren til messagen inn i første transferbuffer
 	
-	while((mcp2515_read(MCP_TXB0CTRL) & MCP_TXREQ)){ //så lenge transfer buffer 0 er fullt, vil MCP_TXREQ være høy, og vi er stuck i whilen. Når det er tomt, vil vi gå ut av whilen
      2e0:	80 e3       	ldi	r24, 0x30	; 48
      2e2:	0e 94 9c 02 	call	0x538	; 0x538 <mcp2515_read>
      2e6:	83 fd       	sbrc	r24, 3
      2e8:	fb cf       	rjmp	.-10     	; 0x2e0 <can_send_message+0xe>
-	}
-	
-	//Left shifter 5 ganger for å lagre riktig i SID bufferregistrene
-	mcp2515_write(MCP_TXB0SIDH+1, send->id<<5); //lagrer identifieren til messagen inn i første transferbuffer. Går fint å overskrive det som ligger der fordi det er 0 som må ligge der for standard identifier (ikke extended)
+	mcp2515_write(MCP_TXB0SIDH+4, send->length); //lagrer datalengden i txb0dlc. plusser på 4 for å komme til txb0dlc (se tabell s. 63)
+
+	//lagrer nå meldinga i TXB0D0-TXB0D6 (s. 63)
+	if(send->length>8){
      2ea:	f7 01       	movw	r30, r14
      2ec:	60 81       	ld	r22, Z
      2ee:	62 95       	swap	r22
@@ -421,9 +421,9 @@ void can_send_message(can_msg* send){//unsigned int identifier, uint8_t *message
      2f2:	60 7e       	andi	r22, 0xE0	; 224
      2f4:	82 e3       	ldi	r24, 0x32	; 50
      2f6:	0e 94 aa 02 	call	0x554	; 0x554 <mcp2515_write>
-	
-	 //Right shift 3 ganger for å flytte de 8 høyeste bit'ene til de 8 laveste, så de lagres i SIDH
-	mcp2515_write(MCP_TXB0SIDH, send->id>>3); //lagrer identifieren til messagen inn i første transferbuffer
+		printf("Length of data too big.");
+		return;
+	}
      2fa:	f7 01       	movw	r30, r14
      2fc:	60 81       	ld	r22, Z
      2fe:	71 81       	ldd	r23, Z+1	; 0x01
@@ -435,51 +435,51 @@ void can_send_message(can_msg* send){//unsigned int identifier, uint8_t *message
      30a:	67 95       	ror	r22
      30c:	81 e3       	ldi	r24, 0x31	; 49
      30e:	0e 94 aa 02 	call	0x554	; 0x554 <mcp2515_write>
-	
-	mcp2515_write(MCP_TXB0SIDH+4, send->length); //lagrer datalengden i txb0dlc. plusser på 4 for å komme til txb0dlc (se tabell s. 63)
+	int byte = 0;
+	for (byte = 0; byte < send->length; byte++){
      312:	f7 01       	movw	r30, r14
      314:	62 89       	ldd	r22, Z+18	; 0x12
      316:	85 e3       	ldi	r24, 0x35	; 53
      318:	0e 94 aa 02 	call	0x554	; 0x554 <mcp2515_write>
+		mcp2515_write(MCP_TXB0SIDH+5+byte, send->data[byte]);
+	}
 
-	//lagrer nå meldinga i TXB0D0-TXB0D6 (s. 63)
-	if(send->length>8){
      31c:	f7 01       	movw	r30, r14
      31e:	82 89       	ldd	r24, Z+18	; 0x12
      320:	89 30       	cpi	r24, 0x09	; 9
      322:	18 f4       	brcc	.+6      	; 0x32a <can_send_message+0x58>
-		printf("Length of data too big.");
-		return;
-	}
-	int byte = 0;
-	for (byte = 0; byte < send->length; byte++){
+	mcp2515_request_to_send(0); //sender RTS signal til TXB0 nå
+}
+
+can_msg can_receive_message(){
+	can_msg wholeMessage;
      324:	81 11       	cpse	r24, r1
      326:	0a c0       	rjmp	.+20     	; 0x33c <can_send_message+0x6a>
      328:	1d c0       	rjmp	.+58     	; 0x364 <can_send_message+0x92>
-	
-	mcp2515_write(MCP_TXB0SIDH+4, send->length); //lagrer datalengden i txb0dlc. plusser på 4 for å komme til txb0dlc (se tabell s. 63)
+	int byte = 0;
+	for (byte = 0; byte < send->length; byte++){
+		mcp2515_write(MCP_TXB0SIDH+5+byte, send->data[byte]);
+	}
 
-	//lagrer nå meldinga i TXB0D0-TXB0D6 (s. 63)
-	if(send->length>8){
-		printf("Length of data too big.");
+	mcp2515_request_to_send(0); //sender RTS signal til TXB0 nå
      32a:	86 e0       	ldi	r24, 0x06	; 6
      32c:	91 e0       	ldi	r25, 0x01	; 1
      32e:	9f 93       	push	r25
      330:	8f 93       	push	r24
      332:	0e 94 0f 08 	call	0x101e	; 0x101e <printf>
-		return;
+}
      336:	0f 90       	pop	r0
      338:	0f 90       	pop	r0
      33a:	18 c0       	rjmp	.+48     	; 0x36c <can_send_message+0x9a>
      33c:	87 01       	movw	r16, r14
      33e:	0e 5f       	subi	r16, 0xFE	; 254
      340:	1f 4f       	sbci	r17, 0xFF	; 255
-	}
-	int byte = 0;
-	for (byte = 0; byte < send->length; byte++){
+
+can_msg can_receive_message(){
+	can_msg wholeMessage;
      342:	c0 e0       	ldi	r28, 0x00	; 0
      344:	d0 e0       	ldi	r29, 0x00	; 0
-		mcp2515_write(MCP_TXB0SIDH+5+byte, send->data[byte]);
+	wholeMessage.id = 0;
      346:	f8 01       	movw	r30, r16
      348:	60 81       	ld	r22, Z
      34a:	0e 5f       	subi	r16, 0xFE	; 254
@@ -487,12 +487,12 @@ void can_send_message(can_msg* send){//unsigned int identifier, uint8_t *message
      34e:	8c 2f       	mov	r24, r28
      350:	8a 5c       	subi	r24, 0xCA	; 202
      352:	0e 94 aa 02 	call	0x554	; 0x554 <mcp2515_write>
-	if(send->length>8){
-		printf("Length of data too big.");
-		return;
-	}
-	int byte = 0;
-	for (byte = 0; byte < send->length; byte++){
+
+	mcp2515_request_to_send(0); //sender RTS signal til TXB0 nå
+}
+
+can_msg can_receive_message(){
+	can_msg wholeMessage;
      356:	21 96       	adiw	r28, 0x01	; 1
      358:	f7 01       	movw	r30, r14
      35a:	22 89       	ldd	r18, Z+18	; 0x12
@@ -500,14 +500,14 @@ void can_send_message(can_msg* send){//unsigned int identifier, uint8_t *message
      35e:	c2 17       	cp	r28, r18
      360:	d3 07       	cpc	r29, r19
      362:	8c f3       	brlt	.-30     	; 0x346 <can_send_message+0x74>
-		mcp2515_write(MCP_TXB0SIDH+5+byte, send->data[byte]);
-	}
-
-	mcp2515_request_to_send(0); //sender RTS signal til TXB0 nå
+	wholeMessage.id = 0;
+	wholeMessage.length = 0;
+	wholeMessage.data[0] = 0b00000000;
+	
      364:	80 e0       	ldi	r24, 0x00	; 0
      366:	90 e0       	ldi	r25, 0x00	; 0
      368:	0e 94 d4 02 	call	0x5a8	; 0x5a8 <mcp2515_request_to_send>
-}
+	if (mcp2515_read(MCP_CANINTF) & MCP_RX0IF){ //om rx0if er høy, altså interrupt pinnen er høy, betyr det at receive buffer nr 0 har fått inn ny data
      36c:	df 91       	pop	r29
      36e:	cf 91       	pop	r28
      370:	1f 91       	pop	r17
@@ -517,7 +517,7 @@ void can_send_message(can_msg* send){//unsigned int identifier, uint8_t *message
      378:	08 95       	ret
 
 0000037a <joy_getDirectionX>:
-	return (((raw*(1.0)-127.5) / 127.5) * 100);
+	return (((raw*(1.0)) / 255) * 100);
 }
 
 int joy_getDirectionX(int raw){
@@ -944,90 +944,90 @@ uint8_t mcp2515_init(){
      58e:	8a 95       	dec	r24
      590:	f1 f7       	brne	.-4      	; 0x58e <mcp2515_init+0xa>
      592:	00 00       	nop
-	_delay_us(10); //oscillatoren er i reset modus i 128 klokkesykluser. trenger derav en delay
+	_delay_us(8); //oscillatoren er i reset modus i 128 klokkesykluser. trenger derav en delay
+	
 	//Self-test to check if system is in config mode
-	value = mcp2515_read(MCP_CANSTAT); 
      594:	8e e0       	ldi	r24, 0x0E	; 14
      596:	0e 94 9c 02 	call	0x538	; 0x538 <mcp2515_read>
-	if((value & MODE_MASK)  != MODE_CONFIG) {
+	value = mcp2515_read(MCP_CANSTAT); 
      59a:	98 2f       	mov	r25, r24
      59c:	90 7e       	andi	r25, 0xE0	; 224
      59e:	81 e0       	ldi	r24, 0x01	; 1
      5a0:	90 38       	cpi	r25, 0x80	; 128
      5a2:	09 f4       	brne	.+2      	; 0x5a6 <mcp2515_init+0x22>
      5a4:	80 e0       	ldi	r24, 0x00	; 0
+	if((value & MODE_MASK)  != MODE_CONFIG) {
 		return 1;
 	}
 	// More initialization
 	return 0;
-}
      5a6:	08 95       	ret
 
 000005a8 <mcp2515_request_to_send>:
+}
 
 void mcp2515_request_to_send(int whichBuffer){ //se s. 66
-	clear_bit(PORTB,SS); //Setter SS lav
      5a8:	c4 98       	cbi	0x18, 4	; 24
+	clear_bit(PORTB,SS); //Setter SS lav
 
-	if(whichBuffer == 0){ //choose TXB0
      5aa:	00 97       	sbiw	r24, 0x00	; 0
      5ac:	21 f4       	brne	.+8      	; 0x5b6 <mcp2515_request_to_send+0xe>
-		spi_MasterTransmit(0b10000001); 
+	if(whichBuffer == 0){ //choose TXB0
      5ae:	81 e8       	ldi	r24, 0x81	; 129
      5b0:	0e 94 07 03 	call	0x60e	; 0x60e <spi_MasterTransmit>
      5b4:	09 c0       	rjmp	.+18     	; 0x5c8 <mcp2515_request_to_send+0x20>
+		spi_MasterTransmit(0b10000001); 
 	}
 	
-	else if (whichBuffer == 1){ //choose TXB1
      5b6:	01 97       	sbiw	r24, 0x01	; 1
      5b8:	21 f4       	brne	.+8      	; 0x5c2 <mcp2515_request_to_send+0x1a>
-		spi_MasterTransmit(0b10000010); 
+	else if (whichBuffer == 1){ //choose TXB1
      5ba:	82 e8       	ldi	r24, 0x82	; 130
      5bc:	0e 94 07 03 	call	0x60e	; 0x60e <spi_MasterTransmit>
      5c0:	03 c0       	rjmp	.+6      	; 0x5c8 <mcp2515_request_to_send+0x20>
+		spi_MasterTransmit(0b10000010); 
 	}
 	else{ //choose TXB2
-		spi_MasterTransmit(0b10000100);
      5c2:	84 e8       	ldi	r24, 0x84	; 132
      5c4:	0e 94 07 03 	call	0x60e	; 0x60e <spi_MasterTransmit>
+		spi_MasterTransmit(0b10000100);
 	}
 	
-	set_bit(PORTB,SS); //Setter SS høy
      5c8:	c4 9a       	sbi	0x18, 4	; 24
      5ca:	08 95       	ret
 
 000005cc <mcp2515_bit_modify>:
-
 	return statusRegister;
 }
 
 
 void mcp2515_bit_modify(uint8_t regAdr, uint8_t maskBits, uint8_t data){ //se s. 68
+	clear_bit(PORTB,SS); //Setter SS lav
      5cc:	1f 93       	push	r17
      5ce:	cf 93       	push	r28
      5d0:	df 93       	push	r29
      5d2:	18 2f       	mov	r17, r24
      5d4:	d6 2f       	mov	r29, r22
      5d6:	c4 2f       	mov	r28, r20
-	clear_bit(PORTB,SS); //Setter SS lav
-     5d8:	c4 98       	cbi	0x18, 4	; 24
 
+     5d8:	c4 98       	cbi	0x18, 4	; 24
 	spi_MasterTransmit(MCP_BITMOD);
+	spi_MasterTransmit(regAdr);
      5da:	85 e0       	ldi	r24, 0x05	; 5
      5dc:	0e 94 07 03 	call	0x60e	; 0x60e <spi_MasterTransmit>
-	spi_MasterTransmit(regAdr);
+	spi_MasterTransmit(maskBits);
      5e0:	81 2f       	mov	r24, r17
      5e2:	0e 94 07 03 	call	0x60e	; 0x60e <spi_MasterTransmit>
-	spi_MasterTransmit(maskBits);
+	spi_MasterTransmit(data);
      5e6:	8d 2f       	mov	r24, r29
      5e8:	0e 94 07 03 	call	0x60e	; 0x60e <spi_MasterTransmit>
-	spi_MasterTransmit(data);
+
      5ec:	8c 2f       	mov	r24, r28
      5ee:	0e 94 07 03 	call	0x60e	; 0x60e <spi_MasterTransmit>
-
 	set_bit(PORTB,SS); //Setter SS høy
-     5f2:	c4 9a       	sbi	0x18, 4	; 24
 }
+     5f2:	c4 9a       	sbi	0x18, 4	; 24
+
      5f4:	df 91       	pop	r29
      5f6:	cf 91       	pop	r28
      5f8:	1f 91       	pop	r17
@@ -1201,9 +1201,9 @@ uint8_t adc_read(uint8_t ch){ //ch = 0: joystick x. ch = 1: joystick y. ch = 2: 
      682:	08 95       	ret
 
 00000684 <main>:
-	lengthOfBuffer = 0;
-	return 1;
-}
+
+volatile int RECEIVE_BUFFER_INTERRUPT = 0;
+
 
 int main(void)
 {

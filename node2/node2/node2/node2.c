@@ -13,11 +13,14 @@
 #include "../../../lib/spi.h"
 #include "../../../lib/MCP2515.h"
 #include "../../../lib/can.h"
+#include "timer.h"
+#include "servo.h"
 
 
-//Fra node 1
 #define F_CPU 16000000
 #define FOSC 16000000// Clock Speed
+
+//Fra node 1
 #define BAUD 9600
 #define MYUBRR FOSC/16/BAUD-1
 
@@ -27,12 +30,15 @@
 
 
 volatile int RECEIVE_BUFFER_INTERRUPT = 0;
+volatile int TIMER_OVERFLOW_INTERRUPT = 0;
 
 int main(void)
 {
 	
 	USART_Init(MYUBRR);
 	can_init();
+	timer_init();
+	
 	
 	can_msg melding;
 	melding.id = 5;
@@ -47,11 +53,10 @@ int main(void)
 	melding.data[7] = (uint8_t)('8');
 	
 	
-	
     while(1)
     {
 		
-	//	can_send_message(&melding);
+		//	can_send_message(&melding);
 		can_msg mottatt;
 		
 		
@@ -64,7 +69,7 @@ int main(void)
 
 			can_receive_message(&mottatt);		
 			
-			int mottatt_data_char0 = mottatt.data[0];
+			int mottatt_data_char0 = mottatt.data[0]; //X-akse
 			int mottatt_data_char1 = mottatt.data[1];
 			int mottatt_data_char2 = mottatt.data[2];
 			int mottatt_data_char3 = mottatt.data[3];
@@ -72,15 +77,18 @@ int main(void)
 			int mottatt_data_char5 = mottatt.data[5];
 			int mottatt_data_char6 = mottatt.data[6];
 						
-
+			
 
 			printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
 			RECEIVE_BUFFER_INTERRUPT = 0; //clearer interruptflagget
 			
 			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten
-						
+			
+			
+			
+					
 		}
-		
+		servo_positionUpdate(255);
 
 		
     }
@@ -90,3 +98,7 @@ int main(void)
 ISR(INT2_vect){
 	RECEIVE_BUFFER_INTERRUPT = 1;
 }
+/*
+ISR(TIMER1_OVF_vect){
+	TIMER_OVERFLOW_INTERRUPT +=1;
+}*/

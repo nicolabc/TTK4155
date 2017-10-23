@@ -16,7 +16,7 @@ int joyLastDirectionY; //Må gjøres global for å leve etter vi går ut av scope
 int joyLastDirectionX;
 
 int joy_getPercent(int raw){
-	return (((raw*(1.0)-127.5) / 127.5) * 100);
+	return (((raw*(1.0)) / 255) * 100);
 }
 
 int joy_getDirectionX(int raw){

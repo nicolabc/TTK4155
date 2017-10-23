@@ -39,26 +39,6 @@
 
 volatile int RECEIVE_BUFFER_INTERRUPT = 0;
 
-volatile char buffer[50];
-volatile uint8_t lengthOfBuffer = 0;
-
-int addToBuffer(uint8_t *data, uint8_t sizeOfData){
-	if(sizeOfData + lengthOfBuffer > 50){
-		return 0;
-	}
-	memcpy(buffer + lengthOfBuffer, data, sizeOfData);
-	lengthOfBuffer += sizeOfData; 
-	return 1;
-}
-
-int readFromBuffer(uint8_t *data, uint8_t sizeOfData){
-	if(sizeOfData < lengthOfBuffer){
-		return 0;
-	}
-	memcpy(data, buffer, lengthOfBuffer);
-	lengthOfBuffer = 0;
-	return 1;
-}
 
 int main(void)
 {

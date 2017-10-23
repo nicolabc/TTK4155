@@ -38,10 +38,13 @@ SUBDIRS :=
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
 ../../../../lib/can.c \
+../../../../lib/joy.c \
 ../../../../lib/MCP2515.c \
 ../../../../lib/spi.c \
 ../../../../lib/uart.c \
-../node2.c
+../node2.c \
+../servo.c \
+../timer.c
 
 
 PREPROCESSING_SRCS += 
@@ -52,31 +55,43 @@ ASM_SRCS +=
 
 OBJS +=  \
 can.o \
+joy.o \
 MCP2515.o \
 spi.o \
 uart.o \
-node2.o
+node2.o \
+servo.o \
+timer.o
 
 OBJS_AS_ARGS +=  \
 can.o \
+joy.o \
 MCP2515.o \
 spi.o \
 uart.o \
-node2.o
+node2.o \
+servo.o \
+timer.o
 
 C_DEPS +=  \
 can.d \
+joy.d \
 MCP2515.d \
 spi.d \
 uart.d \
-node2.d
+node2.d \
+servo.d \
+timer.d
 
 C_DEPS_AS_ARGS +=  \
 can.d \
+joy.d \
 MCP2515.d \
 spi.d \
 uart.d \
-node2.d
+node2.d \
+servo.d \
+timer.d
 
 OUTPUT_FILE_PATH +=node2.elf
 
@@ -92,6 +107,12 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
+
+
 
 
 
