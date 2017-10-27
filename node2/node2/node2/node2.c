@@ -15,6 +15,7 @@
 #include "../../../lib/can.h"
 #include "timer.h"
 #include "servo.h"
+#include "internalADC.h"
 
 
 #define F_CPU 16000000
@@ -38,7 +39,7 @@ int main(void)
 	USART_Init(MYUBRR);
 	can_init();
 	timer_init();
-	
+	internalADC_init();
 	
 	can_msg melding;
 	melding.id = 5;

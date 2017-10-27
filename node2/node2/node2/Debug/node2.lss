@@ -191,12 +191,6 @@ Disassembly of section .text:
      122:	6e cf       	rjmp	.-292    	; 0x0 <__vectors>
 
 00000124 <can_init>:
-	can_msg wholeMessage;
-	wholeMessage.id = 0;
-	wholeMessage.length = 0;
-	wholeMessage.data[0] = 0b00000000;
-	
-	if (mcp2515_read(MCP_CANINTF) & MCP_RX0IF){ //om rx0if er høy, altså interrupt pinnen er høy, betyr det at receive buffer nr 0 har fått inn ny data
      124:	b2 d0       	rcall	.+356    	; 0x28a <mcp2515_init>
      126:	43 e0       	ldi	r20, 0x03	; 3
      128:	63 e0       	ldi	r22, 0x03	; 3
@@ -221,8 +215,6 @@ Disassembly of section .text:
      14e:	08 95       	ret
 
 00000150 <can_receive_message>:
-		unsigned int idH = mcp2515_read(MCP_RXB0SIDH);
-		unsigned int idL = mcp2515_read(MCP_RXB0SIDH+1);
      150:	9f 92       	push	r9
      152:	af 92       	push	r10
      154:	bf 92       	push	r11
@@ -235,32 +227,23 @@ Disassembly of section .text:
      162:	cf 93       	push	r28
      164:	df 93       	push	r29
      166:	7c 01       	movw	r14, r24
-		idL = (idL >> 5); //Fordi de er idL er tre MSB i MCP_RXB0SIDL, må rightshifte 5 ganger
      168:	fc 01       	movw	r30, r24
      16a:	11 82       	std	Z+1, r1	; 0x01
      16c:	10 82       	st	Z, r1
-		idH = (idH << 3); //Må leftshifte 
      16e:	12 8a       	std	Z+18, r1	; 0x12
-		unsigned int id = (idH | idL); //Kan evt ta +
      170:	13 82       	std	Z+3, r1	; 0x03
      172:	12 82       	std	Z+2, r1	; 0x02
-		
-		
      174:	8c e2       	ldi	r24, 0x2C	; 44
      176:	6a d0       	rcall	.+212    	; 0x24c <mcp2515_read>
      178:	80 ff       	sbrs	r24, 0
      17a:	47 c0       	rjmp	.+142    	; 0x20a <can_receive_message+0xba>
-		uint8_t length = mcp2515_read(MCP_RXB0SIDH+4); //leser av rxb0dlc
      17c:	81 e6       	ldi	r24, 0x61	; 97
      17e:	66 d0       	rcall	.+204    	; 0x24c <mcp2515_read>
      180:	c8 2f       	mov	r28, r24
      182:	d0 e0       	ldi	r29, 0x00	; 0
-		if (length > 8){
      184:	82 e6       	ldi	r24, 0x62	; 98
      186:	62 d0       	rcall	.+196    	; 0x24c <mcp2515_read>
      188:	90 e0       	ldi	r25, 0x00	; 0
-			printf("Length > 8, not allowed.");
-			return wholeMessage;
      18a:	5e 01       	movw	r10, r28
      18c:	aa 0c       	add	r10, r10
      18e:	bb 1c       	adc	r11, r11
@@ -268,12 +251,6 @@ Disassembly of section .text:
      192:	bb 1c       	adc	r11, r11
      194:	aa 0c       	add	r10, r10
      196:	bb 1c       	adc	r11, r11
-		unsigned int id = (idH | idL); //Kan evt ta +
-		
-		
-		uint8_t length = mcp2515_read(MCP_RXB0SIDH+4); //leser av rxb0dlc
-		if (length > 8){
-			printf("Length > 8, not allowed.");
      198:	96 95       	lsr	r25
      19a:	87 95       	ror	r24
      19c:	92 95       	swap	r25
@@ -282,44 +259,25 @@ Disassembly of section .text:
      1a2:	89 27       	eor	r24, r25
      1a4:	9f 70       	andi	r25, 0x0F	; 15
      1a6:	89 27       	eor	r24, r25
-			return wholeMessage;
-		}
      1a8:	a8 2a       	or	r10, r24
      1aa:	b9 2a       	or	r11, r25
-		
-		//leser nå av rxb0d0 til rxb0d7 (avhengig av hvor lang meldinga vi har mottatt er), og lagrer det i arrayet message
-		int byte = 0;
      1ac:	85 e6       	ldi	r24, 0x65	; 101
      1ae:	4e d0       	rcall	.+156    	; 0x24c <mcp2515_read>
      1b0:	98 2e       	mov	r9, r24
-		//lagrer alt i en struct
      1b2:	f8 e0       	ldi	r31, 0x08	; 8
      1b4:	f8 17       	cp	r31, r24
      1b6:	30 f0       	brcs	.+12     	; 0x1c4 <can_receive_message+0x74>
-		}
-		
-		
-		wholeMessage.id = id;
-		wholeMessage.length = length;
-	}
      1b8:	c8 2e       	mov	r12, r24
      1ba:	d1 2c       	mov	r13, r1
      1bc:	1c 14       	cp	r1, r12
      1be:	1d 04       	cpc	r1, r13
      1c0:	5c f0       	brlt	.+22     	; 0x1d8 <can_receive_message+0x88>
      1c2:	1c c0       	rjmp	.+56     	; 0x1fc <can_receive_message+0xac>
-		}
-		
-		//leser nå av rxb0d0 til rxb0d7 (avhengig av hvor lang meldinga vi har mottatt er), og lagrer det i arrayet message
-		int byte = 0;
-		//lagrer alt i en struct
-		for (byte = 0; byte < length; byte++){
      1c4:	8e e1       	ldi	r24, 0x1E	; 30
      1c6:	92 e0       	ldi	r25, 0x02	; 2
      1c8:	9f 93       	push	r25
      1ca:	8f 93       	push	r24
      1cc:	50 d3       	rcall	.+1696   	; 0x86e <printf>
-			wholeMessage.data[byte] = mcp2515_read(MCP_RXB0SIDH+5+byte);
      1ce:	0f 90       	pop	r0
      1d0:	0f 90       	pop	r0
      1d2:	80 e0       	ldi	r24, 0x00	; 0
@@ -328,15 +286,8 @@ Disassembly of section .text:
      1d8:	87 01       	movw	r16, r14
      1da:	0e 5f       	subi	r16, 0xFE	; 254
      1dc:	1f 4f       	sbci	r17, 0xFF	; 255
-		}
-		
-		
-		wholeMessage.id = id;
-		wholeMessage.length = length;
-	}
      1de:	c0 e0       	ldi	r28, 0x00	; 0
      1e0:	d0 e0       	ldi	r29, 0x00	; 0
-	return wholeMessage;
      1e2:	8c 2f       	mov	r24, r28
      1e4:	8a 59       	subi	r24, 0x9A	; 154
      1e6:	32 d0       	rcall	.+100    	; 0x24c <mcp2515_read>
@@ -346,25 +297,13 @@ Disassembly of section .text:
      1ee:	21 93       	st	Z+, r18
      1f0:	31 93       	st	Z+, r19
      1f2:	8f 01       	movw	r16, r30
-		}
-		
-		
-		wholeMessage.id = id;
-		wholeMessage.length = length;
-	}
      1f4:	21 96       	adiw	r28, 0x01	; 1
      1f6:	cc 15       	cp	r28, r12
      1f8:	dd 05       	cpc	r29, r13
      1fa:	9c f3       	brlt	.-26     	; 0x1e2 <can_receive_message+0x92>
-	return wholeMessage;
-}
-
-
-
      1fc:	f7 01       	movw	r30, r14
      1fe:	b1 82       	std	Z+1, r11	; 0x01
      200:	a0 82       	st	Z, r10
- //enable rollover
      202:	92 8a       	std	Z+18, r9	; 0x12
      204:	81 e0       	ldi	r24, 0x01	; 1
      206:	90 e0       	ldi	r25, 0x00	; 0
@@ -413,12 +352,6 @@ int joy_getPercent(int raw){
      24a:	08 95       	ret
 
 0000024c <mcp2515_read>:
-		spi_MasterTransmit(0b10000010); 
-	}
-	else{ //choose TXB2
-		spi_MasterTransmit(0b10000100);
-	}
-	
      24c:	cf 93       	push	r28
      24e:	c8 2f       	mov	r28, r24
      250:	2f 98       	cbi	0x05, 7	; 5
@@ -473,189 +406,89 @@ int joy_getPercent(int raw){
      2a6:	08 95       	ret
 
 000002a8 <mcp2515_read_status>:
-	set_bit(PORTB,SS); //Setter SS høy
-}
-
      2a8:	cf 93       	push	r28
-uint8_t mcp2515_read_status(){
      2aa:	2f 98       	cbi	0x05, 7	; 5
-	clear_bit(PORTB,SS); //Setter SS lav
-	
-	uint8_t statusRegister;
-	uint8_t statusRegister2;
-
      2ac:	80 ea       	ldi	r24, 0xA0	; 160
      2ae:	26 d0       	rcall	.+76     	; 0x2fc <spi_MasterTransmit>
-	spi_MasterTransmit(MCP_READ_STATUS);
      2b0:	2a d0       	rcall	.+84     	; 0x306 <spi_MasterRead>
      2b2:	c8 2f       	mov	r28, r24
-	statusRegister = spi_MasterRead(); //disse to skal være like hverandre, se s. 69
      2b4:	28 d0       	rcall	.+80     	; 0x306 <spi_MasterRead>
-		printf("Status registers in mcp2515_read_status() not identical.");
-		return 0;
-	}
-
-	set_bit(PORTB,SS); //Setter SS høy
-
      2b6:	2f 9a       	sbi	0x05, 7	; 5
-	return statusRegister;
-}
-
      2b8:	8c 2f       	mov	r24, r28
      2ba:	cf 91       	pop	r28
      2bc:	08 95       	ret
 
 000002be <mcp2515_bit_modify>:
-
-void mcp2515_bit_modify(uint8_t regAdr, uint8_t maskBits, uint8_t data){ //se s. 68
-	clear_bit(PORTB,SS); //Setter SS lav
      2be:	1f 93       	push	r17
      2c0:	cf 93       	push	r28
      2c2:	df 93       	push	r29
      2c4:	18 2f       	mov	r17, r24
      2c6:	d6 2f       	mov	r29, r22
      2c8:	c4 2f       	mov	r28, r20
-
      2ca:	2f 98       	cbi	0x05, 7	; 5
-	spi_MasterTransmit(MCP_BITMOD);
-	spi_MasterTransmit(regAdr);
      2cc:	85 e0       	ldi	r24, 0x05	; 5
      2ce:	16 d0       	rcall	.+44     	; 0x2fc <spi_MasterTransmit>
-	spi_MasterTransmit(maskBits);
      2d0:	81 2f       	mov	r24, r17
      2d2:	14 d0       	rcall	.+40     	; 0x2fc <spi_MasterTransmit>
-	spi_MasterTransmit(data);
      2d4:	8d 2f       	mov	r24, r29
      2d6:	12 d0       	rcall	.+36     	; 0x2fc <spi_MasterTransmit>
-
      2d8:	8c 2f       	mov	r24, r28
      2da:	10 d0       	rcall	.+32     	; 0x2fc <spi_MasterTransmit>
-	set_bit(PORTB,SS); //Setter SS høy
-}
      2dc:	2f 9a       	sbi	0x05, 7	; 5
-
      2de:	df 91       	pop	r29
      2e0:	cf 91       	pop	r28
      2e2:	1f 91       	pop	r17
      2e4:	08 95       	ret
 
 000002e6 <spi_init>:
- #define set_bit( reg, bit ) (reg |= (1 << bit))
- #define clear_bit( reg, bit ) (reg &= ~(1 << bit))
-
-void spi_init(void){
-    /* Set MOSI and SCK output, all others input */
-    DDRB |= (1<<MOSI)|(1<<SCK);
      2e6:	84 b1       	in	r24, 0x04	; 4
      2e8:	86 60       	ori	r24, 0x06	; 6
      2ea:	84 b9       	out	0x04, r24	; 4
-	DDRB &= ~(1 << MISO);
      2ec:	23 98       	cbi	0x04, 3	; 4
-    /* Enable SPI, Master, set clock rate fck/2 */
-    SPCR = (1<<SPE)|(1<<MSTR)|(1<<SPI2X);
      2ee:	81 e5       	ldi	r24, 0x51	; 81
      2f0:	8c bd       	out	0x2c, r24	; 44
-	
-	set_bit(DDRB,SS); //Setter PB4 til write/output
      2f2:	27 9a       	sbi	0x04, 7	; 4
-	set_bit(PORTB, SS);
      2f4:	2f 9a       	sbi	0x05, 7	; 5
-	
-	if(SS==7){ //Hvis vi har arduino'en, trenger å sette PB0 til output og høy
-		set_bit(DDRB,PB0); //Setter PB4 til write/output
      2f6:	20 9a       	sbi	0x04, 0	; 4
-		set_bit(PORTB, PB0);
      2f8:	28 9a       	sbi	0x05, 0	; 5
      2fa:	08 95       	ret
 
 000002fc <spi_MasterTransmit>:
-
-//Med denne må vi sette SS lav/høy før/etter mastertransmit starter/slutter
-void spi_MasterTransmit(char cData) { //keepLow holds the SS* signal low so the transmission continues
-	
-	/* Start transmission */
-	SPDR = cData;
      2fc:	8e bd       	out	0x2e, r24	; 46
-	/* Wait for transmission complete. Interrupt flag in SPSR is set (SPIF). */
-	while(!(SPSR & (1<<SPIF)));
      2fe:	0d b4       	in	r0, 0x2d	; 45
      300:	07 fe       	sbrs	r0, 7
      302:	fd cf       	rjmp	.-6      	; 0x2fe <spi_MasterTransmit+0x2>
-}
      304:	08 95       	ret
 
 00000306 <spi_MasterRead>:
-
-//Egentlig ikke nødvendig med denne funksjonen, fordi MasterTransmit gjør det samme, men vi beholder den for lesbarhet av koden
-uint8_t spi_MasterRead(){
-	//Setter SS lav utenfor funksjonen, altså setter vi SS lav inni mcp2515_read
-
-	spi_MasterTransmit(0x00);
      306:	80 e0       	ldi	r24, 0x00	; 0
      308:	f9 df       	rcall	.-14     	; 0x2fc <spi_MasterTransmit>
-	
-	//Setter SS høy utenfor funksjonen, altså setter vi SS høy igjen inni mcp2515_read
-
-	return SPDR;
      30a:	8e b5       	in	r24, 0x2e	; 46
-	
-}
      30c:	08 95       	ret
 
 0000030e <USART_Transmit>:
- }
- 
- void USART_Transmit( unsigned char data )
- {
-	 /* Wait for empty transmit buffer */
-	 while( !( UCSR0A & (1<<UDRE0)) );
      30e:	e0 ec       	ldi	r30, 0xC0	; 192
      310:	f0 e0       	ldi	r31, 0x00	; 0
      312:	90 81       	ld	r25, Z
      314:	95 ff       	sbrs	r25, 5
      316:	fd cf       	rjmp	.-6      	; 0x312 <USART_Transmit+0x4>
-	 
-	 /* Put data into buffer, sends the data */
-	 UDR0 = data;
      318:	80 93 c6 00 	sts	0x00C6, r24
      31c:	08 95       	ret
 
 0000031e <USART_Receive>:
- }
-
- unsigned char USART_Receive( void )
- {
-	 /*Wait for data to be received*/
-	 while( !(UCSR0A & (1<<RXC0)) );
      31e:	e0 ec       	ldi	r30, 0xC0	; 192
      320:	f0 e0       	ldi	r31, 0x00	; 0
      322:	80 81       	ld	r24, Z
      324:	88 23       	and	r24, r24
      326:	ec f7       	brge	.-6      	; 0x322 <USART_Receive+0x4>
-	 
-	 /* Get and return received data from buffer*/
-	 return UDR0;
      328:	80 91 c6 00 	lds	r24, 0x00C6
- }
      32c:	08 95       	ret
 
 0000032e <USART_Init>:
-
-
-void USART_Init( unsigned int ubrr )
- {
-	 /* Set baud rate */
-	 UBRR0H = (unsigned char)(ubrr>>8);
      32e:	90 93 c5 00 	sts	0x00C5, r25
-	 UBRR0L = (unsigned char)ubrr;
      332:	80 93 c4 00 	sts	0x00C4, r24
-
-	 /* Enable receiver and transmitter*/
-	 UCSR0B = (1<<RXEN0)|(1<<TXEN0);
      336:	88 e1       	ldi	r24, 0x18	; 24
      338:	80 93 c1 00 	sts	0x00C1, r24
-	 
-	 fdevopen(*USART_Transmit, *USART_Receive);
      33c:	6f e8       	ldi	r22, 0x8F	; 143
      33e:	71 e0       	ldi	r23, 0x01	; 1
      340:	87 e8       	ldi	r24, 0x87	; 135
