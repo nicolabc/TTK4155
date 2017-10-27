@@ -31,7 +31,7 @@ void internalADC_init(void){
 
 uint16_t internalADC_getResult(void){
 	
-	uint16_t resultL = ADCL;
-	uint16_t resultH = (ADCH<<8); //Leftshift 8 ganger
-	return resultL+resultH;
+	uint8_t resultL = ADCL;
+	uint8_t resultH = ADCH; //Leftshift 8 ganger
+	return (uint16_t) (resultL | (resultH << 8));
 }

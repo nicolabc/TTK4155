@@ -151,6 +151,12 @@
       <SubType>compile</SubType>
       <Link>uart.h</Link>
     </Compile>
+    <Compile Include="internalADC.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="internalADC.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="node2.c">
       <SubType>compile</SubType>
     </Compile>
