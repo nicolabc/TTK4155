@@ -18,6 +18,7 @@
 #include "servo.h"
 #include "internalADC.h"
 #include "game.h"
+#include "TWI_Master.h"
 
 
 
@@ -44,6 +45,8 @@ int main(void)
 	can_init();
 	timer_init();
 	internalADC_init();
+	TWI_Master_Initialise();
+	
 	sei(); //Global interrupt enable
 	
 	can_msg melding;
