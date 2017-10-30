@@ -39,6 +39,14 @@
 
 volatile int RECEIVE_BUFFER_INTERRUPT = 0;
 
+//Kan legge til flere states slik at spillet utvikler seg. F.eks hver vanskelighestgrad
+/*
+enum gamestate {
+	MENU = 0,
+	PLAYING = 1,
+};*/
+
+int GAMESTATUS = 0;
 
 int main(void)
 {
@@ -55,60 +63,75 @@ int main(void)
 	can_init();
 	
 	can_msg yourMessage;
-	/*melding.id = 6;
-	melding.length = 8;
-	
-	melding.data[0] = (uint8_t)('s');
-	melding.data[1] = (uint8_t)('l');
-	melding.data[2] = (uint8_t)('e');
-	melding.data[3] = (uint8_t)('t');
-	melding.data[4] = (uint8_t)('t');
-	melding.data[5] = (uint8_t)('d');
-	melding.data[6] = (uint8_t)('e');
-	melding.data[7] = (uint8_t)('n');
-	*/
-	//joy_sendMultiboardInfo(&melding);
-	
-	
-
+	GAMESTATUS = MENU;
+	uint8_t gameOverValue = 0; //verdien vi får fra can-meldinga fra node 2 om vi har mista ballen i bakken
 	
 	while(1)
 	{
 		multiboardInfo_update(&yourMessage);
 		can_send_message(&yourMessage);
-		printf("Sent msg\n");
-		//_delay_ms(100);
-	
 		
-		//uint8_t statreg = mcp2515_read_status();
+		//Leser statusregisteret og sjekker om recieve-bufferet har fått inn noe
+		volatile uint8_t statusReg = mcp2515_read_status();
 		
-		
-		/*if(RECEIVE_BUFFER_INTERRUPT){ //Mulig å lage det som en funskjon i ettertid
-
-			can_receive_message(&mottatt);		
+		if(test_bit(statusReg, 0)){
+			can_msg mottatt;
+			can_receive_message(&mottatt);
+			gameOverValue = mottatt.data[0];
 			
-			char mottatt_data_char0 = mottatt.data[0];
-			char mottatt_data_char1 = mottatt.data[1];
-			char mottatt_data_char2 = mottatt.data[2];
-			char mottatt_data_char3 = mottatt.data[3];
-			char mottatt_data_char4 = mottatt.data[4];
-			char mottatt_data_char5 = mottatt.data[5];
-			char mottatt_data_char6 = mottatt.data[6];
-			char mottatt_data_char7 = mottatt.data[7];
-						
-
-
-			printf("ID: %i  LENGTH: %i   ALL DATA  %c    %c   %c    %c    %c    %c    %c    %c\n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6, mottatt_data_char7);
-			RECEIVE_BUFFER_INTERRUPT = 0; //clearer interruptflagget
-			
-			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten
-						
+			//printf("ID: %i   Length: %i   GameOver: %i \n", mottatt.id, mottatt.length, gameOverValue);	
 		}
-		_delay_ms(500);*/
-		if(joy_doesDirectionChange()){
-			menu_save();
-			oled_refresh();
+		
+		
+		
+		switch(GAMESTATUS){
+			case MENU:
+				if(joy_doesDirectionChange()){
+					
+					menu_save();
+					oled_refresh();
+				}
+				
+				break;
+			case PLAYING_EASY:
+				oled_clear_screen(); //Litt dumt at alt refresher hver gang i main nå da :)
+				menu_printGameScreen();
+				oled_refresh();
+				if(gameOverValue == 1){
+					GAMESTATUS = GAMEOVER;
+				}
+				break;
+				
+				
+			case PLAYING_NORMAL:
+				oled_clear_screen();
+				menu_printGameScreen();
+				oled_refresh();
+				if(gameOverValue == 1){
+					GAMESTATUS = GAMEOVER;
+				}
+				break;
+				
+				
+			case PLAYING_HARD:
+				oled_clear_screen();
+				menu_printGameScreen();
+				oled_refresh();
+				if(gameOverValue == 1){
+					GAMESTATUS = GAMEOVER;
+				}
+				break;
+				
+				
+			case GAMEOVER:
+				oled_clear_screen();
+				sram_save_string("GAME OVER",3,30);
+				printf("GAME OVER MANN");
+				oled_refresh();
+			default:
+			break;
 		}
+		
 	}
 	
 	

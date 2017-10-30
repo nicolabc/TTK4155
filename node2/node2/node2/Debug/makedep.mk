@@ -12,6 +12,10 @@
 
 ..\..\..\lib\uart.c
 
+game.c
+
+internalADC.c
+
 node2.c
 
 servo.c

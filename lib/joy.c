@@ -97,6 +97,21 @@ int joy_doesDirectionChange(void){
 				currentSelection = currentSelection->child;
 				currentHead = currentSelection;
 			}
+			else if(currentSelection->name == "Easy"){
+				GAMESTATUS = PLAYING_EASY;
+				
+				
+			}
+			else if(currentSelection->name == "Normal"){
+				GAMESTATUS = PLAYING_NORMAL;
+			
+				
+			}
+			else if(currentSelection->name == "Hard"){
+				GAMESTATUS = PLAYING_HARD;
+				
+			}
+			
 			break;
 		case LEFT:
 			if(currentSelection->parent != NULL){

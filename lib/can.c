@@ -92,7 +92,12 @@ int can_receive_message(can_msg *wholeMessage){
 		
 		wholeMessage->id = id;
 		wholeMessage->length = length;
+		
+		mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten
 	}
+	
+	
+	
 	return 1;
 }
 

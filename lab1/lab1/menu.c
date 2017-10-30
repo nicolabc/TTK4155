@@ -98,3 +98,19 @@ void menu_save(void){ //Argument node_t* firstNode?
 		page++;
 	}
 }
+
+void menu_printGameScreen(void){
+	switch(GAMESTATUS){
+		case PLAYING_EASY:
+			sram_save_string("EASYYYYYY", 0,30);
+			
+			break;
+		case PLAYING_NORMAL:
+			sram_save_string("MEDIUM EKSTRA MAIS",0,30);
+			break;
+		case PLAYING_HARD:
+			sram_save_string("EKSTRA STERK",0,30);
+			break;
+	}
+
+}

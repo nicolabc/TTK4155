@@ -9,6 +9,7 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <avr/interrupt.h>
 #include "../../../lib/uart.h"
 #include "../../../lib/spi.h"
 #include "../../../lib/MCP2515.h"
@@ -16,6 +17,8 @@
 #include "timer.h"
 #include "servo.h"
 #include "internalADC.h"
+#include "game.h"
+
 
 
 #define F_CPU 16000000
@@ -32,14 +35,16 @@
 
 volatile int RECEIVE_BUFFER_INTERRUPT = 0;
 volatile int TIMER_OVERFLOW_INTERRUPT = 0;
+volatile int ADC_CONVERSION_COMPLETE_INTERRUPT = 0;
 
 int main(void)
 {
-	
+	cli();
 	USART_Init(MYUBRR);
 	can_init();
 	timer_init();
 	internalADC_init();
+	sei(); //Global interrupt enable
 	
 	can_msg melding;
 	melding.id = 5;
@@ -53,9 +58,32 @@ int main(void)
 	melding.data[6] = (uint8_t)('7');
 	melding.data[7] = (uint8_t)('8');
 	
+	uint16_t result;
+	
 	int mottatt_data_char0 = 50; //startposisjon
+	
+	
     while(1)
     {
+		
+		if(ADC_CONVERSION_COMPLETE_INTERRUPT){
+			
+			uint8_t gameOver = game_isGameOver();
+			//printf("Game Over = %i \n", gameOver);
+			
+			//sender can melding som har info om spillet er over
+			can_msg gameInfo;
+			gameInfo.id = 5;
+			gameInfo.length = 1; //skal kun sende over én verdi, som er verdien gameOver
+			gameInfo.data[0] = gameOver;
+			can_send_message(&gameInfo);
+
+			
+			internalADC_startConversion();
+			
+			ADC_CONVERSION_COMPLETE_INTERRUPT = 0;
+		}
+		
 		
 		//	can_send_message(&melding);
 		can_msg mottatt;
@@ -63,8 +91,6 @@ int main(void)
 		
 		//sjekker om receive bufre inneholder noe. se s. 69 i mcp2515
 		volatile uint8_t statusReg = mcp2515_read_status();
-		
-		//printf("statusReg: %x \n", statusReg);
 		
 		if(test_bit(statusReg, 0)){ //Mulig å lage det som en funskjon i ettertid
 
@@ -80,7 +106,7 @@ int main(void)
 						
 			
 
-			printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
+			//printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
 			RECEIVE_BUFFER_INTERRUPT = 0; //clearer interruptflagget
 			
 			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten
@@ -92,8 +118,7 @@ int main(void)
 		servo_positionUpdate(mottatt_data_char0);
 
 		
-    }
-	
+	}
 }
 
 ISR(INT2_vect){
@@ -103,3 +128,7 @@ ISR(INT2_vect){
 ISR(TIMER1_OVF_vect){
 	TIMER_OVERFLOW_INTERRUPT +=1;
 }*/
+
+ISR(ADC_vect){
+	ADC_CONVERSION_COMPLETE_INTERRUPT = 1;
+}

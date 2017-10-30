@@ -42,6 +42,8 @@ C_SRCS +=  \
 ../../../../lib/MCP2515.c \
 ../../../../lib/spi.c \
 ../../../../lib/uart.c \
+../game.c \
+../internalADC.c \
 ../node2.c \
 ../servo.c \
 ../timer.c
@@ -59,6 +61,8 @@ joy.o \
 MCP2515.o \
 spi.o \
 uart.o \
+game.o \
+internalADC.o \
 node2.o \
 servo.o \
 timer.o
@@ -69,6 +73,8 @@ joy.o \
 MCP2515.o \
 spi.o \
 uart.o \
+game.o \
+internalADC.o \
 node2.o \
 servo.o \
 timer.o
@@ -79,6 +85,8 @@ joy.d \
 MCP2515.d \
 spi.d \
 uart.d \
+game.d \
+internalADC.d \
 node2.d \
 servo.d \
 timer.d
@@ -89,6 +97,8 @@ joy.d \
 MCP2515.d \
 spi.d \
 uart.d \
+game.d \
+internalADC.d \
 node2.d \
 servo.d \
 timer.d
@@ -107,6 +117,10 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
 
 
 

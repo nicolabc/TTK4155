@@ -105,3 +105,5 @@ void oled_init(){
 	PAGE = 0;
 	COL = 0;
 }
+
+

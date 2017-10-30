@@ -13,5 +13,5 @@
 
 void internalADC_init(void);
 uint16_t internalADC_getResult(void);
-
+void internalADC_startConversion(void);
 #endif /* INTERNALADC_H_ */
