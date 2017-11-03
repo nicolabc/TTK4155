@@ -42,11 +42,14 @@ C_SRCS +=  \
 ../../../../lib/MCP2515.c \
 ../../../../lib/spi.c \
 ../../../../lib/uart.c \
+../dac.c \
 ../game.c \
 ../internalADC.c \
+../motor.c \
 ../node2.c \
 ../servo.c \
-../timer.c
+../timer.c \
+../TWI_Master.c
 
 
 PREPROCESSING_SRCS += 
@@ -61,11 +64,14 @@ joy.o \
 MCP2515.o \
 spi.o \
 uart.o \
+dac.o \
 game.o \
 internalADC.o \
+motor.o \
 node2.o \
 servo.o \
-timer.o
+timer.o \
+TWI_Master.o
 
 OBJS_AS_ARGS +=  \
 can.o \
@@ -73,11 +79,14 @@ joy.o \
 MCP2515.o \
 spi.o \
 uart.o \
+dac.o \
 game.o \
 internalADC.o \
+motor.o \
 node2.o \
 servo.o \
-timer.o
+timer.o \
+TWI_Master.o
 
 C_DEPS +=  \
 can.d \
@@ -85,11 +94,14 @@ joy.d \
 MCP2515.d \
 spi.d \
 uart.d \
+dac.d \
 game.d \
 internalADC.d \
+motor.d \
 node2.d \
 servo.d \
-timer.d
+timer.d \
+TWI_Master.d
 
 C_DEPS_AS_ARGS +=  \
 can.d \
@@ -97,11 +109,14 @@ joy.d \
 MCP2515.d \
 spi.d \
 uart.d \
+dac.d \
 game.d \
 internalADC.d \
+motor.d \
 node2.d \
 servo.d \
-timer.d
+timer.d \
+TWI_Master.d
 
 OUTPUT_FILE_PATH +=node2.elf
 
@@ -117,6 +132,12 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
+
+
 
 
 

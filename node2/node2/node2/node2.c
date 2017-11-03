@@ -19,7 +19,8 @@
 #include "internalADC.h"
 #include "game.h"
 #include "TWI_Master.h"
-
+#include "dac.h"
+#include "motor.h"
 
 
 #define F_CPU 16000000
@@ -46,6 +47,7 @@ int main(void)
 	timer_init();
 	internalADC_init();
 	TWI_Master_Initialise();
+	motor_init();
 	
 	sei(); //Global interrupt enable
 	
@@ -82,7 +84,7 @@ int main(void)
 			can_send_message(&gameInfo);
 
 			
-			internalADC_startConversion();
+			internalADC_startConversion(); //Starte ny interrupt
 			
 			ADC_CONVERSION_COMPLETE_INTERRUPT = 0;
 		}
@@ -109,17 +111,25 @@ int main(void)
 						
 			
 
-			//printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
+			printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
 			RECEIVE_BUFFER_INTERRUPT = 0; //clearer interruptflagget
 			
 			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten
 			
 			
 			
-					
+			servo_positionUpdate(mottatt_data_char0);
+			if(mottatt_data_char1<127){
+				motor_dirLeft();
+			}else{
+				motor_dirRight();
+			}
+			motor_setVoltage(mottatt_data_char1); //Verdi til motorbox
+			/*uint8_t bitValue = 0xFF/2;
+			motor_setVoltage(bitValue);*/
 		}
-		servo_positionUpdate(mottatt_data_char0);
-
+		/*uint8_t bitValue = 0xFF/2;
+		dac_send(bitValue);*/
 		
 	}
 }

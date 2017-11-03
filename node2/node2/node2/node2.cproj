@@ -151,6 +151,12 @@
       <SubType>compile</SubType>
       <Link>uart.h</Link>
     </Compile>
+    <Compile Include="dac.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="dac.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="game.c">
       <SubType>compile</SubType>
     </Compile>
@@ -161,6 +167,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="internalADC.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="motor.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="motor.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="node2.c">

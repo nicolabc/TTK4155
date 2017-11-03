@@ -12,13 +12,19 @@
 
 ..\..\..\lib\uart.c
 
+dac.c
+
 game.c
 
 internalADC.c
+
+motor.c
 
 node2.c
 
 servo.c
 
 timer.c
+
+TWI_Master.c
 
