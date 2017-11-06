@@ -11,6 +11,6 @@
 
 
 void solenoid_init(void);
-
+void solenoid_shoot(void);
 
 #endif /* SOLENOID_H_ */

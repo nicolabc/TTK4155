@@ -41,6 +41,7 @@ volatile int RECEIVE_BUFFER_INTERRUPT = 0;
 volatile int TIMER_OVERFLOW_INTERRUPT = 0;
 volatile int ADC_CONVERSION_COMPLETE_INTERRUPT = 0;
 
+
 int main(void)
 {
 	cli();
@@ -51,6 +52,9 @@ int main(void)
 	TWI_Master_Initialise();
 	motor_init();
 	encoder_init();
+	solenoid_init();
+	
+	
 	
 	sei(); //Global interrupt enable
 	
@@ -70,6 +74,7 @@ int main(void)
 	
 	int mottatt_data_char0 = 50; //startposisjon
 	
+
 	
     while(1)
     {
@@ -117,8 +122,9 @@ int main(void)
 						
 			
 
-			//printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
+			printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
 			RECEIVE_BUFFER_INTERRUPT = 0; //clearer interruptflagget
+			
 			
 			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten
 			
@@ -139,13 +145,15 @@ int main(void)
 		}
 		/*uint8_t bitValue = 0xFF/2;
 		dac_send(bitValue);*/
-		uint16_t encoderValue = encoder_read();
 		
-		printf("Encoder: %i \n", encoderValue);
-			
+		/*int16_t encoderValue = encoder_read();
+		
+		printf("Encoder: %d \n", encoderValue);
+		*/
 		
 		
-		_delay_ms(100); //Hvert tidels sekund
+		//_delay_ms(100); //Hvert tidels sekund
+		
 	}
 }
 

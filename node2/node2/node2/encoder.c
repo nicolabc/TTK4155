@@ -5,6 +5,8 @@
  *  Author: nicolabc
  */ 
 
+#define F_CPU 16000000
+
 #include <avr/io.h>
 #include <util/delay.h>
 #include "encoder.h"
@@ -33,53 +35,26 @@ void encoder_init(void){
 	clear_bit(DDRK, PK7);
 }
 
-uint16_t encoder_read(void){
+int16_t encoder_read(void){
 	
-	uint8_t MSB;
-	uint8_t LSB;
-	uint16_t encoderValue;
+	int16_t MSB = 0;
+	int16_t LSB = 0;
+	int16_t encoderValue = 0;
 	
-	int temp_1=0,temp_2=0,loop_var=0;
-	uint8_t read;
 	//clear_bit(PORTH,PH5); //Enable counter on MJ2 (!OE) ---- Set !OE low to enable output of encoder
 	
 	clear_bit(PORTH,PH3); //Set SEL low to get high byte
 	
-	_delay_us(30); //Wait 20 microseconds
+	_delay_us(20); //Wait 20 microseconds
 	
-	temp_1 = PINK; //Read 8MSB from encoder
-	
-	for(loop_var=0;loop_var<= 7;loop_var++)
-	{
-		read = temp_1 & (1<<loop_var);
-		if(read){
-			temp_2 |=  1<< (8-loop_var);
-		} else
-		{
-			temp_2 &= ~((1<<(8-loop_var)));
-		}
-		
-	}
-	
-	MSB = temp_2; 
+	encoderValue = (((int16_t)PINK) << 8); //Read 8MSB from encoder
 
 	set_bit(PORTH,PH3); //Set SEL high to get low byte
 	
-	_delay_us(30); //Wait about 20 microseconds
+	_delay_us(20); //Wait about 20 microseconds
 	
-	temp_1 = PINK; //Read 8LSB from encoder
-	for(loop_var=0;loop_var<= 7;loop_var++)
-	{
-		read = temp_1 & (1<<loop_var);
-		if(read){
-			temp_2 |=  1<< (8-loop_var);
-		} else
-		{
-			temp_2 &= ~((1<<(8-loop_var)));
-		}
-		
-	}
-	LSB = temp_2;
+	encoderValue |= PINK; //Read 8LSB from encoder
+	
 	
 /*
 	//Reset encoder
@@ -89,7 +64,7 @@ uint16_t encoder_read(void){
 	*/
 	//set_bit(PORTH,PH5); //Disable output of encoder
 	
-	encoderValue =(uint16_t) ((MSB<<8) | LSB);
+	//encoderValue =(int16_t) (MSB | LSB);
 	
 	return encoderValue;
 }

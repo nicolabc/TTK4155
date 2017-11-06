@@ -10,7 +10,7 @@
 #define ENCODER_H_
 
 void encoder_init(void);
-uint16_t encoder_read(void);
+int16_t encoder_read(void);
 
 
 #endif /* ENCODER_H_ */
