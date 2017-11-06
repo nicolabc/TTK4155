@@ -157,6 +157,12 @@
     <Compile Include="dac.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="encoder.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="encoder.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="game.c">
       <SubType>compile</SubType>
     </Compile>
@@ -182,6 +188,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="servo.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="solenoid.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="solnoid.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="timer.c">

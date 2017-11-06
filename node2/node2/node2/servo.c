@@ -14,7 +14,8 @@
 void servo_positionUpdate(int rawJoystickValue){
 	int percent = joy_getPercent(rawJoystickValue);
 	
-	
-	timer_dutyCycleUpdate(percent);
+	if(percent>=0 && percent<=100){
+		timer_dutyCycleUpdate(percent);
+	}
 	
 }

@@ -14,6 +14,8 @@
 
 dac.c
 
+encoder.c
+
 game.c
 
 internalADC.c
@@ -23,6 +25,8 @@ motor.c
 node2.c
 
 servo.c
+
+solnoid.c
 
 timer.c
 

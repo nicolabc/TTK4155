@@ -1077,7 +1077,7 @@ END GROUP
  .debug_frame   0x00000468       0xb8 oled.o
  .debug_frame   0x00000520      0x14c sram.o
 
-.debug_str      0x00000000      0x946
+.debug_str      0x00000000      0x97a
  *(.debug_str)
  .debug_str     0x00000000      0x1ca can.o
                                 0x20d (size before relaxing)
@@ -1095,15 +1095,15 @@ END GROUP
                                 0x150 (size before relaxing)
  .debug_str     0x000005c0       0x56 externalmemory.o
                                 0x15e (size before relaxing)
- .debug_str     0x00000616       0xc8 lab1.o
-                                0x321 (size before relaxing)
- .debug_str     0x000006de       0xa9 menu.o
+ .debug_str     0x00000616       0xfc lab1.o
+                                0x31f (size before relaxing)
+ .debug_str     0x00000712       0xa9 menu.o
                                 0x2d1 (size before relaxing)
- .debug_str     0x00000787       0x16 multiboardInfo.o
+ .debug_str     0x000007bb       0x16 multiboardInfo.o
                                 0x1c1 (size before relaxing)
- .debug_str     0x0000079d       0xb9 oled.o
+ .debug_str     0x000007d1       0xb9 oled.o
                                 0x22c (size before relaxing)
- .debug_str     0x00000856       0xf0 sram.o
+ .debug_str     0x0000088a       0xf0 sram.o
                                 0x297 (size before relaxing)
 
 .debug_loc      0x00000000     0x1d6c

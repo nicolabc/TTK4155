@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <avr/interrupt.h>
+#include <avr/delay.h>
 #include "../../../lib/uart.h"
 #include "../../../lib/spi.h"
 #include "../../../lib/MCP2515.h"
@@ -21,7 +22,8 @@
 #include "TWI_Master.h"
 #include "dac.h"
 #include "motor.h"
-
+#include "encoder.h"
+#include "solenoid.h"
 
 #define F_CPU 16000000
 #define FOSC 16000000// Clock Speed
@@ -48,6 +50,7 @@ int main(void)
 	internalADC_init();
 	TWI_Master_Initialise();
 	motor_init();
+	encoder_init();
 	
 	sei(); //Global interrupt enable
 	
@@ -70,7 +73,11 @@ int main(void)
 	
     while(1)
     {
+		/*//Interrupt
+		if(//TIMERINTRERRUPT (MÅ OGSÅ VEKKE FRA SLEEP)
 		
+		//Sleep
+		*/
 		if(ADC_CONVERSION_COMPLETE_INTERRUPT){
 			
 			uint8_t gameOver = game_isGameOver();
@@ -89,14 +96,13 @@ int main(void)
 			ADC_CONVERSION_COMPLETE_INTERRUPT = 0;
 		}
 		
-		
 		//	can_send_message(&melding);
 		can_msg mottatt;
 		
 		
 		//sjekker om receive bufre inneholder noe. se s. 69 i mcp2515
 		volatile uint8_t statusReg = mcp2515_read_status();
-		
+	
 		if(test_bit(statusReg, 0)){ //Mulig å lage det som en funskjon i ettertid
 
 			can_receive_message(&mottatt);		
@@ -111,7 +117,7 @@ int main(void)
 						
 			
 
-			printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
+			//printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
 			RECEIVE_BUFFER_INTERRUPT = 0; //clearer interruptflagget
 			
 			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten
@@ -119,29 +125,40 @@ int main(void)
 			
 			
 			servo_positionUpdate(mottatt_data_char0);
-			if(mottatt_data_char1<127){
+			
+			/*if(mottatt_data_char6<127){
 				motor_dirLeft();
+				motor_setVoltage(255-2*mottatt_data_char6); //Verdi til motorbox
 			}else{
 				motor_dirRight();
-			}
-			motor_setVoltage(mottatt_data_char1); //Verdi til motorbox
+				motor_setVoltage(mottatt_data_char6); //Verdi til motorbox
+			}*/
+			
 			/*uint8_t bitValue = 0xFF/2;
 			motor_setVoltage(bitValue);*/
 		}
 		/*uint8_t bitValue = 0xFF/2;
 		dac_send(bitValue);*/
+		uint16_t encoderValue = encoder_read();
 		
+		printf("Encoder: %i \n", encoderValue);
+			
+		
+		
+		_delay_ms(100); //Hvert tidels sekund
 	}
 }
 
 ISR(INT2_vect){
 	RECEIVE_BUFFER_INTERRUPT = 1;
 }
-/*
-ISR(TIMER1_OVF_vect){
-	TIMER_OVERFLOW_INTERRUPT +=1;
-}*/
 
 ISR(ADC_vect){
 	ADC_CONVERSION_COMPLETE_INTERRUPT = 1;
+}
+
+
+//Timer interrupt vector for sleep of program
+ISR(TIMER3_COMPA_vect){
+	
 }

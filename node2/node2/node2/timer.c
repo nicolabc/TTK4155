@@ -58,6 +58,24 @@ void timer_init(){
 	//set_bit(TIMSK1,TOIE1);
 	
 	//sei();
+	
+	
+	/*
+	http://www.engblaze.com/microcontroller-tutorial-avr-and-arduino-timer-interrupts/
+	*/
+	//Enable timer compare interrupt for waking up program
+	
+	set_bit(TCCR3B,CS12);
+	clear_bit(TCCR3B,CS11);
+	clear_bit(TCCR3B,CS10);
+	
+	int T = 1/(F_CPU/256); //Period of prescaler
+	int timerCount = 0.1/(T)+1; //6251;
+	
+	//Set compare match register to desired timer count
+	OCR1A = timerCount;
+	
+	
 }
 
 int timer_dutyCycleUpdate(int percent){
@@ -66,7 +84,8 @@ int timer_dutyCycleUpdate(int percent){
 	{
 		return -1;
 	}
-	uint16_t top = (percent*(131-56))/100+56;
+	uint16_t offset = 17; //Offset må endres utifra bord. 17 er for arbeidsplass 10
+	uint16_t top = (percent*(131-56))/100+56 -offset;
 	OCR1A = top;
 	
 	return 1;

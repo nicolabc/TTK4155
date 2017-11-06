@@ -43,11 +43,13 @@ C_SRCS +=  \
 ../../../../lib/spi.c \
 ../../../../lib/uart.c \
 ../dac.c \
+../encoder.c \
 ../game.c \
 ../internalADC.c \
 ../motor.c \
 ../node2.c \
 ../servo.c \
+../solnoid.c \
 ../timer.c \
 ../TWI_Master.c
 
@@ -65,11 +67,13 @@ MCP2515.o \
 spi.o \
 uart.o \
 dac.o \
+encoder.o \
 game.o \
 internalADC.o \
 motor.o \
 node2.o \
 servo.o \
+solnoid.o \
 timer.o \
 TWI_Master.o
 
@@ -80,11 +84,13 @@ MCP2515.o \
 spi.o \
 uart.o \
 dac.o \
+encoder.o \
 game.o \
 internalADC.o \
 motor.o \
 node2.o \
 servo.o \
+solnoid.o \
 timer.o \
 TWI_Master.o
 
@@ -95,11 +101,13 @@ MCP2515.d \
 spi.d \
 uart.d \
 dac.d \
+encoder.d \
 game.d \
 internalADC.d \
 motor.d \
 node2.d \
 servo.d \
+solnoid.d \
 timer.d \
 TWI_Master.d
 
@@ -110,11 +118,13 @@ MCP2515.d \
 spi.d \
 uart.d \
 dac.d \
+encoder.d \
 game.d \
 internalADC.d \
 motor.d \
 node2.d \
 servo.d \
+solnoid.d \
 timer.d \
 TWI_Master.d
 
@@ -132,6 +142,10 @@ LINKER_SCRIPT_DEP+=
 
 
 # AVR32/GNU C Compiler
+
+
+
+
 
 
 

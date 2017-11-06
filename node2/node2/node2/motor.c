@@ -22,6 +22,8 @@ void motor_init(void){
 	//Set direction
 	set_bit(DDRH,DDH1); //Output
 	clear_bit(PORTH,PH1); //Usikker på om dette er høyre eller venstre, kan evt ta clear_bit for motsatt vei
+	
+	motor_setVoltage(0); //For å ikke starte motor unødvendig
 }
 
 void motor_setVoltage(uint8_t myValue){
@@ -29,10 +31,10 @@ void motor_setVoltage(uint8_t myValue){
 }
 
 void motor_dirLeft(void){
+	clear_bit(PORTH,PH1);
 	
-	set_bit(PORTH,PH1);
 }
 
 void motor_dirRight(void){
-	clear_bit(PORTH,PH1);
+	set_bit(PORTH,PH1);
 }
