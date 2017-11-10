@@ -190,10 +190,10 @@
     <Compile Include="servo.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="solenoid.h">
+    <Compile Include="solenoid.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="solnoid.c">
+    <Compile Include="solenoid.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="timer.c">

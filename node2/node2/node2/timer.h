@@ -12,7 +12,7 @@
 
 
 void timer_init();
-
+void timer_timedInterrupt(void); //For PID update clock
 int timer_dutyCycleUpdate(int percent);
 
 #endif /* TIMER_H_ */

@@ -40,7 +40,9 @@
 volatile int RECEIVE_BUFFER_INTERRUPT = 0;
 volatile int TIMER_OVERFLOW_INTERRUPT = 0;
 volatile int ADC_CONVERSION_COMPLETE_INTERRUPT = 0;
-
+volatile int16_t ENCODERVALUE = 0;
+volatile int CAN_FIRST_MESSAGE_RECEIVED = 0;
+volatile int REF_TO_MOTOR_PID = 0;
 
 int main(void)
 {
@@ -57,6 +59,7 @@ int main(void)
 	
 	
 	sei(); //Global interrupt enable
+	motor_calibrate();
 	
 	can_msg melding;
 	melding.id = 5;
@@ -74,7 +77,7 @@ int main(void)
 	
 	int mottatt_data_char0 = 50; //startposisjon
 	
-
+	
 	
     while(1)
     {
@@ -119,15 +122,17 @@ int main(void)
 			int mottatt_data_char4 = mottatt.data[4];
 			int mottatt_data_char5 = mottatt.data[5];
 			int mottatt_data_char6 = mottatt.data[6];
-						
 			
-
-			printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
+			REF_TO_MOTOR_PID = mottatt_data_char6;
+			
+			//printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
 			RECEIVE_BUFFER_INTERRUPT = 0; //clearer interruptflagget
 			
 			
 			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten
 			
+			ENCODERVALUE = encoder_read(); //Leser verdi på encoderen
+			CAN_FIRST_MESSAGE_RECEIVED = 1;
 			
 			
 			servo_positionUpdate(mottatt_data_char0);
@@ -142,23 +147,21 @@ int main(void)
 			
 			/*uint8_t bitValue = 0xFF/2;
 			motor_setVoltage(bitValue);*/
+			
+			
+			//printf("Encoder: %d \n", encoderValue);
 		}
-		/*uint8_t bitValue = 0xFF/2;
-		dac_send(bitValue);*/
-		
-		/*int16_t encoderValue = encoder_read();
-		
-		printf("Encoder: %d \n", encoderValue);
-		*/
-		
-		
-		//_delay_ms(100); //Hvert tidels sekund
+		/*if(TIMER_COMPARE_MATCH == 1){
+			
+			TIMER_COMPARE_MATCH = 0;
+		}*/
 		
 	}
 }
 
 ISR(INT2_vect){
 	RECEIVE_BUFFER_INTERRUPT = 1;
+	
 }
 
 ISR(ADC_vect){
@@ -168,5 +171,7 @@ ISR(ADC_vect){
 
 //Timer interrupt vector for sleep of program
 ISR(TIMER3_COMPA_vect){
-	
+	if(CAN_FIRST_MESSAGE_RECEIVED == 1){
+		motor_PID(REF_TO_MOTOR_PID,ENCODERVALUE); //Oppdater PID og spenning til motor (u)
+	}
 }

@@ -26,7 +26,7 @@ node2.c
 
 servo.c
 
-solnoid.c
+solenoid.c
 
 timer.c
 

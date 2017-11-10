@@ -49,7 +49,7 @@ C_SRCS +=  \
 ../motor.c \
 ../node2.c \
 ../servo.c \
-../solnoid.c \
+../solenoid.c \
 ../timer.c \
 ../TWI_Master.c
 
@@ -73,7 +73,7 @@ internalADC.o \
 motor.o \
 node2.o \
 servo.o \
-solnoid.o \
+solenoid.o \
 timer.o \
 TWI_Master.o
 
@@ -90,7 +90,7 @@ internalADC.o \
 motor.o \
 node2.o \
 servo.o \
-solnoid.o \
+solenoid.o \
 timer.o \
 TWI_Master.o
 
@@ -107,7 +107,7 @@ internalADC.d \
 motor.d \
 node2.d \
 servo.d \
-solnoid.d \
+solenoid.d \
 timer.d \
 TWI_Master.d
 
@@ -124,7 +124,7 @@ internalADC.d \
 motor.d \
 node2.d \
 servo.d \
-solnoid.d \
+solenoid.d \
 timer.d \
 TWI_Master.d
 

@@ -65,19 +65,45 @@ void timer_init(){
 	*/
 	//Enable timer compare interrupt for waking up program
 	
+	
+	
+	timer_timedInterrupt(); //Enable timed interrupt (FOR PID)
+	
+	
+	
+}
+void timer_timedInterrupt(void){
+	// ----- Timed interrupt for whole Node 2 -----
+	
+	
+	double frequency = (F_CPU/256);
+	double T = 1/frequency; //Period of prescaler
+	double targetTime = 0.05;
+	
+	//FOrmel under funker ikke pga overflow, setter verdi manuelt
+	//timercount = targetTime/(1.6*10^(-5));
+	//int timerCount = targetTime/(T)-1; //6249. -1 fordi det tar en klokkesykel å resette klokken.
+	
+	int timerCount = 625*5; //Nå oppdateres det hvert 0.05 sekund
+	//Set compare match register to desired timer count
+	OCR3A = timerCount;
+	
+	
+	
+	TCCR3A = 0;     // set entire TCCR3A register to 0
+	TCCR3B = 0;     // same for TCCR3B
+	
+	//Enable CTC
+	set_bit(TCCR3B,WGM32);
+	
+	//Prescaler 256
 	set_bit(TCCR3B,CS12);
 	clear_bit(TCCR3B,CS11);
 	clear_bit(TCCR3B,CS10);
 	
-	int T = 1/(F_CPU/256); //Period of prescaler
-	int timerCount = 0.1/(T)+1; //6251;
-	
-	//Set compare match register to desired timer count
-	OCR1A = timerCount;
-	
-	
+	//Enable timer compare interrupt
+	set_bit(TIMSK3,OCIE3A);
 }
-
 int timer_dutyCycleUpdate(int percent){
 	
 	if (percent <  0 || percent > 100)
