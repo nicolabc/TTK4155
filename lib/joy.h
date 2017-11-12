@@ -33,7 +33,7 @@ struct joystickinfo {
 	int dir;
 } joystick;
 
-
+int joy_convertToPercentage(int adcValue, int isFirstMessage);
 
 int joy_getPercent(int raw);
 

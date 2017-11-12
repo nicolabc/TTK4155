@@ -14,7 +14,25 @@
 
 int joyLastDirectionY; //Må gjøres global for å leve etter vi går ut av scope
 int joyLastDirectionX;
+volatile int MID_VALUE;
 
+
+
+int joy_convertToPercentage(int adcValue, int isFirstMessage){
+	if(isFirstMessage == 1){
+		MID_VALUE = adcValue;
+	}
+	
+	if(adcValue > MID_VALUE){
+		adcValue = 100*(adcValue-MID_VALUE)/(255-MID_VALUE);
+		}else if(adcValue<MID_VALUE){
+		adcValue = 100*(adcValue-MID_VALUE)/MID_VALUE;
+		}else{
+		adcValue = 0;
+	}
+	return adcValue;
+	
+}
 int joy_getPercent(int raw){
 	return (((raw*(1.0)) / 255) * 100);
 }

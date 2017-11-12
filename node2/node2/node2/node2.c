@@ -42,6 +42,7 @@ volatile int TIMER_OVERFLOW_INTERRUPT = 0;
 volatile int ADC_CONVERSION_COMPLETE_INTERRUPT = 0;
 volatile int16_t ENCODERVALUE = 0;
 volatile int CAN_FIRST_MESSAGE_RECEIVED = 0;
+volatile int CAN_CALIBRATION_NEEDED = 0;
 volatile int REF_TO_MOTOR_PID = 0;
 
 int main(void)
@@ -59,7 +60,7 @@ int main(void)
 	
 	
 	sei(); //Global interrupt enable
-	motor_calibrate();
+	//motor_calibrate();
 	
 	can_msg melding;
 	melding.id = 5;
@@ -112,44 +113,42 @@ int main(void)
 		volatile uint8_t statusReg = mcp2515_read_status();
 	
 		if(test_bit(statusReg, 0)){ //Mulig å lage det som en funskjon i ettertid
-
+			
+			//---------------CAN----------------------
 			can_receive_message(&mottatt);		
 			
 			mottatt_data_char0 = mottatt.data[0]; //X-akse
 			int mottatt_data_char1 = mottatt.data[1];
 			int mottatt_data_char2 = mottatt.data[2];
 			int mottatt_data_char3 = mottatt.data[3];
-			int mottatt_data_char4 = mottatt.data[4];
+			int mottatt_data_char4 = mottatt.data[4]; //Høyre knapp
 			int mottatt_data_char5 = mottatt.data[5];
 			int mottatt_data_char6 = mottatt.data[6];
 			
-			REF_TO_MOTOR_PID = mottatt_data_char6;
 			
-			//printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
+			
+			printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
 			RECEIVE_BUFFER_INTERRUPT = 0; //clearer interruptflagget
 			
 			
 			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten
 			
+			//------------- VALUES TO MOTOR ------------------------
+			//REF_TO_MOTOR_PID = mottatt_data_char6;
+			CAN_CALIBRATION_NEEDED +=1;
+			REF_TO_MOTOR_PID = joy_convertToPercentage(mottatt_data_char0,CAN_CALIBRATION_NEEDED); //for x-akse på joystick
 			ENCODERVALUE = encoder_read(); //Leser verdi på encoderen
 			CAN_FIRST_MESSAGE_RECEIVED = 1;
 			
+			//----------------TO SERVO -------------------
+			servo_positionUpdate(mottatt_data_char6);
 			
-			servo_positionUpdate(mottatt_data_char0);
+			//---------------SOLENOID-----------------
+			if(mottatt_data_char4 == 1){
+				
+				solenoid_shoot();
+			}
 			
-			/*if(mottatt_data_char6<127){
-				motor_dirLeft();
-				motor_setVoltage(255-2*mottatt_data_char6); //Verdi til motorbox
-			}else{
-				motor_dirRight();
-				motor_setVoltage(mottatt_data_char6); //Verdi til motorbox
-			}*/
-			
-			/*uint8_t bitValue = 0xFF/2;
-			motor_setVoltage(bitValue);*/
-			
-			
-			//printf("Encoder: %d \n", encoderValue);
 		}
 		/*if(TIMER_COMPARE_MATCH == 1){
 			
@@ -172,6 +171,7 @@ ISR(ADC_vect){
 //Timer interrupt vector for sleep of program
 ISR(TIMER3_COMPA_vect){
 	if(CAN_FIRST_MESSAGE_RECEIVED == 1){
-		motor_PID(REF_TO_MOTOR_PID,ENCODERVALUE); //Oppdater PID og spenning til motor (u)
+		//motor_PID(REF_TO_MOTOR_PID,ENCODERVALUE); //Oppdater PID og spenning til motor (u)
+		motor_PIDspeed(REF_TO_MOTOR_PID,ENCODERVALUE);  ////Oppdater PID og spenning til motor (u)
 	}
 }

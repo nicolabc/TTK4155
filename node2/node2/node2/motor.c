@@ -10,9 +10,11 @@
 #include <util/delay.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "motor.h"
 #include "dac.h"
 #include "encoder.h"
+#include "../../../lib/joy.h"
 
 #define set_bit( reg, bit )(reg |= (1 << bit))
 #define clear_bit( reg, bit ) (reg &= ~(1 << bit))
@@ -22,6 +24,8 @@ int16_t CALIBRATE_MAX;
 int16_t CALIBRATE_MIN;
 volatile double PREV_ERROR = 0;
 volatile double SUM_ERROR = 0;
+volatile int16_t PREV_ENCODERVALUE = 0;
+volatile int FIRST_ENCODER_VALUE_READ = 0;
 
 void motor_init(void){
 	
@@ -108,5 +112,56 @@ void motor_PID(int posRef, int16_t encoderValue){
 	}
 	
 	SUM_ERROR = SUM_ERROR + error;
+	PREV_ERROR = error;
+}
+
+void motor_PIDspeed(int velRef, int16_t encoderValue){
+	if(FIRST_ENCODER_VALUE_READ == 0){ //For å ikke få feil første gang vi går inn (da er PREV_ENCODERVALUE satt default til 0. Dette blir da feil i utregningen)
+		FIRST_ENCODER_VALUE_READ = 1;
+		return;
+	}
+	
+	
+	int16_t dx = encoderValue - PREV_ENCODERVALUE;
+	double dt = 0.05; //Timer interrupt seconds (every measurment is done with 0.05s interval
+	double velocity = -((double)dx)/dt; //Positiv defineres til høyre
+	velocity = velocity/1000; //For å ikke få altfor høye verdier
+	PREV_ENCODERVALUE = encoderValue;
+	
+	
+	double Kp = 1.5;  //1.5;
+	double Ki = 0.5;  //0.5;
+	double T = 0.05;  //0.05;
+	double Kd = 0.05; //0.07;
+	
+	//Scale velRef from 0-100 to 0 - 4000
+	velRef = velRef;
+	double error = (velRef - velocity); 
+	
+	double AbsError = abs(error); //Siden vi kun er interessert i feil, vi tar for oss retning i if(error > 10) .. else if (error <10)...
+	
+	SUM_ERROR = SUM_ERROR + error;
+	
+	
+	
+	
+	
+	int u = Kp*AbsError+ Kd/T*(error-PREV_ERROR); //T*Ki*SUM_ERROR
+	
+	//printf("Velocity: %i error: %i    u:  %i \n", (int)velocity,(int)error, u);
+	//Velg retning basert på hvilken vei joystick peker
+	if(error > 10){
+		motor_dirRight();
+		}else if(error < -10){
+		motor_dirLeft();
+	}else{
+		u = 0;
+	}
+	if(u<250 && u >= 0){
+		motor_setVoltage(u); //input to motor
+		}else{
+		motor_setVoltage(150); //Max
+	}
+	
 	PREV_ERROR = error;
 }

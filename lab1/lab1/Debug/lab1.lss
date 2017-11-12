@@ -7,25 +7,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, DATA
   1 .text         0000184e  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000020  0080021e  0080021e  00001a00  2**0
+  2 .bss          00000022  0080021e  0080021e  00001a00  2**0
                   ALLOC
   3 .comment      0000005c  00000000  00000000  00001a00  2**0
                   CONTENTS, READONLY
-  4 .debug_aranges 000002a8  00000000  00000000  00001a5c  2**0
+  4 .debug_aranges 000002b0  00000000  00000000  00001a5c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   00002c4d  00000000  00000000  00001d04  2**0
+  5 .debug_info   00002ca1  00000000  00000000  00001d0c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 0000111b  00000000  00000000  00004951  2**0
+  6 .debug_abbrev 00001122  00000000  00000000  000049ad  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   0000101a  00000000  00000000  00005a6c  2**0
+  7 .debug_line   00001034  00000000  00000000  00005acf  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  0000066c  00000000  00000000  00006a88  2**2
+  8 .debug_frame  0000067c  00000000  00000000  00006b04  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    0000097a  00000000  00000000  000070f4  2**0
+  9 .debug_str    000009b4  00000000  00000000  00007180  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00001d6c  00000000  00000000  00007a6e  2**0
+ 10 .debug_loc    00001e34  00000000  00000000  00007b34  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000208  00000000  00000000  000097da  2**0
+ 11 .debug_ranges 00000210  00000000  00000000  00009968  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -338,7 +338,7 @@ Disassembly of section .text:
      284:	1d 92       	st	X+, r1
 
 00000286 <.do_clear_bss_start>:
-     286:	ae 33       	cpi	r26, 0x3E	; 62
+     286:	a0 34       	cpi	r26, 0x40	; 64
      288:	b2 07       	cpc	r27, r18
      28a:	e1 f7       	brne	.-8      	; 0x284 <.do_clear_bss_loop>
      28c:	0e 94 ee 03 	call	0x7dc	; 0x7dc <main>
@@ -564,66 +564,129 @@ Disassembly of section .text:
      464:	08 95       	ret
 
 00000466 <joy_getDirectionX>:
+	return (((raw*(1.0)) / 255) * 100);
+}
+
+int joy_getDirectionX(int raw){
+	
+	if (raw > 28 && raw < 228){
      466:	9c 01       	movw	r18, r24
      468:	2d 51       	subi	r18, 0x1D	; 29
      46a:	31 09       	sbc	r19, r1
      46c:	27 3c       	cpi	r18, 0xC7	; 199
      46e:	31 05       	cpc	r19, r1
      470:	48 f0       	brcs	.+18     	; 0x484 <joy_getDirectionX+0x1e>
+		return NEUTRAL;
+	}
+	else if(raw >= 228){
      472:	31 e0       	ldi	r19, 0x01	; 1
      474:	20 e0       	ldi	r18, 0x00	; 0
      476:	84 3e       	cpi	r24, 0xE4	; 228
      478:	91 05       	cpc	r25, r1
      47a:	0c f4       	brge	.+2      	; 0x47e <joy_getDirectionX+0x18>
      47c:	30 e0       	ldi	r19, 0x00	; 0
+}
+
+int joy_getDirectionX(int raw){
+	
+	if (raw > 28 && raw < 228){
+		return NEUTRAL;
      47e:	83 2f       	mov	r24, r19
      480:	92 2f       	mov	r25, r18
      482:	08 95       	ret
      484:	84 e0       	ldi	r24, 0x04	; 4
      486:	90 e0       	ldi	r25, 0x00	; 0
+	}
+	else if(raw >= 228){
+		return RIGHT;
+	}
+	return LEFT;
+}
      488:	08 95       	ret
 
 0000048a <joy_getDirectionY>:
+
+int joy_getDirectionY(int raw){
+
+	if (raw > 8 && raw < 248){ //127.5+-19.5
      48a:	9c 01       	movw	r18, r24
      48c:	29 50       	subi	r18, 0x09	; 9
      48e:	31 09       	sbc	r19, r1
      490:	2f 3e       	cpi	r18, 0xEF	; 239
      492:	31 05       	cpc	r19, r1
      494:	30 f0       	brcs	.+12     	; 0x4a2 <joy_getDirectionY+0x18>
+		return NEUTRAL;
+	}
+	else if(raw >= 248){
      496:	88 3f       	cpi	r24, 0xF8	; 248
      498:	91 05       	cpc	r25, r1
      49a:	34 f0       	brlt	.+12     	; 0x4a8 <joy_getDirectionY+0x1e>
+		return UP;
      49c:	83 e0       	ldi	r24, 0x03	; 3
      49e:	90 e0       	ldi	r25, 0x00	; 0
      4a0:	08 95       	ret
+}
+
+int joy_getDirectionY(int raw){
+
+	if (raw > 8 && raw < 248){ //127.5+-19.5
+		return NEUTRAL;
      4a2:	84 e0       	ldi	r24, 0x04	; 4
      4a4:	90 e0       	ldi	r25, 0x00	; 0
      4a6:	08 95       	ret
+	}
+	else if(raw >= 248){
+		return UP;
+	}
+	return DOWN;
      4a8:	82 e0       	ldi	r24, 0x02	; 2
      4aa:	90 e0       	ldi	r25, 0x00	; 0
+}
      4ac:	08 95       	ret
 
 000004ae <joy_readButton>:
+
+int joy_readButton(int button){ // Button 0, 1 or 2
+	if (button == 2){
      4ae:	82 30       	cpi	r24, 0x02	; 2
      4b0:	91 05       	cpc	r25, r1
      4b2:	39 f4       	brne	.+14     	; 0x4c2 <joy_readButton+0x14>
+		if ((PINB & (1<<(PB0+button))) > 0){
      4b4:	31 e0       	ldi	r19, 0x01	; 1
      4b6:	20 e0       	ldi	r18, 0x00	; 0
      4b8:	b2 99       	sbic	0x16, 2	; 22
      4ba:	30 e0       	ldi	r19, 0x00	; 0
+			return 0; //så: om joystickknappen ikke er trykket inn, vil verdien i parentesen være 4. om knappen ikke er trykket inn, returnerer vi 0
      4bc:	83 2f       	mov	r24, r19
      4be:	92 2f       	mov	r25, r18
      4c0:	08 95       	ret
+		}
+		return 1; //ellers returnerer vi 1
+	}
+	if (button == 1){
      4c2:	81 30       	cpi	r24, 0x01	; 1
      4c4:	91 05       	cpc	r25, r1
      4c6:	39 f4       	brne	.+14     	; 0x4d6 <joy_readButton+0x28>
+		if ((PINB & (1<<(PB0+button))) > 0){
      4c8:	31 e0       	ldi	r19, 0x01	; 1
      4ca:	20 e0       	ldi	r18, 0x00	; 0
      4cc:	b1 9b       	sbis	0x16, 1	; 22
      4ce:	30 e0       	ldi	r19, 0x00	; 0
+}
+
+int joy_readButton(int button){ // Button 0, 1 or 2
+	if (button == 2){
+		if ((PINB & (1<<(PB0+button))) > 0){
+			return 0; //så: om joystickknappen ikke er trykket inn, vil verdien i parentesen være 4. om knappen ikke er trykket inn, returnerer vi 0
      4d0:	83 2f       	mov	r24, r19
      4d2:	92 2f       	mov	r25, r18
      4d4:	08 95       	ret
+		if ((PINB & (1<<(PB0+button))) > 0){
+			return 1; //så om høyreknappen er trykket inn, vil verdien i parentesen være 2. Og da returnerer vi 1
+		}
+		return 0;
+	}
+	return (PINB & (1<<(PB0+button)));
      4d6:	26 b3       	in	r18, 0x16	; 22
      4d8:	41 e0       	ldi	r20, 0x01	; 1
      4da:	50 e0       	ldi	r21, 0x00	; 0
@@ -637,39 +700,76 @@ Disassembly of section .text:
      4ea:	30 e0       	ldi	r19, 0x00	; 0
      4ec:	82 23       	and	r24, r18
      4ee:	93 23       	and	r25, r19
+}
      4f0:	08 95       	ret
 
 000004f2 <joy_doesDirectionChange>:
+
+int joy_doesDirectionChange(void){
      4f2:	0f 93       	push	r16
      4f4:	1f 93       	push	r17
      4f6:	cf 93       	push	r28
      4f8:	df 93       	push	r29
+	int joyCurrentDirectionY = joy_getDirectionY(adc_read(1));
      4fa:	81 e0       	ldi	r24, 0x01	; 1
      4fc:	90 e0       	ldi	r25, 0x00	; 0
      4fe:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <adc_read>
      502:	0e 94 45 02 	call	0x48a	; 0x48a <joy_getDirectionY>
      506:	ec 01       	movw	r28, r24
+	int joyCurrentDirectionX = joy_getDirectionX(adc_read(0));
      508:	80 e0       	ldi	r24, 0x00	; 0
      50a:	90 e0       	ldi	r25, 0x00	; 0
      50c:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <adc_read>
      510:	0e 94 33 02 	call	0x466	; 0x466 <joy_getDirectionX>
      514:	8c 01       	movw	r16, r24
-     516:	80 91 2a 02 	lds	r24, 0x022A
-     51a:	90 91 2b 02 	lds	r25, 0x022B
+	int joyCurrentDirection = NEUTRAL;
+	
+	int doesDirectionChange = 0;
+	
+	if(joyLastDirectionY != joyCurrentDirectionY){ //Prioriterer opp og ned
+     516:	80 91 2c 02 	lds	r24, 0x022C
+     51a:	90 91 2d 02 	lds	r25, 0x022D
      51e:	8c 17       	cp	r24, r28
      520:	9d 07       	cpc	r25, r29
      522:	21 f0       	breq	.+8      	; 0x52c <__stack+0x2d>
+		joyCurrentDirection = joyCurrentDirectionY;
+		oled_clear_screen(); //Skjermen må oppdateres
      524:	0e 94 ba 06 	call	0xd74	; 0xd74 <oled_clear_screen>
+	int joyCurrentDirection = NEUTRAL;
+	
+	int doesDirectionChange = 0;
+	
+	if(joyLastDirectionY != joyCurrentDirectionY){ //Prioriterer opp og ned
+		joyCurrentDirection = joyCurrentDirectionY;
      528:	9e 01       	movw	r18, r28
      52a:	0b c0       	rjmp	.+22     	; 0x542 <__stack+0x43>
+		oled_clear_screen(); //Skjermen må oppdateres
+		doesDirectionChange = 1;
+		
+	}
+	else if(joyLastDirectionX != joyCurrentDirectionX){
      52c:	80 91 22 02 	lds	r24, 0x0222
      530:	90 91 23 02 	lds	r25, 0x0223
      534:	80 17       	cp	r24, r16
      536:	91 07       	cpc	r25, r17
      538:	09 f4       	brne	.+2      	; 0x53c <__stack+0x3d>
      53a:	7e c0       	rjmp	.+252    	; 0x638 <__stack+0x139>
+		joyCurrentDirection = joyCurrentDirectionX;
+		oled_clear_screen(); //skjermen må oppdateres
      53c:	0e 94 ba 06 	call	0xd74	; 0xd74 <oled_clear_screen>
+		oled_clear_screen(); //Skjermen må oppdateres
+		doesDirectionChange = 1;
+		
+	}
+	else if(joyLastDirectionX != joyCurrentDirectionX){
+		joyCurrentDirection = joyCurrentDirectionX;
      540:	98 01       	movw	r18, r16
+		doesDirectionChange = 1;
+	}
+	else{
+		doesDirectionChange = 0;
+	}
+	switch(joyCurrentDirection){
      542:	21 30       	cpi	r18, 0x01	; 1
      544:	31 05       	cpc	r19, r1
      546:	61 f1       	breq	.+88     	; 0x5a0 <__stack+0xa1>
@@ -685,58 +785,83 @@ Disassembly of section .text:
      55a:	31 05       	cpc	r19, r1
      55c:	89 f0       	breq	.+34     	; 0x580 <__stack+0x81>
      55e:	6f c0       	rjmp	.+222    	; 0x63e <__stack+0x13f>
-     560:	e0 91 2c 02 	lds	r30, 0x022C
-     564:	f0 91 2d 02 	lds	r31, 0x022D
+		case DOWN:
+			//oled_print("DOWN", 6 , 70);
+			if(currentSelection->next != NULL){
+     560:	e0 91 2e 02 	lds	r30, 0x022E
+     564:	f0 91 2f 02 	lds	r31, 0x022F
      568:	82 81       	ldd	r24, Z+2	; 0x02
      56a:	93 81       	ldd	r25, Z+3	; 0x03
      56c:	00 97       	sbiw	r24, 0x00	; 0
      56e:	09 f4       	brne	.+2      	; 0x572 <__stack+0x73>
      570:	69 c0       	rjmp	.+210    	; 0x644 <__stack+0x145>
-     572:	90 93 2d 02 	sts	0x022D, r25
-     576:	80 93 2c 02 	sts	0x022C, r24
+				currentSelection = currentSelection->next;
+     572:	90 93 2f 02 	sts	0x022F, r25
+     576:	80 93 2e 02 	sts	0x022E, r24
      57a:	81 e0       	ldi	r24, 0x01	; 1
      57c:	90 e0       	ldi	r25, 0x00	; 0
      57e:	6d c0       	rjmp	.+218    	; 0x65a <__stack+0x15b>
-     580:	e0 91 2c 02 	lds	r30, 0x022C
-     584:	f0 91 2d 02 	lds	r31, 0x022D
+			}
+				
+			break;
+		case UP:
+			//oled_print("UP", 6,70);
+			if(currentSelection->previous != NULL){
+     580:	e0 91 2e 02 	lds	r30, 0x022E
+     584:	f0 91 2f 02 	lds	r31, 0x022F
      588:	84 81       	ldd	r24, Z+4	; 0x04
      58a:	95 81       	ldd	r25, Z+5	; 0x05
      58c:	00 97       	sbiw	r24, 0x00	; 0
      58e:	09 f4       	brne	.+2      	; 0x592 <__stack+0x93>
      590:	5c c0       	rjmp	.+184    	; 0x64a <__stack+0x14b>
-     592:	90 93 2d 02 	sts	0x022D, r25
-     596:	80 93 2c 02 	sts	0x022C, r24
+				currentSelection = currentSelection->previous;
+     592:	90 93 2f 02 	sts	0x022F, r25
+     596:	80 93 2e 02 	sts	0x022E, r24
      59a:	81 e0       	ldi	r24, 0x01	; 1
      59c:	90 e0       	ldi	r25, 0x00	; 0
      59e:	5d c0       	rjmp	.+186    	; 0x65a <__stack+0x15b>
-     5a0:	e0 91 2c 02 	lds	r30, 0x022C
-     5a4:	f0 91 2d 02 	lds	r31, 0x022D
+			}
+			break;
+		case RIGHT:
+			if(currentSelection->child != NULL){
+     5a0:	e0 91 2e 02 	lds	r30, 0x022E
+     5a4:	f0 91 2f 02 	lds	r31, 0x022F
      5a8:	86 81       	ldd	r24, Z+6	; 0x06
      5aa:	97 81       	ldd	r25, Z+7	; 0x07
      5ac:	00 97       	sbiw	r24, 0x00	; 0
      5ae:	59 f0       	breq	.+22     	; 0x5c6 <__stack+0xc7>
-     5b0:	90 93 2d 02 	sts	0x022D, r25
-     5b4:	80 93 2c 02 	sts	0x022C, r24
-     5b8:	90 93 31 02 	sts	0x0231, r25
-     5bc:	80 93 30 02 	sts	0x0230, r24
+				currentSelection = currentSelection->child;
+     5b0:	90 93 2f 02 	sts	0x022F, r25
+     5b4:	80 93 2e 02 	sts	0x022E, r24
+				currentHead = currentSelection;
+     5b8:	90 93 33 02 	sts	0x0233, r25
+     5bc:	80 93 32 02 	sts	0x0232, r24
      5c0:	81 e0       	ldi	r24, 0x01	; 1
      5c2:	90 e0       	ldi	r25, 0x00	; 0
      5c4:	4a c0       	rjmp	.+148    	; 0x65a <__stack+0x15b>
+			}
+			else if(currentSelection->name == "Easy"){
      5c6:	80 81       	ld	r24, Z
      5c8:	91 81       	ldd	r25, Z+1	; 0x01
      5ca:	21 e0       	ldi	r18, 0x01	; 1
      5cc:	87 33       	cpi	r24, 0x37	; 55
      5ce:	92 07       	cpc	r25, r18
      5d0:	39 f4       	brne	.+14     	; 0x5e0 <__stack+0xe1>
+				GAMESTATUS = PLAYING_EASY;
      5d2:	81 e0       	ldi	r24, 0x01	; 1
      5d4:	90 e0       	ldi	r25, 0x00	; 0
      5d6:	90 93 1f 02 	sts	0x021F, r25
      5da:	80 93 1e 02 	sts	0x021E, r24
      5de:	3d c0       	rjmp	.+122    	; 0x65a <__stack+0x15b>
+				
+				
+			}
+			else if(currentSelection->name == "Normal"){
      5e0:	21 e0       	ldi	r18, 0x01	; 1
      5e2:	8c 33       	cpi	r24, 0x3C	; 60
      5e4:	92 07       	cpc	r25, r18
      5e6:	49 f4       	brne	.+18     	; 0x5fa <__stack+0xfb>
+				GAMESTATUS = PLAYING_NORMAL;
      5e8:	82 e0       	ldi	r24, 0x02	; 2
      5ea:	90 e0       	ldi	r25, 0x00	; 0
      5ec:	90 93 1f 02 	sts	0x021F, r25
@@ -744,9 +869,14 @@ Disassembly of section .text:
      5f4:	81 e0       	ldi	r24, 0x01	; 1
      5f6:	90 e0       	ldi	r25, 0x00	; 0
      5f8:	30 c0       	rjmp	.+96     	; 0x65a <__stack+0x15b>
+			
+				
+			}
+			else if(currentSelection->name == "Hard"){
      5fa:	83 54       	subi	r24, 0x43	; 67
      5fc:	91 40       	sbci	r25, 0x01	; 1
      5fe:	41 f5       	brne	.+80     	; 0x650 <__stack+0x151>
+				GAMESTATUS = PLAYING_HARD;
      600:	83 e0       	ldi	r24, 0x03	; 3
      602:	90 e0       	ldi	r25, 0x00	; 0
      604:	90 93 1f 02 	sts	0x021F, r25
@@ -754,22 +884,38 @@ Disassembly of section .text:
      60c:	81 e0       	ldi	r24, 0x01	; 1
      60e:	90 e0       	ldi	r25, 0x00	; 0
      610:	24 c0       	rjmp	.+72     	; 0x65a <__stack+0x15b>
-     612:	e0 91 2c 02 	lds	r30, 0x022C
-     616:	f0 91 2d 02 	lds	r31, 0x022D
+				
+			}
+			
+			break;
+		case LEFT:
+			if(currentSelection->parent != NULL){
+     612:	e0 91 2e 02 	lds	r30, 0x022E
+     616:	f0 91 2f 02 	lds	r31, 0x022F
      61a:	80 85       	ldd	r24, Z+8	; 0x08
      61c:	91 85       	ldd	r25, Z+9	; 0x09
      61e:	00 97       	sbiw	r24, 0x00	; 0
      620:	d1 f0       	breq	.+52     	; 0x656 <__stack+0x157>
-     622:	90 93 2d 02 	sts	0x022D, r25
-     626:	80 93 2c 02 	sts	0x022C, r24
-     62a:	90 93 31 02 	sts	0x0231, r25
-     62e:	80 93 30 02 	sts	0x0230, r24
+				currentSelection = currentSelection->parent;
+     622:	90 93 2f 02 	sts	0x022F, r25
+     626:	80 93 2e 02 	sts	0x022E, r24
+				currentHead = currentSelection;
+     62a:	90 93 33 02 	sts	0x0233, r25
+     62e:	80 93 32 02 	sts	0x0232, r24
      632:	81 e0       	ldi	r24, 0x01	; 1
      634:	90 e0       	ldi	r25, 0x00	; 0
      636:	11 c0       	rjmp	.+34     	; 0x65a <__stack+0x15b>
+		joyCurrentDirection = joyCurrentDirectionX;
+		oled_clear_screen(); //skjermen må oppdateres
+		doesDirectionChange = 1;
+	}
+	else{
+		doesDirectionChange = 0;
      638:	80 e0       	ldi	r24, 0x00	; 0
      63a:	90 e0       	ldi	r25, 0x00	; 0
      63c:	0e c0       	rjmp	.+28     	; 0x65a <__stack+0x15b>
+	}
+	switch(joyCurrentDirection){
      63e:	81 e0       	ldi	r24, 0x01	; 1
      640:	90 e0       	ldi	r25, 0x00	; 0
      642:	0b c0       	rjmp	.+22     	; 0x65a <__stack+0x15b>
@@ -784,10 +930,20 @@ Disassembly of section .text:
      654:	02 c0       	rjmp	.+4      	; 0x65a <__stack+0x15b>
      656:	81 e0       	ldi	r24, 0x01	; 1
      658:	90 e0       	ldi	r25, 0x00	; 0
-     65a:	d0 93 2b 02 	sts	0x022B, r29
-     65e:	c0 93 2a 02 	sts	0x022A, r28
+		//default:
+			
+		//Burde ikke skje
+			
+	}
+	joyLastDirectionY = joyCurrentDirectionY; //Oppdaterer hva som var sist
+     65a:	d0 93 2d 02 	sts	0x022D, r29
+     65e:	c0 93 2c 02 	sts	0x022C, r28
+	joyLastDirectionX = joyCurrentDirectionX;
      662:	10 93 23 02 	sts	0x0223, r17
      666:	00 93 22 02 	sts	0x0222, r16
+	
+	return doesDirectionChange;
+}
      66a:	df 91       	pop	r29
      66c:	cf 91       	pop	r28
      66e:	1f 91       	pop	r17
@@ -954,16 +1110,35 @@ Disassembly of section .text:
      79c:	08 95       	ret
 
 0000079e <adc_init>:
+*/
+
+volatile int adcInProgress = 0;
+
+void adc_init(void){
+	DDRE &= ~(1<<DDE0); //Hvis vi skal bruke interrupt pin-en i stedet for delay (blir en slags interrupt)
      79e:	30 98       	cbi	0x06, 0	; 6
      7a0:	08 95       	ret
 
 000007a2 <adc_read>:
+
+uint8_t adc_read(uint8_t ch){ //ch = 0: joystick x. ch = 1: joystick y. ch = 2: slider left. ch = 3: slider right. 
+	
+	
+	volatile char *ext_adc =(char*) 0x1400;
+	*ext_adc = 0x4 + ch;
      7a2:	8c 5f       	subi	r24, 0xFC	; 252
      7a4:	80 93 00 14 	sts	0x1400, r24
      7a8:	82 e5       	ldi	r24, 0x52	; 82
      7aa:	8a 95       	dec	r24
      7ac:	f1 f7       	brne	.-4      	; 0x7aa <adc_read+0x8>
+	while (adcInProgress)
+	*/
+	
+	
+	_delay_us(50);
+	return *ext_adc;	
      7ae:	80 91 00 14 	lds	r24, 0x1400
+}
      7b2:	08 95       	ret
 
 000007b4 <avr_init>:
@@ -1228,6 +1403,12 @@ ISR(INT2_vect){
      92a:	18 95       	reti
 
 0000092c <menu_init>:
+
+node_t* currentSelection;
+node_t* currentHead;
+node_t* developers;
+
+void menu_init(void){
      92c:	2f 92       	push	r2
      92e:	3f 92       	push	r3
      930:	4f 92       	push	r4
@@ -1251,65 +1432,95 @@ ISR(INT2_vect){
      954:	00 d0       	rcall	.+0      	; 0x956 <menu_init+0x2a>
      956:	cd b7       	in	r28, 0x3d	; 61
      958:	de b7       	in	r29, 0x3e	; 62
+	
+	
+	node_t* newgame = malloc(sizeof(node_t)); //For å allokere nok minne av størrelse node_t
      95a:	8a e0       	ldi	r24, 0x0A	; 10
      95c:	90 e0       	ldi	r25, 0x00	; 0
      95e:	0e 94 cd 07 	call	0xf9a	; 0xf9a <malloc>
      962:	9e 83       	std	Y+6, r25	; 0x06
      964:	8d 83       	std	Y+5, r24	; 0x05
+		node_t* easy = malloc(sizeof(node_t));
      966:	8a e0       	ldi	r24, 0x0A	; 10
      968:	90 e0       	ldi	r25, 0x00	; 0
      96a:	0e 94 cd 07 	call	0xf9a	; 0xf9a <malloc>
      96e:	4c 01       	movw	r8, r24
+		node_t* normal = malloc(sizeof(node_t));
      970:	8a e0       	ldi	r24, 0x0A	; 10
      972:	90 e0       	ldi	r25, 0x00	; 0
      974:	0e 94 cd 07 	call	0xf9a	; 0xf9a <malloc>
      978:	5c 01       	movw	r10, r24
+		node_t* hard = malloc(sizeof(node_t));
      97a:	8a e0       	ldi	r24, 0x0A	; 10
      97c:	90 e0       	ldi	r25, 0x00	; 0
      97e:	0e 94 cd 07 	call	0xf9a	; 0xf9a <malloc>
      982:	9a 83       	std	Y+2, r25	; 0x02
      984:	89 83       	std	Y+1, r24	; 0x01
+	
+	node_t* highscore = malloc(sizeof(node_t));
      986:	8a e0       	ldi	r24, 0x0A	; 10
      988:	90 e0       	ldi	r25, 0x00	; 0
      98a:	0e 94 cd 07 	call	0xf9a	; 0xf9a <malloc>
      98e:	6c 01       	movw	r12, r24
+	node_t* options = malloc(sizeof(node_t));
      990:	8a e0       	ldi	r24, 0x0A	; 10
      992:	90 e0       	ldi	r25, 0x00	; 0
      994:	0e 94 cd 07 	call	0xf9a	; 0xf9a <malloc>
      998:	8c 01       	movw	r16, r24
+		node_t* sound = malloc(sizeof(node_t));
      99a:	8a e0       	ldi	r24, 0x0A	; 10
      99c:	90 e0       	ldi	r25, 0x00	; 0
      99e:	0e 94 cd 07 	call	0xf9a	; 0xf9a <malloc>
      9a2:	7c 01       	movw	r14, r24
+			node_t* sound_on = malloc(sizeof(node_t));
      9a4:	8a e0       	ldi	r24, 0x0A	; 10
      9a6:	90 e0       	ldi	r25, 0x00	; 0
      9a8:	0e 94 cd 07 	call	0xf9a	; 0xf9a <malloc>
      9ac:	2c 01       	movw	r4, r24
+			node_t* sound_off = malloc(sizeof(node_t));
      9ae:	8a e0       	ldi	r24, 0x0A	; 10
      9b0:	90 e0       	ldi	r25, 0x00	; 0
      9b2:	0e 94 cd 07 	call	0xf9a	; 0xf9a <malloc>
      9b6:	9c 83       	std	Y+4, r25	; 0x04
      9b8:	8b 83       	std	Y+3, r24	; 0x03
+		node_t* sensitivity = malloc(sizeof(node_t));
      9ba:	8a e0       	ldi	r24, 0x0A	; 10
      9bc:	90 e0       	ldi	r25, 0x00	; 0
      9be:	0e 94 cd 07 	call	0xf9a	; 0xf9a <malloc>
      9c2:	3c 01       	movw	r6, r24
+	
+	node_t* credits = malloc(sizeof(node_t));
      9c4:	8a e0       	ldi	r24, 0x0A	; 10
      9c6:	90 e0       	ldi	r25, 0x00	; 0
      9c8:	0e 94 cd 07 	call	0xf9a	; 0xf9a <malloc>
      9cc:	1c 01       	movw	r2, r24
+		developers = malloc(sizeof(node_t));
      9ce:	8a e0       	ldi	r24, 0x0A	; 10
      9d0:	90 e0       	ldi	r25, 0x00	; 0
      9d2:	0e 94 cd 07 	call	0xf9a	; 0xf9a <malloc>
      9d6:	9c 01       	movw	r18, r24
-     9d8:	90 93 2f 02 	sts	0x022F, r25
-     9dc:	80 93 2e 02 	sts	0x022E, r24
+     9d8:	90 93 31 02 	sts	0x0231, r25
+     9dc:	80 93 30 02 	sts	0x0230, r24
+	
+	currentHead = malloc(sizeof(node_t));
+	currentSelection = malloc(sizeof(node_t));
+	
+	
+	currentHead = newgame;
      9e0:	8d 81       	ldd	r24, Y+5	; 0x05
      9e2:	9e 81       	ldd	r25, Y+6	; 0x06
-     9e4:	90 93 31 02 	sts	0x0231, r25
-     9e8:	80 93 30 02 	sts	0x0230, r24
-     9ec:	90 93 2d 02 	sts	0x022D, r25
-     9f0:	80 93 2c 02 	sts	0x022C, r24
+     9e4:	90 93 33 02 	sts	0x0233, r25
+     9e8:	80 93 32 02 	sts	0x0232, r24
+	//currentSelection = DER PILEN DIN PEKER NÅ
+	currentSelection = newgame;
+     9ec:	90 93 2f 02 	sts	0x022F, r25
+     9f0:	80 93 2e 02 	sts	0x022E, r24
+		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
+		
+}
+
+void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
+	myNode->name = nodeName;
      9f4:	81 e6       	ldi	r24, 0x61	; 97
      9f6:	91 e0       	ldi	r25, 0x01	; 1
      9f8:	ad 81       	ldd	r26, Y+5	; 0x05
@@ -1317,160 +1528,250 @@ ISR(INT2_vect){
      9fc:	11 96       	adiw	r26, 0x01	; 1
      9fe:	9c 93       	st	X, r25
      a00:	8e 93       	st	-X, r24
+	myNode->previous = previous;
      a02:	15 96       	adiw	r26, 0x05	; 5
      a04:	1c 92       	st	X, r1
      a06:	1e 92       	st	-X, r1
      a08:	14 97       	sbiw	r26, 0x04	; 4
+	myNode->next = next;
      a0a:	13 96       	adiw	r26, 0x03	; 3
      a0c:	dc 92       	st	X, r13
      a0e:	ce 92       	st	-X, r12
      a10:	12 97       	sbiw	r26, 0x02	; 2
+	myNode->child = child;
      a12:	17 96       	adiw	r26, 0x07	; 7
      a14:	9c 92       	st	X, r9
      a16:	8e 92       	st	-X, r8
      a18:	16 97       	sbiw	r26, 0x06	; 6
+	myNode->parent = parent;
      a1a:	19 96       	adiw	r26, 0x09	; 9
      a1c:	1c 92       	st	X, r1
      a1e:	1e 92       	st	-X, r1
      a20:	18 97       	sbiw	r26, 0x08	; 8
+		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
+		
+}
+
+void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
+	myNode->name = nodeName;
      a22:	87 e3       	ldi	r24, 0x37	; 55
      a24:	91 e0       	ldi	r25, 0x01	; 1
      a26:	f4 01       	movw	r30, r8
      a28:	91 83       	std	Z+1, r25	; 0x01
      a2a:	80 83       	st	Z, r24
+	myNode->previous = previous;
      a2c:	15 82       	std	Z+5, r1	; 0x05
      a2e:	14 82       	std	Z+4, r1	; 0x04
+	myNode->next = next;
      a30:	b3 82       	std	Z+3, r11	; 0x03
      a32:	a2 82       	std	Z+2, r10	; 0x02
+	myNode->child = child;
      a34:	17 82       	std	Z+7, r1	; 0x07
      a36:	16 82       	std	Z+6, r1	; 0x06
+	myNode->parent = parent;
      a38:	b1 87       	std	Z+9, r27	; 0x09
      a3a:	a0 87       	std	Z+8, r26	; 0x08
+		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
+		
+}
+
+void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
+	myNode->name = nodeName;
      a3c:	8c e3       	ldi	r24, 0x3C	; 60
      a3e:	91 e0       	ldi	r25, 0x01	; 1
      a40:	d5 01       	movw	r26, r10
      a42:	11 96       	adiw	r26, 0x01	; 1
      a44:	9c 93       	st	X, r25
      a46:	8e 93       	st	-X, r24
+	myNode->previous = previous;
      a48:	15 96       	adiw	r26, 0x05	; 5
      a4a:	9c 92       	st	X, r9
      a4c:	8e 92       	st	-X, r8
      a4e:	14 97       	sbiw	r26, 0x04	; 4
+	myNode->next = next;
      a50:	e9 81       	ldd	r30, Y+1	; 0x01
      a52:	fa 81       	ldd	r31, Y+2	; 0x02
      a54:	13 96       	adiw	r26, 0x03	; 3
      a56:	fc 93       	st	X, r31
      a58:	ee 93       	st	-X, r30
      a5a:	12 97       	sbiw	r26, 0x02	; 2
+	myNode->child = child;
      a5c:	17 96       	adiw	r26, 0x07	; 7
      a5e:	1c 92       	st	X, r1
      a60:	1e 92       	st	-X, r1
      a62:	16 97       	sbiw	r26, 0x06	; 6
+	myNode->parent = parent;
      a64:	8d 81       	ldd	r24, Y+5	; 0x05
      a66:	9e 81       	ldd	r25, Y+6	; 0x06
      a68:	19 96       	adiw	r26, 0x09	; 9
      a6a:	9c 93       	st	X, r25
      a6c:	8e 93       	st	-X, r24
      a6e:	18 97       	sbiw	r26, 0x08	; 8
+		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
+		
+}
+
+void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
+	myNode->name = nodeName;
      a70:	83 e4       	ldi	r24, 0x43	; 67
      a72:	91 e0       	ldi	r25, 0x01	; 1
      a74:	91 83       	std	Z+1, r25	; 0x01
      a76:	80 83       	st	Z, r24
+	myNode->previous = previous;
      a78:	b5 82       	std	Z+5, r11	; 0x05
      a7a:	a4 82       	std	Z+4, r10	; 0x04
+	myNode->next = next;
      a7c:	13 82       	std	Z+3, r1	; 0x03
      a7e:	12 82       	std	Z+2, r1	; 0x02
+	myNode->child = child;
      a80:	17 82       	std	Z+7, r1	; 0x07
      a82:	16 82       	std	Z+6, r1	; 0x06
+	myNode->parent = parent;
      a84:	ad 81       	ldd	r26, Y+5	; 0x05
      a86:	be 81       	ldd	r27, Y+6	; 0x06
      a88:	b1 87       	std	Z+9, r27	; 0x09
      a8a:	a0 87       	std	Z+8, r26	; 0x08
+		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
+		
+}
+
+void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
+	myNode->name = nodeName;
      a8c:	8a e6       	ldi	r24, 0x6A	; 106
      a8e:	91 e0       	ldi	r25, 0x01	; 1
      a90:	f6 01       	movw	r30, r12
      a92:	91 83       	std	Z+1, r25	; 0x01
      a94:	80 83       	st	Z, r24
+	myNode->previous = previous;
      a96:	b5 83       	std	Z+5, r27	; 0x05
      a98:	a4 83       	std	Z+4, r26	; 0x04
+	myNode->next = next;
      a9a:	13 83       	std	Z+3, r17	; 0x03
      a9c:	02 83       	std	Z+2, r16	; 0x02
+	myNode->child = child;
      a9e:	17 82       	std	Z+7, r1	; 0x07
      aa0:	16 82       	std	Z+6, r1	; 0x06
+	myNode->parent = parent;
      aa2:	11 86       	std	Z+9, r1	; 0x09
      aa4:	10 86       	std	Z+8, r1	; 0x08
+		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
+		
+}
+
+void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
+	myNode->name = nodeName;
      aa6:	84 e7       	ldi	r24, 0x74	; 116
      aa8:	91 e0       	ldi	r25, 0x01	; 1
      aaa:	d8 01       	movw	r26, r16
      aac:	11 96       	adiw	r26, 0x01	; 1
      aae:	9c 93       	st	X, r25
      ab0:	8e 93       	st	-X, r24
+	myNode->previous = previous;
      ab2:	15 96       	adiw	r26, 0x05	; 5
      ab4:	dc 92       	st	X, r13
      ab6:	ce 92       	st	-X, r12
      ab8:	14 97       	sbiw	r26, 0x04	; 4
+	myNode->next = next;
      aba:	13 96       	adiw	r26, 0x03	; 3
      abc:	3c 92       	st	X, r3
      abe:	2e 92       	st	-X, r2
      ac0:	12 97       	sbiw	r26, 0x02	; 2
+	myNode->child = child;
      ac2:	17 96       	adiw	r26, 0x07	; 7
      ac4:	7c 92       	st	X, r7
      ac6:	6e 92       	st	-X, r6
      ac8:	16 97       	sbiw	r26, 0x06	; 6
+	myNode->parent = parent;
      aca:	19 96       	adiw	r26, 0x09	; 9
      acc:	1c 92       	st	X, r1
      ace:	1e 92       	st	-X, r1
      ad0:	18 97       	sbiw	r26, 0x08	; 8
+		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
+		
+}
+
+void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
+	myNode->name = nodeName;
      ad2:	8c e7       	ldi	r24, 0x7C	; 124
      ad4:	91 e0       	ldi	r25, 0x01	; 1
      ad6:	f3 01       	movw	r30, r6
      ad8:	91 83       	std	Z+1, r25	; 0x01
      ada:	80 83       	st	Z, r24
+	myNode->previous = previous;
      adc:	15 82       	std	Z+5, r1	; 0x05
      ade:	14 82       	std	Z+4, r1	; 0x04
+	myNode->next = next;
      ae0:	f3 82       	std	Z+3, r15	; 0x03
      ae2:	e2 82       	std	Z+2, r14	; 0x02
+	myNode->child = child;
      ae4:	17 82       	std	Z+7, r1	; 0x07
      ae6:	16 82       	std	Z+6, r1	; 0x06
+	myNode->parent = parent;
      ae8:	11 87       	std	Z+9, r17	; 0x09
      aea:	00 87       	std	Z+8, r16	; 0x08
+		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
+		
+}
+
+void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
+	myNode->name = nodeName;
      aec:	88 e8       	ldi	r24, 0x88	; 136
      aee:	91 e0       	ldi	r25, 0x01	; 1
      af0:	d7 01       	movw	r26, r14
      af2:	11 96       	adiw	r26, 0x01	; 1
      af4:	9c 93       	st	X, r25
      af6:	8e 93       	st	-X, r24
+	myNode->previous = previous;
      af8:	15 96       	adiw	r26, 0x05	; 5
      afa:	7c 92       	st	X, r7
      afc:	6e 92       	st	-X, r6
      afe:	14 97       	sbiw	r26, 0x04	; 4
+	myNode->next = next;
      b00:	13 96       	adiw	r26, 0x03	; 3
      b02:	1c 92       	st	X, r1
      b04:	1e 92       	st	-X, r1
      b06:	12 97       	sbiw	r26, 0x02	; 2
+	myNode->child = child;
      b08:	17 96       	adiw	r26, 0x07	; 7
      b0a:	5c 92       	st	X, r5
      b0c:	4e 92       	st	-X, r4
      b0e:	16 97       	sbiw	r26, 0x06	; 6
+	myNode->parent = parent;
      b10:	19 96       	adiw	r26, 0x09	; 9
      b12:	1c 93       	st	X, r17
      b14:	0e 93       	st	-X, r16
      b16:	18 97       	sbiw	r26, 0x08	; 8
+		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
+		
+}
+
+void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
+	myNode->name = nodeName;
      b18:	8e e8       	ldi	r24, 0x8E	; 142
      b1a:	91 e0       	ldi	r25, 0x01	; 1
      b1c:	f2 01       	movw	r30, r4
      b1e:	91 83       	std	Z+1, r25	; 0x01
      b20:	80 83       	st	Z, r24
+	myNode->previous = previous;
      b22:	15 82       	std	Z+5, r1	; 0x05
      b24:	14 82       	std	Z+4, r1	; 0x04
+	myNode->next = next;
      b26:	8b 81       	ldd	r24, Y+3	; 0x03
      b28:	9c 81       	ldd	r25, Y+4	; 0x04
      b2a:	93 83       	std	Z+3, r25	; 0x03
      b2c:	82 83       	std	Z+2, r24	; 0x02
+	myNode->child = child;
      b2e:	17 82       	std	Z+7, r1	; 0x07
      b30:	16 82       	std	Z+6, r1	; 0x06
+	myNode->parent = parent;
      b32:	f1 86       	std	Z+9, r15	; 0x09
      b34:	e0 86       	std	Z+8, r14	; 0x08
+		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
+		
+}
+
+void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
+	myNode->name = nodeName;
      b36:	87 e9       	ldi	r24, 0x97	; 151
      b38:	91 e0       	ldi	r25, 0x01	; 1
      b3a:	ab 81       	ldd	r26, Y+3	; 0x03
@@ -1478,57 +1779,87 @@ ISR(INT2_vect){
      b3e:	11 96       	adiw	r26, 0x01	; 1
      b40:	9c 93       	st	X, r25
      b42:	8e 93       	st	-X, r24
+	myNode->previous = previous;
      b44:	15 96       	adiw	r26, 0x05	; 5
      b46:	5c 92       	st	X, r5
      b48:	4e 92       	st	-X, r4
      b4a:	14 97       	sbiw	r26, 0x04	; 4
+	myNode->next = next;
      b4c:	13 96       	adiw	r26, 0x03	; 3
      b4e:	1c 92       	st	X, r1
      b50:	1e 92       	st	-X, r1
      b52:	12 97       	sbiw	r26, 0x02	; 2
+	myNode->child = child;
      b54:	17 96       	adiw	r26, 0x07	; 7
      b56:	1c 92       	st	X, r1
      b58:	1e 92       	st	-X, r1
      b5a:	16 97       	sbiw	r26, 0x06	; 6
+	myNode->parent = parent;
      b5c:	19 96       	adiw	r26, 0x09	; 9
      b5e:	fc 92       	st	X, r15
      b60:	ee 92       	st	-X, r14
      b62:	18 97       	sbiw	r26, 0x08	; 8
+		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
+		
+}
+
+void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
+	myNode->name = nodeName;
      b64:	81 ea       	ldi	r24, 0xA1	; 161
      b66:	91 e0       	ldi	r25, 0x01	; 1
      b68:	f1 01       	movw	r30, r2
      b6a:	91 83       	std	Z+1, r25	; 0x01
      b6c:	80 83       	st	Z, r24
+	myNode->previous = previous;
      b6e:	15 83       	std	Z+5, r17	; 0x05
      b70:	04 83       	std	Z+4, r16	; 0x04
+	myNode->next = next;
      b72:	13 82       	std	Z+3, r1	; 0x03
      b74:	12 82       	std	Z+2, r1	; 0x02
+	myNode->child = child;
      b76:	37 83       	std	Z+7, r19	; 0x07
      b78:	26 83       	std	Z+6, r18	; 0x06
+	myNode->parent = parent;
      b7a:	11 86       	std	Z+9, r1	; 0x09
      b7c:	10 86       	std	Z+8, r1	; 0x08
+		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
+		
+}
+
+void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent){
+	myNode->name = nodeName;
      b7e:	89 ea       	ldi	r24, 0xA9	; 169
      b80:	91 e0       	ldi	r25, 0x01	; 1
      b82:	d9 01       	movw	r26, r18
      b84:	11 96       	adiw	r26, 0x01	; 1
      b86:	9c 93       	st	X, r25
      b88:	8e 93       	st	-X, r24
+	myNode->previous = previous;
      b8a:	15 96       	adiw	r26, 0x05	; 5
      b8c:	1c 92       	st	X, r1
      b8e:	1e 92       	st	-X, r1
      b90:	14 97       	sbiw	r26, 0x04	; 4
+	myNode->next = next;
      b92:	13 96       	adiw	r26, 0x03	; 3
      b94:	1c 92       	st	X, r1
      b96:	1e 92       	st	-X, r1
      b98:	12 97       	sbiw	r26, 0x02	; 2
+	myNode->child = child;
      b9a:	17 96       	adiw	r26, 0x07	; 7
      b9c:	1c 92       	st	X, r1
      b9e:	1e 92       	st	-X, r1
      ba0:	16 97       	sbiw	r26, 0x06	; 6
+	myNode->parent = parent;
      ba2:	19 96       	adiw	r26, 0x09	; 9
      ba4:	3c 92       	st	X, r3
      ba6:	2e 92       	st	-X, r2
      ba8:	18 97       	sbiw	r26, 0x08	; 8
+		
+	
+	menu_defineMenuEntries(credits,"Credits",NULL,options, developers, NULL);
+		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
+		
+}
      baa:	26 96       	adiw	r28, 0x06	; 6
      bac:	0f b6       	in	r0, 0x3f	; 63
      bae:	f8 94       	cli
@@ -1556,52 +1887,90 @@ ISR(INT2_vect){
      bda:	08 95       	ret
 
 00000bdc <menu_save>:
+	myNode->child = child;
+	myNode->parent = parent;
+}
+
+
+void menu_save(void){ //Argument node_t* firstNode?
      bdc:	1f 93       	push	r17
      bde:	cf 93       	push	r28
      be0:	df 93       	push	r29
-     be2:	c0 91 30 02 	lds	r28, 0x0230
-     be6:	d0 91 31 02 	lds	r29, 0x0231
+	
+	node_t* temp = malloc(sizeof(node_t)); //For å iterere gjennom den lenkede listen
+	temp = currentHead;
+     be2:	c0 91 32 02 	lds	r28, 0x0232
+     be6:	d0 91 33 02 	lds	r29, 0x0233
+	
+	int page = 0;
+	while(temp->previous!=NULL){ //Itererer oss bakover til første node i listen
      bea:	8c 81       	ldd	r24, Y+4	; 0x04
      bec:	9d 81       	ldd	r25, Y+5	; 0x05
      bee:	00 97       	sbiw	r24, 0x00	; 0
      bf0:	11 f0       	breq	.+4      	; 0xbf6 <menu_save+0x1a>
+		temp = temp->previous;
      bf2:	ec 01       	movw	r28, r24
      bf4:	fa cf       	rjmp	.-12     	; 0xbea <menu_save+0xe>
+	}
+	while(temp!= NULL){ //Mens noden eksisterer
      bf6:	20 97       	sbiw	r28, 0x00	; 0
      bf8:	09 f1       	breq	.+66     	; 0xc3c <menu_save+0x60>
      bfa:	10 e0       	ldi	r17, 0x00	; 0
-     bfc:	80 91 2c 02 	lds	r24, 0x022C
-     c00:	90 91 2d 02 	lds	r25, 0x022D
+		
+		
+		if(currentSelection == temp && currentSelection != developers){
+     bfc:	80 91 2e 02 	lds	r24, 0x022E
+     c00:	90 91 2f 02 	lds	r25, 0x022F
      c04:	8c 17       	cp	r24, r28
      c06:	9d 07       	cpc	r25, r29
      c08:	69 f4       	brne	.+26     	; 0xc24 <menu_save+0x48>
-     c0a:	20 91 2e 02 	lds	r18, 0x022E
-     c0e:	30 91 2f 02 	lds	r19, 0x022F
+     c0a:	20 91 30 02 	lds	r18, 0x0230
+     c0e:	30 91 31 02 	lds	r19, 0x0231
      c12:	82 17       	cp	r24, r18
      c14:	93 07       	cpc	r25, r19
      c16:	31 f0       	breq	.+12     	; 0xc24 <menu_save+0x48>
+			sram_save_string("-->",page,0); //Burde pilen hardkodes et sted slik eller legges rett etter skriften?
      c18:	40 e0       	ldi	r20, 0x00	; 0
      c1a:	61 2f       	mov	r22, r17
      c1c:	8f ee       	ldi	r24, 0xEF	; 239
      c1e:	91 e0       	ldi	r25, 0x01	; 1
      c20:	0e 94 7a 07 	call	0xef4	; 0xef4 <sram_save_string>
+		}
+		sram_save_string(temp->name, page,20);
      c24:	44 e1       	ldi	r20, 0x14	; 20
      c26:	61 2f       	mov	r22, r17
      c28:	88 81       	ld	r24, Y
      c2a:	99 81       	ldd	r25, Y+1	; 0x01
      c2c:	0e 94 7a 07 	call	0xef4	; 0xef4 <sram_save_string>
+		
+		temp = temp->next;
      c30:	0a 80       	ldd	r0, Y+2	; 0x02
      c32:	db 81       	ldd	r29, Y+3	; 0x03
      c34:	c0 2d       	mov	r28, r0
      c36:	1f 5f       	subi	r17, 0xFF	; 255
+	
+	int page = 0;
+	while(temp->previous!=NULL){ //Itererer oss bakover til første node i listen
+		temp = temp->previous;
+	}
+	while(temp!= NULL){ //Mens noden eksisterer
      c38:	20 97       	sbiw	r28, 0x00	; 0
      c3a:	01 f7       	brne	.-64     	; 0xbfc <menu_save+0x20>
+		sram_save_string(temp->name, page,20);
+		
+		temp = temp->next;
+		page++;
+	}
+}
      c3c:	df 91       	pop	r29
      c3e:	cf 91       	pop	r28
      c40:	1f 91       	pop	r17
      c42:	08 95       	ret
 
 00000c44 <menu_printGameScreen>:
+
+void menu_printGameScreen(void){
+	switch(GAMESTATUS){
      c44:	80 91 1e 02 	lds	r24, 0x021E
      c48:	90 91 1f 02 	lds	r25, 0x021F
      c4c:	82 30       	cpi	r24, 0x02	; 2
@@ -1612,18 +1981,27 @@ ISR(INT2_vect){
      c56:	81 f0       	breq	.+32     	; 0xc78 <menu_printGameScreen+0x34>
      c58:	01 97       	sbiw	r24, 0x01	; 1
      c5a:	a1 f4       	brne	.+40     	; 0xc84 <menu_printGameScreen+0x40>
+		case PLAYING_EASY:
+			sram_save_string("EASYYYYYY", 0,30);
      c5c:	4e e1       	ldi	r20, 0x1E	; 30
      c5e:	60 e0       	ldi	r22, 0x00	; 0
      c60:	83 ef       	ldi	r24, 0xF3	; 243
      c62:	91 e0       	ldi	r25, 0x01	; 1
      c64:	0e 94 7a 07 	call	0xef4	; 0xef4 <sram_save_string>
+			
+			break;
      c68:	08 95       	ret
+		case PLAYING_NORMAL:
+			sram_save_string("MEDIUM EKSTRA MAIS",0,30);
      c6a:	4e e1       	ldi	r20, 0x1E	; 30
      c6c:	60 e0       	ldi	r22, 0x00	; 0
      c6e:	8d ef       	ldi	r24, 0xFD	; 253
      c70:	91 e0       	ldi	r25, 0x01	; 1
      c72:	0e 94 7a 07 	call	0xef4	; 0xef4 <sram_save_string>
+			break;
      c76:	08 95       	ret
+		case PLAYING_HARD:
+			sram_save_string("EKSTRA STERK",0,30);
      c78:	4e e1       	ldi	r20, 0x1E	; 30
      c7a:	60 e0       	ldi	r22, 0x00	; 0
      c7c:	80 e1       	ldi	r24, 0x10	; 16
@@ -1632,50 +2010,68 @@ ISR(INT2_vect){
      c84:	08 95       	ret
 
 00000c86 <multiboardInfo_update>:
+ */ 
+#include "../../lib/can.h"
+#include "../../lib/joy.h"
+#include "adc.h"
+
+int multiboardInfo_update(can_msg* yourMessage){
      c86:	cf 93       	push	r28
      c88:	df 93       	push	r29
      c8a:	ec 01       	movw	r28, r24
+	
+	yourMessage->id = 1; //Her bestemmer vi at en ID som 1 vil være en melding fra joysticken
      c8c:	81 e0       	ldi	r24, 0x01	; 1
      c8e:	90 e0       	ldi	r25, 0x00	; 0
      c90:	99 83       	std	Y+1, r25	; 0x01
      c92:	88 83       	st	Y, r24
+	yourMessage->length = 7;
      c94:	87 e0       	ldi	r24, 0x07	; 7
      c96:	8a 8b       	std	Y+18, r24	; 0x12
+	yourMessage->data[0] = adc_read(0); //sender inn x-verdien til joysticken først. Denne verdien er mellom -100 og 100
      c98:	80 e0       	ldi	r24, 0x00	; 0
      c9a:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <adc_read>
      c9e:	90 e0       	ldi	r25, 0x00	; 0
      ca0:	9b 83       	std	Y+3, r25	; 0x03
      ca2:	8a 83       	std	Y+2, r24	; 0x02
+	yourMessage->data[1] = adc_read(1); //y-verdien til joystick
      ca4:	81 e0       	ldi	r24, 0x01	; 1
      ca6:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <adc_read>
      caa:	90 e0       	ldi	r25, 0x00	; 0
      cac:	9d 83       	std	Y+5, r25	; 0x05
      cae:	8c 83       	std	Y+4, r24	; 0x04
+	yourMessage->data[2] = joy_readButton(2); //leser joystick-knappen (L3 på ps4)
      cb0:	82 e0       	ldi	r24, 0x02	; 2
      cb2:	90 e0       	ldi	r25, 0x00	; 0
      cb4:	0e 94 57 02 	call	0x4ae	; 0x4ae <joy_readButton>
      cb8:	9f 83       	std	Y+7, r25	; 0x07
      cba:	8e 83       	std	Y+6, r24	; 0x06
+	yourMessage->data[3] = joy_readButton(0); //leser venstre knapp
      cbc:	80 e0       	ldi	r24, 0x00	; 0
      cbe:	90 e0       	ldi	r25, 0x00	; 0
      cc0:	0e 94 57 02 	call	0x4ae	; 0x4ae <joy_readButton>
      cc4:	99 87       	std	Y+9, r25	; 0x09
      cc6:	88 87       	std	Y+8, r24	; 0x08
+	yourMessage->data[4] = joy_readButton(1); //leser høyre knapp
      cc8:	81 e0       	ldi	r24, 0x01	; 1
      cca:	90 e0       	ldi	r25, 0x00	; 0
      ccc:	0e 94 57 02 	call	0x4ae	; 0x4ae <joy_readButton>
      cd0:	9b 87       	std	Y+11, r25	; 0x0b
      cd2:	8a 87       	std	Y+10, r24	; 0x0a
+	yourMessage->data[5] = adc_read(2); //Venstre slider
      cd4:	82 e0       	ldi	r24, 0x02	; 2
      cd6:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <adc_read>
      cda:	90 e0       	ldi	r25, 0x00	; 0
      cdc:	9d 87       	std	Y+13, r25	; 0x0d
      cde:	8c 87       	std	Y+12, r24	; 0x0c
+	yourMessage->data[6] = adc_read(3); //Høyre slider
      ce0:	83 e0       	ldi	r24, 0x03	; 3
      ce2:	0e 94 d1 03 	call	0x7a2	; 0x7a2 <adc_read>
      ce6:	90 e0       	ldi	r25, 0x00	; 0
      ce8:	9f 87       	std	Y+15, r25	; 0x0f
      cea:	8e 87       	std	Y+14, r24	; 0x0e
+	
+	return 1;
      cec:	81 e0       	ldi	r24, 0x01	; 1
      cee:	90 e0       	ldi	r25, 0x00	; 0
      cf0:	df 91       	pop	r29
@@ -1818,13 +2214,13 @@ ISR(INT2_vect){
      dfa:	80 83       	st	Z, r24
      dfc:	8f ea       	ldi	r24, 0xAF	; 175
      dfe:	80 83       	st	Z, r24
-     e00:	10 92 32 02 	sts	0x0232, r1
-     e04:	10 92 33 02 	sts	0x0233, r1
+     e00:	10 92 34 02 	sts	0x0234, r1
+     e04:	10 92 35 02 	sts	0x0235, r1
      e08:	08 95       	ret
 
 00000e0a <sram_write_data>:
-     e0a:	90 91 32 02 	lds	r25, 0x0232
-     e0e:	e0 91 33 02 	lds	r30, 0x0233
+     e0a:	90 91 34 02 	lds	r25, 0x0234
+     e0e:	e0 91 35 02 	lds	r30, 0x0235
      e12:	f0 e0       	ldi	r31, 0x00	; 0
      e14:	20 e8       	ldi	r18, 0x80	; 128
      e16:	92 9f       	mul	r25, r18
@@ -1836,11 +2232,11 @@ ISR(INT2_vect){
      e22:	08 95       	ret
 
 00000e24 <sram_goto_page>:
-     e24:	80 93 32 02 	sts	0x0232, r24
+     e24:	80 93 34 02 	sts	0x0234, r24
      e28:	08 95       	ret
 
 00000e2a <sram_goto_column>:
-     e2a:	80 93 33 02 	sts	0x0233, r24
+     e2a:	80 93 35 02 	sts	0x0235, r24
      e2e:	08 95       	ret
 
 00000e30 <sram_save_char>:
@@ -1881,9 +2277,9 @@ ISR(INT2_vect){
      e74:	fe 01       	movw	r30, r28
      e76:	84 91       	lpm	r24, Z
      e78:	0e 94 05 07 	call	0xe0a	; 0xe0a <sram_write_data>
-     e7c:	80 91 33 02 	lds	r24, 0x0233
+     e7c:	80 91 35 02 	lds	r24, 0x0235
      e80:	8f 5f       	subi	r24, 0xFF	; 255
-     e82:	80 93 33 02 	sts	0x0233, r24
+     e82:	80 93 35 02 	sts	0x0235, r24
      e86:	25 c0       	rjmp	.+74     	; 0xed2 <sram_save_char+0xa2>
      e88:	06 3e       	cpi	r16, 0xE6	; 230
      e8a:	11 05       	cpc	r17, r1
@@ -1892,9 +2288,9 @@ ISR(INT2_vect){
      e90:	35 96       	adiw	r30, 0x05	; 5
      e92:	84 91       	lpm	r24, Z
      e94:	0e 94 05 07 	call	0xe0a	; 0xe0a <sram_write_data>
-     e98:	80 91 33 02 	lds	r24, 0x0233
+     e98:	80 91 35 02 	lds	r24, 0x0235
      e9c:	8f 5f       	subi	r24, 0xFF	; 255
-     e9e:	80 93 33 02 	sts	0x0233, r24
+     e9e:	80 93 35 02 	sts	0x0235, r24
      ea2:	17 c0       	rjmp	.+46     	; 0xed2 <sram_save_char+0xa2>
      ea4:	08 3a       	cpi	r16, 0xA8	; 168
      ea6:	11 05       	cpc	r17, r1
@@ -1903,16 +2299,16 @@ ISR(INT2_vect){
      eac:	3a 96       	adiw	r30, 0x0a	; 10
      eae:	84 91       	lpm	r24, Z
      eb0:	0e 94 05 07 	call	0xe0a	; 0xe0a <sram_write_data>
-     eb4:	80 91 33 02 	lds	r24, 0x0233
+     eb4:	80 91 35 02 	lds	r24, 0x0235
      eb8:	8f 5f       	subi	r24, 0xFF	; 255
-     eba:	80 93 33 02 	sts	0x0233, r24
+     eba:	80 93 35 02 	sts	0x0235, r24
      ebe:	09 c0       	rjmp	.+18     	; 0xed2 <sram_save_char+0xa2>
      ec0:	f7 01       	movw	r30, r14
      ec2:	84 91       	lpm	r24, Z
      ec4:	0e 94 05 07 	call	0xe0a	; 0xe0a <sram_write_data>
-     ec8:	80 91 33 02 	lds	r24, 0x0233
+     ec8:	80 91 35 02 	lds	r24, 0x0235
      ecc:	8f 5f       	subi	r24, 0xFF	; 255
-     ece:	80 93 33 02 	sts	0x0233, r24
+     ece:	80 93 35 02 	sts	0x0235, r24
      ed2:	21 96       	adiw	r28, 0x01	; 1
      ed4:	ff ef       	ldi	r31, 0xFF	; 255
      ed6:	ef 1a       	sub	r14, r31
@@ -1945,9 +2341,9 @@ ISR(INT2_vect){
      f08:	cf 93       	push	r28
      f0a:	df 93       	push	r29
      f0c:	7c 01       	movw	r14, r24
-     f0e:	60 93 32 02 	sts	0x0232, r22
-     f12:	40 93 33 02 	sts	0x0233, r20
-     f16:	00 91 33 02 	lds	r16, 0x0233
+     f0e:	60 93 34 02 	sts	0x0234, r22
+     f12:	40 93 35 02 	sts	0x0235, r20
+     f16:	00 91 35 02 	lds	r16, 0x0235
      f1a:	10 e0       	ldi	r17, 0x00	; 0
      f1c:	6c 01       	movw	r12, r24
      f1e:	c0 e0       	ldi	r28, 0x00	; 0
@@ -1969,10 +2365,10 @@ ISR(INT2_vect){
      f3e:	8c 37       	cpi	r24, 0x7C	; 124
      f40:	91 05       	cpc	r25, r1
      f42:	5c f0       	brlt	.+22     	; 0xf5a <sram_save_string+0x66>
-     f44:	80 91 32 02 	lds	r24, 0x0232
+     f44:	80 91 34 02 	lds	r24, 0x0234
      f48:	8f 5f       	subi	r24, 0xFF	; 255
-     f4a:	80 93 32 02 	sts	0x0232, r24
-     f4e:	10 92 33 02 	sts	0x0233, r1
+     f4a:	80 93 34 02 	sts	0x0234, r24
+     f4e:	10 92 35 02 	sts	0x0235, r1
      f52:	c8 2d       	mov	r28, r8
      f54:	d9 2d       	mov	r29, r9
      f56:	08 2d       	mov	r16, r8
@@ -2017,8 +2413,8 @@ ISR(INT2_vect){
      fa2:	10 f4       	brcc	.+4      	; 0xfa8 <malloc+0xe>
      fa4:	82 e0       	ldi	r24, 0x02	; 2
      fa6:	90 e0       	ldi	r25, 0x00	; 0
-     fa8:	e0 91 36 02 	lds	r30, 0x0236
-     fac:	f0 91 37 02 	lds	r31, 0x0237
+     fa8:	e0 91 38 02 	lds	r30, 0x0238
+     fac:	f0 91 39 02 	lds	r31, 0x0239
      fb0:	20 e0       	ldi	r18, 0x00	; 0
      fb2:	30 e0       	ldi	r19, 0x00	; 0
      fb4:	a0 e0       	ldi	r26, 0x00	; 0
@@ -2042,8 +2438,8 @@ ISR(INT2_vect){
      fd8:	8e 93       	st	-X, r24
      fda:	12 97       	sbiw	r26, 0x02	; 2
      fdc:	2c c0       	rjmp	.+88     	; 0x1036 <malloc+0x9c>
-     fde:	90 93 37 02 	sts	0x0237, r25
-     fe2:	80 93 36 02 	sts	0x0236, r24
+     fde:	90 93 39 02 	sts	0x0239, r25
+     fe2:	80 93 38 02 	sts	0x0238, r24
      fe6:	27 c0       	rjmp	.+78     	; 0x1036 <malloc+0x9c>
      fe8:	21 15       	cp	r18, r1
      fea:	31 05       	cpc	r19, r1
@@ -2079,8 +2475,8 @@ ISR(INT2_vect){
     1026:	93 83       	std	Z+3, r25	; 0x03
     1028:	82 83       	std	Z+2, r24	; 0x02
     102a:	04 c0       	rjmp	.+8      	; 0x1034 <malloc+0x9a>
-    102c:	90 93 37 02 	sts	0x0237, r25
-    1030:	80 93 36 02 	sts	0x0236, r24
+    102c:	90 93 39 02 	sts	0x0239, r25
+    1030:	80 93 38 02 	sts	0x0238, r24
     1034:	fe 01       	movw	r30, r28
     1036:	32 96       	adiw	r30, 0x02	; 2
     1038:	44 c0       	rjmp	.+136    	; 0x10c2 <malloc+0x128>
@@ -2094,14 +2490,14 @@ ISR(INT2_vect){
     1048:	39 83       	std	Y+1, r19	; 0x01
     104a:	28 83       	st	Y, r18
     104c:	3a c0       	rjmp	.+116    	; 0x10c2 <malloc+0x128>
-    104e:	20 91 34 02 	lds	r18, 0x0234
-    1052:	30 91 35 02 	lds	r19, 0x0235
+    104e:	20 91 36 02 	lds	r18, 0x0236
+    1052:	30 91 37 02 	lds	r19, 0x0237
     1056:	23 2b       	or	r18, r19
     1058:	41 f4       	brne	.+16     	; 0x106a <malloc+0xd0>
     105a:	20 91 02 01 	lds	r18, 0x0102
     105e:	30 91 03 01 	lds	r19, 0x0103
-    1062:	30 93 35 02 	sts	0x0235, r19
-    1066:	20 93 34 02 	sts	0x0234, r18
+    1062:	30 93 37 02 	sts	0x0237, r19
+    1066:	20 93 36 02 	sts	0x0236, r18
     106a:	20 91 00 01 	lds	r18, 0x0100
     106e:	30 91 01 01 	lds	r19, 0x0101
     1072:	21 15       	cp	r18, r1
@@ -2113,8 +2509,8 @@ ISR(INT2_vect){
     1080:	50 91 05 01 	lds	r21, 0x0105
     1084:	24 1b       	sub	r18, r20
     1086:	35 0b       	sbc	r19, r21
-    1088:	e0 91 34 02 	lds	r30, 0x0234
-    108c:	f0 91 35 02 	lds	r31, 0x0235
+    1088:	e0 91 36 02 	lds	r30, 0x0236
+    108c:	f0 91 37 02 	lds	r31, 0x0237
     1090:	e2 17       	cp	r30, r18
     1092:	f3 07       	cpc	r31, r19
     1094:	a0 f4       	brcc	.+40     	; 0x10be <malloc+0x124>
@@ -2131,8 +2527,8 @@ ISR(INT2_vect){
     10aa:	48 f0       	brcs	.+18     	; 0x10be <malloc+0x124>
     10ac:	4e 0f       	add	r20, r30
     10ae:	5f 1f       	adc	r21, r31
-    10b0:	50 93 35 02 	sts	0x0235, r21
-    10b4:	40 93 34 02 	sts	0x0234, r20
+    10b0:	50 93 37 02 	sts	0x0237, r21
+    10b4:	40 93 36 02 	sts	0x0236, r20
     10b8:	81 93       	st	Z+, r24
     10ba:	91 93       	st	Z+, r25
     10bc:	02 c0       	rjmp	.+4      	; 0x10c2 <malloc+0x128>
@@ -2153,21 +2549,21 @@ ISR(INT2_vect){
     10d6:	32 97       	sbiw	r30, 0x02	; 2
     10d8:	13 82       	std	Z+3, r1	; 0x03
     10da:	12 82       	std	Z+2, r1	; 0x02
-    10dc:	c0 91 36 02 	lds	r28, 0x0236
-    10e0:	d0 91 37 02 	lds	r29, 0x0237
+    10dc:	c0 91 38 02 	lds	r28, 0x0238
+    10e0:	d0 91 39 02 	lds	r29, 0x0239
     10e4:	20 97       	sbiw	r28, 0x00	; 0
     10e6:	81 f4       	brne	.+32     	; 0x1108 <free+0x3e>
     10e8:	20 81       	ld	r18, Z
     10ea:	31 81       	ldd	r19, Z+1	; 0x01
     10ec:	28 0f       	add	r18, r24
     10ee:	39 1f       	adc	r19, r25
-    10f0:	80 91 34 02 	lds	r24, 0x0234
-    10f4:	90 91 35 02 	lds	r25, 0x0235
+    10f0:	80 91 36 02 	lds	r24, 0x0236
+    10f4:	90 91 37 02 	lds	r25, 0x0237
     10f8:	82 17       	cp	r24, r18
     10fa:	93 07       	cpc	r25, r19
     10fc:	79 f5       	brne	.+94     	; 0x115c <free+0x92>
-    10fe:	f0 93 35 02 	sts	0x0235, r31
-    1102:	e0 93 34 02 	sts	0x0234, r30
+    10fe:	f0 93 37 02 	sts	0x0237, r31
+    1102:	e0 93 36 02 	sts	0x0236, r30
     1106:	6d c0       	rjmp	.+218    	; 0x11e2 <free+0x118>
     1108:	de 01       	movw	r26, r28
     110a:	20 e0       	ldi	r18, 0x00	; 0
@@ -2211,8 +2607,8 @@ ISR(INT2_vect){
     1156:	21 15       	cp	r18, r1
     1158:	31 05       	cpc	r19, r1
     115a:	29 f4       	brne	.+10     	; 0x1166 <free+0x9c>
-    115c:	f0 93 37 02 	sts	0x0237, r31
-    1160:	e0 93 36 02 	sts	0x0236, r30
+    115c:	f0 93 39 02 	sts	0x0239, r31
+    1160:	e0 93 38 02 	sts	0x0238, r30
     1164:	3e c0       	rjmp	.+124    	; 0x11e2 <free+0x118>
     1166:	d9 01       	movw	r26, r18
     1168:	13 96       	adiw	r26, 0x03	; 3
@@ -2256,20 +2652,20 @@ ISR(INT2_vect){
     11b4:	39 81       	ldd	r19, Y+1	; 0x01
     11b6:	82 0f       	add	r24, r18
     11b8:	93 1f       	adc	r25, r19
-    11ba:	20 91 34 02 	lds	r18, 0x0234
-    11be:	30 91 35 02 	lds	r19, 0x0235
+    11ba:	20 91 36 02 	lds	r18, 0x0236
+    11be:	30 91 37 02 	lds	r19, 0x0237
     11c2:	28 17       	cp	r18, r24
     11c4:	39 07       	cpc	r19, r25
     11c6:	69 f4       	brne	.+26     	; 0x11e2 <free+0x118>
     11c8:	30 97       	sbiw	r30, 0x00	; 0
     11ca:	29 f4       	brne	.+10     	; 0x11d6 <free+0x10c>
-    11cc:	10 92 37 02 	sts	0x0237, r1
-    11d0:	10 92 36 02 	sts	0x0236, r1
+    11cc:	10 92 39 02 	sts	0x0239, r1
+    11d0:	10 92 38 02 	sts	0x0238, r1
     11d4:	02 c0       	rjmp	.+4      	; 0x11da <free+0x110>
     11d6:	13 82       	std	Z+3, r1	; 0x03
     11d8:	12 82       	std	Z+2, r1	; 0x02
-    11da:	d0 93 35 02 	sts	0x0235, r29
-    11de:	c0 93 34 02 	sts	0x0234, r28
+    11da:	d0 93 37 02 	sts	0x0237, r29
+    11de:	c0 93 36 02 	sts	0x0236, r28
     11e2:	df 91       	pop	r29
     11e4:	cf 91       	pop	r28
     11e6:	08 95       	ret
@@ -2306,12 +2702,12 @@ ISR(INT2_vect){
     1222:	02 87       	std	Z+10, r16	; 0x0a
     1224:	81 e8       	ldi	r24, 0x81	; 129
     1226:	83 83       	std	Z+3, r24	; 0x03
-    1228:	80 91 38 02 	lds	r24, 0x0238
-    122c:	90 91 39 02 	lds	r25, 0x0239
+    1228:	80 91 3a 02 	lds	r24, 0x023A
+    122c:	90 91 3b 02 	lds	r25, 0x023B
     1230:	89 2b       	or	r24, r25
     1232:	21 f4       	brne	.+8      	; 0x123c <fdevopen+0x54>
-    1234:	f0 93 39 02 	sts	0x0239, r31
-    1238:	e0 93 38 02 	sts	0x0238, r30
+    1234:	f0 93 3b 02 	sts	0x023B, r31
+    1238:	e0 93 3a 02 	sts	0x023A, r30
     123c:	20 97       	sbiw	r28, 0x00	; 0
     123e:	c9 f0       	breq	.+50     	; 0x1272 <fdevopen+0x8a>
     1240:	d1 87       	std	Z+9, r29	; 0x09
@@ -2319,18 +2715,18 @@ ISR(INT2_vect){
     1244:	83 81       	ldd	r24, Z+3	; 0x03
     1246:	82 60       	ori	r24, 0x02	; 2
     1248:	83 83       	std	Z+3, r24	; 0x03
-    124a:	80 91 3a 02 	lds	r24, 0x023A
-    124e:	90 91 3b 02 	lds	r25, 0x023B
+    124a:	80 91 3c 02 	lds	r24, 0x023C
+    124e:	90 91 3d 02 	lds	r25, 0x023D
     1252:	89 2b       	or	r24, r25
     1254:	71 f4       	brne	.+28     	; 0x1272 <fdevopen+0x8a>
-    1256:	f0 93 3b 02 	sts	0x023B, r31
-    125a:	e0 93 3a 02 	sts	0x023A, r30
-    125e:	80 91 3c 02 	lds	r24, 0x023C
-    1262:	90 91 3d 02 	lds	r25, 0x023D
+    1256:	f0 93 3d 02 	sts	0x023D, r31
+    125a:	e0 93 3c 02 	sts	0x023C, r30
+    125e:	80 91 3e 02 	lds	r24, 0x023E
+    1262:	90 91 3f 02 	lds	r25, 0x023F
     1266:	89 2b       	or	r24, r25
     1268:	21 f4       	brne	.+8      	; 0x1272 <fdevopen+0x8a>
-    126a:	f0 93 3d 02 	sts	0x023D, r31
-    126e:	e0 93 3c 02 	sts	0x023C, r30
+    126a:	f0 93 3f 02 	sts	0x023F, r31
+    126e:	e0 93 3e 02 	sts	0x023E, r30
     1272:	cf 01       	movw	r24, r30
     1274:	df 91       	pop	r29
     1276:	cf 91       	pop	r28
@@ -2349,8 +2745,8 @@ ISR(INT2_vect){
     128e:	61 91       	ld	r22, Z+
     1290:	71 91       	ld	r23, Z+
     1292:	af 01       	movw	r20, r30
-    1294:	80 91 3a 02 	lds	r24, 0x023A
-    1298:	90 91 3b 02 	lds	r25, 0x023B
+    1294:	80 91 3c 02 	lds	r24, 0x023C
+    1298:	90 91 3d 02 	lds	r25, 0x023D
     129c:	0e 94 53 09 	call	0x12a6	; 0x12a6 <vfprintf>
     12a0:	e2 e0       	ldi	r30, 0x02	; 2
     12a2:	0c 94 1a 0c 	jmp	0x1834	; 0x1834 <__epilogue_restores__+0x20>

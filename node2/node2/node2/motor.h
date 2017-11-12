@@ -16,5 +16,6 @@ void motor_dirLeft(void);
 void motor_dirRight(void);
 void motor_calibrate(void);
 void motor_PID(int posRef, int16_t encoderValue);
+void motor_PIDspeed(int velRef, int16_t encoderValue);
 
 #endif /* MOTOR_H_ */
