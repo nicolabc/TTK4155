@@ -129,7 +129,7 @@ void motor_PIDspeed(int velRef, int16_t encoderValue){
 	PREV_ENCODERVALUE = encoderValue;
 	
 	
-	double Kp = 1.5;  //1.5;
+	double Kp = 1.2;  //1.5;
 	double Ki = 0.5;  //0.5;
 	double T = 0.05;  //0.05;
 	double Kd = 0.05; //0.07;
@@ -145,8 +145,8 @@ void motor_PIDspeed(int velRef, int16_t encoderValue){
 	
 	
 	
-	
-	int u = Kp*AbsError+ Kd/T*(error-PREV_ERROR); //T*Ki*SUM_ERROR
+	//-------Diskret PD regulator
+	int u = Kp*AbsError + Kd/T*(error-PREV_ERROR); //T*Ki*SUM_ERROR
 	
 	//printf("Velocity: %i error: %i    u:  %i \n", (int)velocity,(int)error, u);
 	//Velg retning basert på hvilken vei joystick peker

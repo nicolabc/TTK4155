@@ -110,7 +110,7 @@ int timer_dutyCycleUpdate(int percent){
 	{
 		return -1;
 	}
-	uint16_t offset = 17; //Offset må endres utifra bord. 17 er for arbeidsplass 10
+	uint16_t offset = 0; //Offset må endres utifra bord. 17 er for arbeidsplass 10. NÅ ER DET BORD 3! med 0 offset
 	uint16_t top = (percent*(131-56))/100+56 -offset;
 	OCR1A = top;
 	

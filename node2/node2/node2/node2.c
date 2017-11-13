@@ -141,7 +141,7 @@ int main(void)
 			CAN_FIRST_MESSAGE_RECEIVED = 1;
 			
 			//----------------TO SERVO -------------------
-			servo_positionUpdate(mottatt_data_char6);
+			servo_positionUpdate(255-mottatt_data_char6);
 			
 			//---------------SOLENOID-----------------
 			if(mottatt_data_char4 == 1){

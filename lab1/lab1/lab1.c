@@ -64,23 +64,32 @@ int main(void)
 	
 	can_msg yourMessage;
 	GAMESTATUS = MENU;
-	uint8_t gameOverValue = 0; //verdien vi får fra can-meldinga fra node 2 om vi har mista ballen i bakken
+	uint8_t gameOverValue = 0; //Initialiserer gameOver til å ikke være sann
 	
+	
+	//NEED TO IMPLEMENT SLEEP
 	while(1)
 	{
-		multiboardInfo_update(&yourMessage);
-		can_send_message(&yourMessage);
 		
-		//Leser statusregisteret og sjekker om recieve-bufferet har fått inn noe
-		volatile uint8_t statusReg = mcp2515_read_status();
-		
-		if(test_bit(statusReg, 0)){
-			can_msg mottatt;
-			can_receive_message(&mottatt);
-			gameOverValue = mottatt.data[0];
+		if(GAMESTATUS == PLAYING_EASY || GAMESTATUS == PLAYING_NORMAL || GAMESTATUS == PLAYING_HARD){
 			
-			//printf("ID: %i   Length: %i   GameOver: %i \n", mottatt.id, mottatt.length, gameOverValue);	
+			
+			//-------------------- SEND CAN MESSAGE --------------------------
+			multiboardInfo_update(&yourMessage);
+			can_send_message(&yourMessage);
+			
+			
+			
+			
+			//-------------------- RECEIVE CAN MESSAGE ------------------------
+			volatile uint8_t statusReg = mcp2515_read_status();					//Leser statusregisteret og sjekker om receive-bufferet har fått inn noe
+			if(test_bit(statusReg, 0)){
+				can_msg mottatt;
+				can_receive_message(&mottatt);
+				gameOverValue = mottatt.data[0];
+			}
 		}
+		
 		
 		
 		
@@ -126,7 +135,7 @@ int main(void)
 			case GAMEOVER:
 				oled_clear_screen();
 				sram_save_string("GAME OVER",3,30);
-				printf("GAME OVER MANN");
+				printf("GAME OVER\n");
 				oled_refresh();
 			default:
 			break;
