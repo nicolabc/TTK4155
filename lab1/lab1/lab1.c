@@ -38,6 +38,7 @@
 #define test_bit( reg, bit ) (reg & (1 << bit))
 
 volatile int RECEIVE_BUFFER_INTERRUPT = 0;
+volatile int STATUS_CHANGED = 0;
 
 //Kan legge til flere states slik at spillet utvikler seg. F.eks hver vanskelighestgrad
 /*
@@ -71,7 +72,7 @@ int main(void)
 	while(1)
 	{
 		
-		if(GAMESTATUS == PLAYING_EASY || GAMESTATUS == PLAYING_NORMAL || GAMESTATUS == PLAYING_HARD){
+		if(GAMESTATUS == PLAYING_EASY || GAMESTATUS == PLAYING_NORMAL || GAMESTATUS == PLAYING_HARD || GAMESTATUS == GAMEOVER){
 			
 			
 			//-------------------- SEND CAN MESSAGE --------------------------
@@ -103,12 +104,14 @@ int main(void)
 				
 				break;
 			case PLAYING_EASY:
-				oled_clear_screen(); //Litt dumt at alt refresher hver gang i main nå da :)
+				oled_clear_screen(); //Litt dumt at alt refresher hver gang i main nå da :) Kan ha counter som blir en første gang slik at den ikke cleares hver gang, men kun første gang
 				menu_printGameScreen();
 				oled_refresh();
 				if(gameOverValue == 1){
 					GAMESTATUS = GAMEOVER;
 				}
+				
+				
 				break;
 				
 				
@@ -134,9 +137,18 @@ int main(void)
 				
 			case GAMEOVER:
 				oled_clear_screen();
-				sram_save_string("GAME OVER",3,30);
+				
+				/*------------------ OLED PRINT -----------------*/
+				sram_save_string("GAME OVER",3,40);
+				sram_save_string("TOUCH LEFT BUTTON", 5,20);
 				printf("GAME OVER\n");
 				oled_refresh();
+				
+				/*------------LEFT BUTTON PRESSED ---------------*/
+				if(joy_readButton(0)){
+					GAMESTATUS = MENU;
+				}
+				
 			default:
 			break;
 		}

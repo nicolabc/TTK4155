@@ -24,6 +24,6 @@ void solenoid_shoot(void){
 	// Seter en puls på pin A1
 	clear_bit(PORTF, PF1);
 	
-	_delay_ms(50);
+	_delay_ms(75);
 	set_bit(PORTF, PF1);
 }

@@ -9,7 +9,7 @@
 #ifndef MULTIBOARDINFO_H_
 #define MULTIBOARDINFO_H_
 
-
+extern int GAMESTATUS;
 
 int multiboardInfo_update(can_msg* yourMessage);
 

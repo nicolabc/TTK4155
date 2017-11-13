@@ -122,28 +122,28 @@ int main(void)
 			int mottatt_data_char2 = mottatt.data[2];
 			int mottatt_data_char3 = mottatt.data[3];
 			int mottatt_data_char4 = mottatt.data[4]; //Høyre knapp
-			int mottatt_data_char5 = mottatt.data[5];
+			int mottatt_data_char5 = mottatt.data[5]; //Gamestatus
 			int mottatt_data_char6 = mottatt.data[6];
 			
 			
 			
-			printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
+			//printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
+			//printf("GAMESTATUS:   %i", mottatt_data_char5);
 			RECEIVE_BUFFER_INTERRUPT = 0; //clearer interruptflagget
 			
 			
 			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten
 			
-			//------------- VALUES TO MOTOR ------------------------
-			//REF_TO_MOTOR_PID = mottatt_data_char6;
+			/*------------- VALUES TO MOTOR ------------------------*/
 			CAN_CALIBRATION_NEEDED +=1;
 			REF_TO_MOTOR_PID = joy_convertToPercentage(mottatt_data_char0,CAN_CALIBRATION_NEEDED); //for x-akse på joystick
 			ENCODERVALUE = encoder_read(); //Leser verdi på encoderen
 			CAN_FIRST_MESSAGE_RECEIVED = 1;
 			
-			//----------------TO SERVO -------------------
+			/*----------------TO SERVO -------------------*/
 			servo_positionUpdate(255-mottatt_data_char6);
 			
-			//---------------SOLENOID-----------------
+			/*---------------SOLENOID-----------------*/
 			if(mottatt_data_char4 == 1){
 				
 				solenoid_shoot();
