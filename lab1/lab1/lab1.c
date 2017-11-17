@@ -78,6 +78,7 @@ int main(void)
 			
 			//-------------------- SEND CAN MESSAGE --------------------------
 			multiboardInfo_update(&yourMessage);
+			yourMessage.data[5] = GAMESTATUS;
 			can_send_message(&yourMessage);
 			
 			
@@ -159,17 +160,31 @@ int main(void)
 				
 				/*------CUSTOMIZE CONTROLLER---------*/
 				if(FIRST_TIME_IN_CUSTOM_GAME == 1){
+					printf("Choose parameters. NOTE: ALL VALUES WILL BE DIVIDED BY 10. MAX = 255 \n");
 					printf("Kp = ");
-					double Kp;
-					scanf("%d",&Kp);  //Fra termite
+					int Kp;
+					scanf("%i",&Kp);  //Fra termite
 					
-					printf("New Kp = %d \n",Kp);
+					printf("Ki = ");
+					int Ki;
+					scanf("%i",&Ki);  //Fra termite
+					
+					printf("Kd = ");
+					int Kd;
+					scanf("%i",&Kd);  //Fra termite
+					
+					//Printe på oled??
+					/*char* sramKp = "Kd = "+Kp;
+					sram_save_string("Kd = ")*/
+					printf("New Kp = %i, new Ki = %i, new Kd = %i \n",Kp,Ki,Kd);
 					
 					
 					/*---------------SENDING CONTROLLER PARAMETERS TO NODE 2 ---------*/
-					controllerParameters.id = 2;
-					controllerParameters.length = 1;
+					controllerParameters.id = 100;
+					controllerParameters.length = 3;
 					controllerParameters.data[0] = Kp;
+					controllerParameters.data[1] = Ki;
+					controllerParameters.data[2] = Kd;
 					can_send_message(&controllerParameters);
 					
 					

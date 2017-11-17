@@ -67,7 +67,7 @@ void motor_calibrate(void){
 }
 
 
-void motor_PIDspeed(int velRef, int16_t encoderValue){
+void motor_PIDspeed(int velRef, int16_t encoderValue, int Kp_in, int Ki_in, int Kd_in){
 	if(FIRST_ENCODER_VALUE_READ == 0){ //For å ikke få feil første gang vi går inn (da er PREV_ENCODERVALUE satt default til 0. Dette blir da feil i utregningen)
 		FIRST_ENCODER_VALUE_READ = 1;
 		return;
@@ -80,17 +80,30 @@ void motor_PIDspeed(int velRef, int16_t encoderValue){
 	velocity = velocity/1000; //For å ikke få altfor høye verdier
 	PREV_ENCODERVALUE = encoderValue;
 	
+	double Kp;  //1.5;
+	double Ki;  //0.5;
+	double T =  0.05;  //0.05;
+	double Kd; //0.07;
 	
-	double Kp = 1.2;  //1.5;
-	double Ki = 0.5;  //0.5;
-	double T = 0.05;  //0.05;
-	double Kd = 0.05; //0.07;
+	//If all inputs are 0 then we use the standard parameters
+	if(Kp_in+Ki_in+Kd_in == 0){
+		Kp = 1.2;  //1.5;
+		Ki = 0.5;  //0.5;
+		Kd = 0.05; //0.07;
+	}
+	
+	else{
+		Kp = ((double)Kp_in) / 10;  
+		Ki = ((double)Ki_in) / 10;  
+		Kd = ((double)Kd_in) / 10;
+	}
+	
 	
 	velRef = velRef;
 	double error = (velRef - velocity); 
-	
+	int errorThreshold = 5;
 	double AbsError = abs(error); //Siden vi kun er interessert i feil, vi tar for oss retning i if(error > 10) .. else if (error <10)...
-	if(error > 10){
+	if(error > errorThreshold){
 		SUM_ERROR = SUM_ERROR + error;
 	}else{
 		SUM_ERROR = 0;
@@ -105,9 +118,9 @@ void motor_PIDspeed(int velRef, int16_t encoderValue){
 	
 	//printf("Velocity: %i error: %i    u:  %i \n", (int)velocity,(int)error, u);
 	//Velg retning basert på hvilken vei joystick peker
-	if(error > 10){
+	if(error > errorThreshold){
 		motor_dirRight();
-		}else if(error < -10){
+		}else if(error < -errorThreshold){
 		motor_dirLeft();
 	}else{
 		u = 0;

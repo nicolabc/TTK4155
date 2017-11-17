@@ -16,6 +16,7 @@
 #include "../../../lib/spi.h"
 #include "../../../lib/MCP2515.h"
 #include "../../../lib/can.h"
+#include "../../../lib/joy.h"
 #include "timer.h"
 #include "servo.h"
 #include "internalADC.h"
@@ -45,9 +46,14 @@ volatile int16_t ENCODERVALUE = 0;
 volatile int CAN_FIRST_MESSAGE_RECEIVED = 0;
 volatile int CAN_CALIBRATION_NEEDED = 0;
 volatile int REF_TO_MOTOR_PID = 0;
+volatile int HAVE_ENTERED_CUSTOM = 0;
+volatile int RECEIVED_GAMESTATUS = 0; //Default MENU
 
+//CUSTOM CONTROLLER PARAMETERS
+volatile int KP;
+volatile int KI;
+volatile int KD;
 
-volatile double KP;
 
 int main(void)
 {
@@ -128,9 +134,12 @@ int main(void)
 			//---------------CAN----------------------
 			can_receive_message(&mottatt);		
 			
-			if(mottatt.id == 2){
+			if(mottatt.id == 100){
+				HAVE_ENTERED_CUSTOM = 1; //Set flag high that we have customized the parameters
 				KP = mottatt.data[0];
-				printf("Custom Kp = %i \n",(int)KP);
+				KI = mottatt.data[1];
+				KD = mottatt.data[2];
+				printf("Custom Kp = %i, Custom Ki = %i, Custom Kd = %i \n",KP,KI,KD);
 			}
 			
 			
@@ -141,7 +150,7 @@ int main(void)
 				int mottatt_data_char2 = mottatt.data[2];
 				int mottatt_data_char3 = mottatt.data[3];
 				int mottatt_data_char4 = mottatt.data[4]; //Høyre knapp
-				int mottatt_data_char5 = mottatt.data[5]; //Gamestatus
+				RECEIVED_GAMESTATUS = mottatt.data[5]; //Gamestatus
 				int mottatt_data_char6 = mottatt.data[6];
 				
 				/*------------- VALUES TO MOTOR ------------------------*/
@@ -158,8 +167,8 @@ int main(void)
 					
 					solenoid_shoot();
 				}
-				printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
-				
+				//printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
+				printf("RECEIVED GAMESTATUS = %i \n",RECEIVED_GAMESTATUS);
 			}
 			
 			
@@ -176,6 +185,8 @@ int main(void)
 			
 			TIMER_COMPARE_MATCH = 0;
 		}*/
+		
+		//sleep_mode(); Blir så vekket av interrupt og kjører videre
 		
 	}
 }
@@ -194,6 +205,13 @@ ISR(ADC_vect){
 ISR(TIMER3_COMPA_vect){
 	//sleep_disable();
 	if(CAN_FIRST_MESSAGE_RECEIVED == 1){
-		motor_PIDspeed(REF_TO_MOTOR_PID,ENCODERVALUE);  ////Oppdater PID og spenning til motor (u)
+		if (RECEIVED_GAMESTATUS == PLAYING_CUSTOM) //If we have customized the parameters
+		{
+			motor_PIDspeed(REF_TO_MOTOR_PID,ENCODERVALUE,KP,KI,KD);
+		}
+		else{
+			motor_PIDspeed(REF_TO_MOTOR_PID,ENCODERVALUE,0,0,0);  ////Oppdater PID og spenning til motor (u)
+		}
+		
 	}
 }
