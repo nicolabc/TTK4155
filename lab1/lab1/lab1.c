@@ -38,7 +38,7 @@
 #define test_bit( reg, bit ) (reg & (1 << bit))
 
 volatile int RECEIVE_BUFFER_INTERRUPT = 0;
-volatile int STATUS_CHANGED = 0;
+volatile int FIRST_TIME_IN_CUSTOM_GAME = 1;
 
 //Kan legge til flere states slik at spillet utvikler seg. F.eks hver vanskelighestgrad
 /*
@@ -64,6 +64,7 @@ int main(void)
 	can_init();
 	
 	can_msg yourMessage;
+	can_msg controllerParameters;
 	GAMESTATUS = MENU;
 	uint8_t gameOverValue = 0; //Initialiserer gameOver til å ikke være sann
 	
@@ -72,7 +73,7 @@ int main(void)
 	while(1)
 	{
 		
-		if(GAMESTATUS == PLAYING_EASY || GAMESTATUS == PLAYING_NORMAL || GAMESTATUS == PLAYING_HARD || GAMESTATUS == GAMEOVER){
+		if(GAMESTATUS == PLAYING_EASY || GAMESTATUS == PLAYING_NORMAL || GAMESTATUS == PLAYING_HARD || GAMESTATUS == GAMEOVER || FIRST_TIME_IN_CUSTOM_GAME == 0){
 			
 			
 			//-------------------- SEND CAN MESSAGE --------------------------
@@ -101,39 +102,85 @@ int main(void)
 					menu_save();
 					oled_refresh();
 				}
+				FIRST_TIME_IN_CUSTOM_GAME = 1; //To reset the global variable needed to customize the controller values.
 				
 				break;
 			case PLAYING_EASY:
 				oled_clear_screen(); //Litt dumt at alt refresher hver gang i main nå da :) Kan ha counter som blir en første gang slik at den ikke cleares hver gang, men kun første gang
-				menu_printGameScreen();
+				sram_gameScreen();
 				oled_refresh();
 				if(gameOverValue == 1){
 					GAMESTATUS = GAMEOVER;
 				}
 				
-				
+				/*------------LEFT BUTTON PRESSED ---------------*/
+				if(joy_readButton(0)){
+					GAMESTATUS = MENU;
+				}
 				break;
 				
 				
 			case PLAYING_NORMAL:
 				oled_clear_screen();
-				menu_printGameScreen();
+				sram_gameScreen();
 				oled_refresh();
 				if(gameOverValue == 1){
 					GAMESTATUS = GAMEOVER;
+				}
+				
+				/*------------LEFT BUTTON PRESSED ---------------*/
+				if(joy_readButton(0)){
+					GAMESTATUS = MENU;
 				}
 				break;
 				
 				
 			case PLAYING_HARD:
 				oled_clear_screen();
-				menu_printGameScreen();
+				sram_gameScreen();
 				oled_refresh();
 				if(gameOverValue == 1){
 					GAMESTATUS = GAMEOVER;
 				}
-				break;
+
 				
+				/*------------LEFT BUTTON PRESSED ---------------*/
+				if(joy_readButton(0)){
+					GAMESTATUS = MENU;
+				}
+				break;
+			case PLAYING_CUSTOM:
+				oled_clear_screen();
+				sram_gameScreen();
+				oled_refresh();
+				if(gameOverValue == 1){
+					GAMESTATUS = GAMEOVER;
+				}
+				
+				/*------CUSTOMIZE CONTROLLER---------*/
+				if(FIRST_TIME_IN_CUSTOM_GAME == 1){
+					printf("Kp = ");
+					double Kp;
+					scanf("%d",&Kp);  //Fra termite
+					
+					printf("New Kp = %d \n",Kp);
+					
+					
+					/*---------------SENDING CONTROLLER PARAMETERS TO NODE 2 ---------*/
+					controllerParameters.id = 2;
+					controllerParameters.length = 1;
+					controllerParameters.data[0] = Kp;
+					can_send_message(&controllerParameters);
+					
+					
+					FIRST_TIME_IN_CUSTOM_GAME = 0;
+				}
+				
+				/*------------LEFT BUTTON PRESSED ---------------*/
+				if(joy_readButton(0)){
+					GAMESTATUS = MENU;
+				}
+				break;
 				
 			case GAMEOVER:
 				oled_clear_screen();

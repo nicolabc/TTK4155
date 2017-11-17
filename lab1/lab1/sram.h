@@ -18,5 +18,6 @@ void sram_goto_page(uint8_t newPage);
 void sram_goto_column(uint8_t newColumn);
 void sram_save_char(char myChar);
 void sram_save_string(char* myString, uint8_t page, uint8_t col);
+void sram_gameScreen(void);
 
 #endif /* SRAM_H_ */

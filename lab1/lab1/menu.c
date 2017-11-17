@@ -28,6 +28,7 @@ void menu_init(void){
 		node_t* easy = malloc(sizeof(node_t));
 		node_t* normal = malloc(sizeof(node_t));
 		node_t* hard = malloc(sizeof(node_t));
+		node_t* custom = malloc(sizeof(node_t));
 	
 	node_t* highscore = malloc(sizeof(node_t));
 	node_t* options = malloc(sizeof(node_t));
@@ -52,8 +53,8 @@ void menu_init(void){
 	menu_defineMenuEntries(newgame,"New Game",highscore,NULL,easy,NULL);
 		menu_defineMenuEntries(easy,"Easy",normal,NULL,NULL,newgame);
 		menu_defineMenuEntries(normal, "Normal", hard, easy, NULL,newgame);
-		menu_defineMenuEntries(hard,"Hard",NULL,normal,NULL,newgame);
-	
+		menu_defineMenuEntries(hard,"Hard",custom,normal,NULL,newgame);
+		menu_defineMenuEntries(custom,"Custom",NULL,hard,NULL,newgame);
 	menu_defineMenuEntries(highscore,"Highscore",options,newgame,NULL,NULL);
 	
 	menu_defineMenuEntries(options,"Options",credits,highscore,sensitivity,NULL);
@@ -99,18 +100,3 @@ void menu_save(void){ //Argument node_t* firstNode?
 	}
 }
 
-void menu_printGameScreen(void){
-	switch(GAMESTATUS){
-		case PLAYING_EASY:
-			sram_save_string("EASYYYYYY", 0,30);
-			
-			break;
-		case PLAYING_NORMAL:
-			sram_save_string("MEDIUM EKSTRA MAIS",0,30);
-			break;
-		case PLAYING_HARD:
-			sram_save_string("EKSTRA STERK",0,30);
-			break;
-	}
-
-}

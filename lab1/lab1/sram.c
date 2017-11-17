@@ -14,6 +14,7 @@
 #include "fonts.h"
 #include "oled.h"
 #include "../../lib/MCP2515.h"
+#include "../../lib/joy.h"
 
 volatile uint8_t PAGE;
 volatile uint8_t COL;
@@ -112,6 +113,35 @@ void sram_save_string(char* myString, uint8_t page, uint8_t col){
 		}
 		colCounter++;
 		sram_save_char(myString[characterNr]);
+	}
+
+}
+
+void sram_gameScreen(void){
+	switch(GAMESTATUS){
+		case PLAYING_EASY:
+		sram_save_string("EASY", 0,30);
+		sram_save_string("TOUCH LEFT BUTTON TO QUIT", 5,20);
+		
+		break;
+		case PLAYING_NORMAL:
+		sram_save_string("NORMAL",0,30);
+		sram_save_string("TOUCH LEFT BUTTON TO QUIT", 5,20);
+		break;
+		case PLAYING_HARD:
+		sram_save_string("HARD",0,30);
+		sram_save_string("TOUCH LEFT BUTTON TO QUIT", 5,20);
+		break;
+		
+		case GAMEOVER:
+		sram_save_string("GAME OVER",3,40);
+		sram_save_string("TOUCH LEFT BUTTON TO QUIT", 5,20);
+		break;
+		
+		case PLAYING_CUSTOM:
+		sram_save_string("CUSTOM",0,30);
+		sram_save_string("TOUCH LEFT BUTTON TO QUIT", 5,20);
+		break;
 	}
 
 }

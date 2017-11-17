@@ -22,7 +22,8 @@ enum gamestate {
 	PLAYING_EASY = 1,
 	PLAYING_NORMAL = 2,
 	PLAYING_HARD = 3,
-	GAMEOVER = 4
+	GAMEOVER = 4,
+	PLAYING_CUSTOM = 5
 };
 
 extern int GAMESTATUS;

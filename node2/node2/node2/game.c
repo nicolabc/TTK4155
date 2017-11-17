@@ -13,7 +13,7 @@
 
 int game_isGameOver(void){
 	uint16_t adcValue = internalADC_getResult();
-	printf("ADC RESULT IR: %i \n", adcValue);
+	//printf("ADC RESULT IR: %i \n", adcValue);
 	if(adcValue<= 300){ //Endre denne for IR sensorsensitivity
 		return 1;
 	}

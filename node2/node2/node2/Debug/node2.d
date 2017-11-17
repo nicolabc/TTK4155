@@ -19,6 +19,7 @@ node2.d node2.o: .././node2.c \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\util\delay.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\util\delay_basic.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\math.h \
+ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\avr\sleep.h \
  .././../../../lib/uart.h .././../../../lib/spi.h \
  .././../../../lib/MCP2515.h .././../../../lib/can.h .././timer.h \
  .././servo.h .././internalADC.h .././game.h .././TWI_Master.h .././dac.h \
@@ -63,6 +64,8 @@ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-g
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\util\delay_basic.h:
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\math.h:
+
+c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1061\avr8-gnu-toolchain\avr\include\avr\sleep.h:
 
 .././../../../lib/uart.h:
 

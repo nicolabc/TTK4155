@@ -128,6 +128,8 @@ int joy_doesDirectionChange(void){
 			else if(currentSelection->name == "Hard"){
 				GAMESTATUS = PLAYING_HARD;
 				
+			}else if(currentSelection->name == "Custom"){
+				GAMESTATUS = PLAYING_CUSTOM;
 			}
 			
 			break;

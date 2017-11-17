@@ -66,54 +66,6 @@ void motor_calibrate(void){
 	printf("Max: %i  Min: %i \n\n\n", CALIBRATE_MAX, CALIBRATE_MIN);
 }
 
-void motor_PID(int posRef, int16_t encoderValue){	
-	double scaledRef = (((double)posRef)/255)*100;
-	
-	int scalingfactor = abs(CALIBRATE_MAX-CALIBRATE_MIN);//Regner ut total avstand fra høyre til venstre på box
-	double scaledEncoder = (((double)encoderValue)/scalingfactor)*100;
-	
-	
-	//Altså mot høyre så går verdien nedover, men fra vår referanse skal verdien øke. Dermed må verdien øke som gjøres ved å gange med -1
-	//KAN VÆRE HER NOE PROBLEMER OPPSTÅR --- ARBEIDSPLASS 6 BOX
-	if (CALIBRATE_MAX<CALIBRATE_MIN){
-		scaledEncoder = scaledEncoder*(-1);
-	}
-	
-	//int16_t scaleToBoxRef = 35*posRef; //Encoderverdiene tilsvarer ca 35 ganger mer. Altså 255 på multifunctionboard tilsvarer 8750 i encoderverdi (pos til motor)
-	double  error = scaledRef - scaledEncoder;
-	//printf("Ref: %i  EncoderValue:  %i   Error: %i \n", scaleToBoxRef, encoderValue, error);
-	
-	double Kp = 0.2; //0.3
-	double Ki = 0.5; //0.5
-	double T = 0.05; //Sample time
-	uint8_t Kd = 1;
-	
-	
-	uint8_t u = 2.55*(Kp*error)+T*Ki*SUM_ERROR;//+(Kd/T)*(error-PREV_ERROR);
-	//2.55 Fordi motorbox tar verdier fra 0 til 255
-	
-	
-	//threshold
-	if(abs(error) <= 3 ){
-		u = 0;
-	}
-	
-	//printf("REF: %i \n",(uint8_t)scaledRef);
-	printf("Ref: %d EncoderValue: %d  u: %i \n", (uint8_t)scaledRef,(int)scaledEncoder, u);
-	if(error>0){
-		motor_dirRight();
-	}else{
-		motor_dirLeft();
-	}
-	if(u<250){
-		motor_setVoltage(u); //input to motor
-	}else{
-		motor_setVoltage(150); //Max
-	}
-	
-	SUM_ERROR = SUM_ERROR + error;
-	PREV_ERROR = error;
-}
 
 void motor_PIDspeed(int velRef, int16_t encoderValue){
 	if(FIRST_ENCODER_VALUE_READ == 0){ //For å ikke få feil første gang vi går inn (da er PREV_ENCODERVALUE satt default til 0. Dette blir da feil i utregningen)
@@ -134,19 +86,22 @@ void motor_PIDspeed(int velRef, int16_t encoderValue){
 	double T = 0.05;  //0.05;
 	double Kd = 0.05; //0.07;
 	
-	//Scale velRef from 0-100 to 0 - 4000
 	velRef = velRef;
 	double error = (velRef - velocity); 
 	
 	double AbsError = abs(error); //Siden vi kun er interessert i feil, vi tar for oss retning i if(error > 10) .. else if (error <10)...
+	if(error > 10){
+		SUM_ERROR = SUM_ERROR + error;
+	}else{
+		SUM_ERROR = 0;
+	}
 	
-	SUM_ERROR = SUM_ERROR + error;
 	
 	
 	
 	
 	//-------Diskret PD regulator
-	int u = Kp*AbsError + Kd/T*(error-PREV_ERROR); //T*Ki*SUM_ERROR
+	int u = Kp*AbsError+ T*Ki*SUM_ERROR  + Kd/T*(error-PREV_ERROR); //
 	
 	//printf("Velocity: %i error: %i    u:  %i \n", (int)velocity,(int)error, u);
 	//Velg retning basert på hvilken vei joystick peker

@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <avr/interrupt.h>
 #include <avr/delay.h>
+#include <avr/sleep.h>
 #include "../../../lib/uart.h"
 #include "../../../lib/spi.h"
 #include "../../../lib/MCP2515.h"
@@ -45,6 +46,9 @@ volatile int CAN_FIRST_MESSAGE_RECEIVED = 0;
 volatile int CAN_CALIBRATION_NEEDED = 0;
 volatile int REF_TO_MOTOR_PID = 0;
 
+
+volatile double KP;
+
 int main(void)
 {
 	cli();
@@ -57,6 +61,13 @@ int main(void)
 	encoder_init();
 	solenoid_init();
 	
+	
+	/*set_sleep_mode(0);
+	sleep_mode();
+	sleep_enable();
+	sei();
+	sleep_cpu();*/
+	//sleep_disable();
 	
 	
 	sei(); //Global interrupt enable
@@ -117,37 +128,48 @@ int main(void)
 			//---------------CAN----------------------
 			can_receive_message(&mottatt);		
 			
-			mottatt_data_char0 = mottatt.data[0]; //X-akse
-			int mottatt_data_char1 = mottatt.data[1];
-			int mottatt_data_char2 = mottatt.data[2];
-			int mottatt_data_char3 = mottatt.data[3];
-			int mottatt_data_char4 = mottatt.data[4]; //Høyre knapp
-			int mottatt_data_char5 = mottatt.data[5]; //Gamestatus
-			int mottatt_data_char6 = mottatt.data[6];
+			if(mottatt.id == 2){
+				KP = mottatt.data[0];
+				printf("Custom Kp = %i \n",(int)KP);
+			}
+			
+			
+			/*-------IF CAN MESSAGE IS JOYSTICK INFO-------*/
+			if(mottatt.id == 1){
+				mottatt_data_char0 = mottatt.data[0]; //X-akse
+				int mottatt_data_char1 = mottatt.data[1];
+				int mottatt_data_char2 = mottatt.data[2];
+				int mottatt_data_char3 = mottatt.data[3];
+				int mottatt_data_char4 = mottatt.data[4]; //Høyre knapp
+				int mottatt_data_char5 = mottatt.data[5]; //Gamestatus
+				int mottatt_data_char6 = mottatt.data[6];
+				
+				/*------------- VALUES TO MOTOR ------------------------*/
+				CAN_CALIBRATION_NEEDED +=1;
+				REF_TO_MOTOR_PID = joy_convertToPercentage(mottatt_data_char0,CAN_CALIBRATION_NEEDED); //for x-akse på joystick
+				ENCODERVALUE = encoder_read(); //Leser verdi på encoderen
+				CAN_FIRST_MESSAGE_RECEIVED = 1;
+				
+				/*----------------TO SERVO -------------------*/
+				servo_positionUpdate(255-mottatt_data_char6);
+				
+				/*---------------SOLENOID-----------------*/
+				if(mottatt_data_char4 == 1){
+					
+					solenoid_shoot();
+				}
+				printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
+				
+			}
 			
 			
 			
-			//printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
-			//printf("GAMESTATUS:   %i", mottatt_data_char5);
+			
 			RECEIVE_BUFFER_INTERRUPT = 0; //clearer interruptflagget
 			
 			
 			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten
 			
-			/*------------- VALUES TO MOTOR ------------------------*/
-			CAN_CALIBRATION_NEEDED +=1;
-			REF_TO_MOTOR_PID = joy_convertToPercentage(mottatt_data_char0,CAN_CALIBRATION_NEEDED); //for x-akse på joystick
-			ENCODERVALUE = encoder_read(); //Leser verdi på encoderen
-			CAN_FIRST_MESSAGE_RECEIVED = 1;
-			
-			/*----------------TO SERVO -------------------*/
-			servo_positionUpdate(255-mottatt_data_char6);
-			
-			/*---------------SOLENOID-----------------*/
-			if(mottatt_data_char4 == 1){
-				
-				solenoid_shoot();
-			}
 			
 		}
 		/*if(TIMER_COMPARE_MATCH == 1){
@@ -170,8 +192,8 @@ ISR(ADC_vect){
 
 //Timer interrupt vector for sleep of program
 ISR(TIMER3_COMPA_vect){
+	//sleep_disable();
 	if(CAN_FIRST_MESSAGE_RECEIVED == 1){
-		//motor_PID(REF_TO_MOTOR_PID,ENCODERVALUE); //Oppdater PID og spenning til motor (u)
 		motor_PIDspeed(REF_TO_MOTOR_PID,ENCODERVALUE);  ////Oppdater PID og spenning til motor (u)
 	}
 }

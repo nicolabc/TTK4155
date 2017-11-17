@@ -22,9 +22,8 @@ extern node_t* currentHead;		//Definisjonen ligger i .c filen
 
 void menu_init(void);
 void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent);//, node_t* parent);
-void updateCurrentSelection(void);
 void menu_save(void);
-void menu_printGameScreen(void);
+
 
 
 #endif /* MENU_H_ */
