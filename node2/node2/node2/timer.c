@@ -51,20 +51,7 @@ void timer_init(){
 	uint16_t F_OC1A = 50; // 1/(20*10^-3)
 	uint16_t top = (F_CPU)/(prescaler*F_OC1A)-1; // = 1249 
 	ICR1 = top;
-	
-	//cli();
-	
-	//Enable timer overflow interrupt (Altså når en full PWM syklus har gått (20ms))
-	//set_bit(TIMSK1,TOIE1);
-	
-	//sei();
-	
-	
-	/*
-	http://www.engblaze.com/microcontroller-tutorial-avr-and-arduino-timer-interrupts/
-	*/
-	//Enable timer compare interrupt for waking up program
-	
+
 	
 	
 	timer_timedInterrupt(); //Enable timed interrupt (FOR PID)
@@ -79,10 +66,6 @@ void timer_timedInterrupt(void){
 	double frequency = (F_CPU/256);
 	double T = 1/frequency; //Period of prescaler
 	double targetTime = 0.05;
-	
-	//FOrmel under funker ikke pga overflow, setter verdi manuelt
-	//timercount = targetTime/(1.6*10^(-5));
-	//int timerCount = targetTime/(T)-1; //6249. -1 fordi det tar en klokkesykel å resette klokken.
 	
 	int timerCount = 625*5; //Nå oppdateres det hvert 0.05 sekund
 	//Set compare match register to desired timer count

@@ -11,6 +11,7 @@
 
 extern int GAMESTATUS;
 
+/*Reads the data from the multiboard and saves it in the can message struct*/
 int multiboardInfo_update(can_msg* yourMessage);
 
 #endif /* MULTIBOARDINFO_H_ */

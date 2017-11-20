@@ -936,7 +936,7 @@ END GROUP
  *(.fini0)
                 0x000021a4                _etext = .
 
-.data           0x00800100      0x29c load address 0x000021a4
+.data           0x00800100      0x28c load address 0x000021a4
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x6 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(malloc.o)
@@ -954,57 +954,56 @@ END GROUP
  .rodata.str1.1
                 0x00800139       0x18 joy.o
  .rodata.str1.1
-                0x00800151       0x9f lab1.o
+                0x00800151       0x81 lab1.o
  .rodata.str1.1
-                0x008001f0       0x92 menu.o
-                                 0xaa (size before relaxing)
+                0x008001d2       0xa1 menu.o
+                                 0xb9 (size before relaxing)
  .rodata.str1.1
-                0x00800282      0x119 sram.o
+                0x00800273      0x119 sram.o
                                 0x123 (size before relaxing)
  *(.gnu.linkonce.d*)
-                0x0080039c                . = ALIGN (0x2)
- *fill*         0x0080039b        0x1 
-                0x0080039c                _edata = .
-                0x0080039c                PROVIDE (__data_end, .)
+                0x0080038c                . = ALIGN (0x2)
+                0x0080038c                _edata = .
+                0x0080038c                PROVIDE (__data_end, .)
 
-.bss            0x0080039c       0x22
-                0x0080039c                PROVIDE (__bss_start, .)
+.bss            0x0080038c       0x22
+                0x0080038c                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
  .bss.GAMESTATUS
-                0x0080039c        0x2 lab1.o
-                0x0080039c                GAMESTATUS
+                0x0080038c        0x2 lab1.o
+                0x0080038c                GAMESTATUS
  .bss.RECEIVE_BUFFER_INTERRUPT
-                0x0080039e        0x2 lab1.o
-                0x0080039e                RECEIVE_BUFFER_INTERRUPT
+                0x0080038e        0x2 lab1.o
+                0x0080038e                RECEIVE_BUFFER_INTERRUPT
  *(COMMON)
- COMMON         0x008003a0        0xc joy.o
-                0x008003a0                joyLastDirectionX
-                0x008003a2                MID_VALUE
-                0x008003a4                joystick
-                0x008003aa                joyLastDirectionY
- COMMON         0x008003ac        0x6 menu.o
-                0x008003ac                currentSelection
-                0x008003ae                developers
-                0x008003b0                currentHead
- COMMON         0x008003b2        0x2 sram.o
-                0x008003b2                PAGE
-                0x008003b3                COL
- COMMON         0x008003b4        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(malloc.o)
-                0x008003b4                __brkval
-                0x008003b6                __flp
- COMMON         0x008003b8        0x6 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(iob.o)
-                0x008003b8                __iob
-                0x008003be                PROVIDE (__bss_end, .)
+ COMMON         0x00800390        0xc joy.o
+                0x00800390                joyLastDirectionX
+                0x00800392                MID_VALUE
+                0x00800394                joystick
+                0x0080039a                joyLastDirectionY
+ COMMON         0x0080039c        0x6 menu.o
+                0x0080039c                currentSelection
+                0x0080039e                developers
+                0x008003a0                currentHead
+ COMMON         0x008003a2        0x2 sram.o
+                0x008003a2                PAGE
+                0x008003a3                COL
+ COMMON         0x008003a4        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(malloc.o)
+                0x008003a4                __brkval
+                0x008003a6                __flp
+ COMMON         0x008003a8        0x6 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.1061/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.8.1/../../../../avr/lib/avr5\libc.a(iob.o)
+                0x008003a8                __iob
+                0x008003ae                PROVIDE (__bss_end, .)
                 0x000021a4                __data_load_start = LOADADDR (.data)
-                0x00002440                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x00002430                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x008003be        0x0
-                0x008003be                PROVIDE (__noinit_start, .)
+.noinit         0x008003ae        0x0
+                0x008003ae                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x008003be                PROVIDE (__noinit_end, .)
-                0x008003be                _end = .
-                0x008003be                PROVIDE (__heap_start, .)
+                0x008003ae                PROVIDE (__noinit_end, .)
+                0x008003ae                _end = .
+                0x008003ae                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)
@@ -1152,21 +1151,21 @@ END GROUP
  .debug_abbrev  0x00000d8b      0x1f5 oled.o
  .debug_abbrev  0x00000f80      0x1f1 sram.o
 
-.debug_line     0x00000000     0x10a1
+.debug_line     0x00000000     0x10a0
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x138 can.o
  .debug_line    0x00000138      0x16e joy.o
- .debug_line    0x000002a6      0x1e5 MCP2515.o
- .debug_line    0x0000048b       0xdd spi.o
- .debug_line    0x00000568       0xeb uart.o
- .debug_line    0x00000653      0x153 adc.o
- .debug_line    0x000007a6       0xb0 avr.o
- .debug_line    0x00000856       0xb5 externalmemory.o
- .debug_line    0x0000090b      0x1c9 lab1.o
- .debug_line    0x00000ad4      0x1fc menu.o
- .debug_line    0x00000cd0       0xe7 multiboardInfo.o
- .debug_line    0x00000db7      0x159 oled.o
- .debug_line    0x00000f10      0x191 sram.o
+ .debug_line    0x000002a6      0x1e3 MCP2515.o
+ .debug_line    0x00000489       0xdd spi.o
+ .debug_line    0x00000566       0xeb uart.o
+ .debug_line    0x00000651      0x153 adc.o
+ .debug_line    0x000007a4       0xb0 avr.o
+ .debug_line    0x00000854       0xb5 externalmemory.o
+ .debug_line    0x00000909      0x1ca lab1.o
+ .debug_line    0x00000ad3      0x1fc menu.o
+ .debug_line    0x00000ccf       0xe7 multiboardInfo.o
+ .debug_line    0x00000db6      0x159 oled.o
+ .debug_line    0x00000f0f      0x191 sram.o
 
 .debug_frame    0x00000000      0x67c
  *(.debug_frame)
@@ -1184,34 +1183,34 @@ END GROUP
  .debug_frame   0x00000468       0xb8 oled.o
  .debug_frame   0x00000520      0x15c sram.o
 
-.debug_str      0x00000000      0xa09
+.debug_str      0x00000000      0x938
  *(.debug_str)
- .debug_str     0x00000000      0x1ca can.o
-                                0x20d (size before relaxing)
- .debug_str     0x000001ca      0x231 joy.o
-                                0x34d (size before relaxing)
- .debug_str     0x000003fb      0x154 MCP2515.o
-                                0x2c1 (size before relaxing)
- .debug_str     0x0000054f       0x19 spi.o
-                                0x180 (size before relaxing)
- .debug_str     0x00000568       0x63 uart.o
-                                0x1a9 (size before relaxing)
- .debug_str     0x000005cb       0x2a adc.o
-                                0x1d0 (size before relaxing)
- .debug_str     0x000005f5       0x48 avr.o
-                                0x150 (size before relaxing)
- .debug_str     0x0000063d       0x56 externalmemory.o
-                                0x15e (size before relaxing)
- .debug_str     0x00000693      0x107 lab1.o
-                                0x381 (size before relaxing)
- .debug_str     0x0000079a       0xb0 menu.o
-                                0x275 (size before relaxing)
- .debug_str     0x0000084a       0x16 multiboardInfo.o
-                                0x1bf (size before relaxing)
- .debug_str     0x00000860       0xb9 oled.o
-                                0x22a (size before relaxing)
- .debug_str     0x00000919       0xf0 sram.o
-                                0x318 (size before relaxing)
+ .debug_str     0x00000000      0x1c9 can.o
+                                0x20c (size before relaxing)
+ .debug_str     0x000001c9      0x1fd joy.o
+                                0x34e (size before relaxing)
+ .debug_str     0x000003c6      0x120 MCP2515.o
+                                0x2c2 (size before relaxing)
+ .debug_str     0x000004e6       0x19 spi.o
+                                0x181 (size before relaxing)
+ .debug_str     0x000004ff       0x63 uart.o
+                                0x1aa (size before relaxing)
+ .debug_str     0x00000562       0x2a adc.o
+                                0x1d1 (size before relaxing)
+ .debug_str     0x0000058c       0x14 avr.o
+                                0x151 (size before relaxing)
+ .debug_str     0x000005a0       0x22 externalmemory.o
+                                0x15f (size before relaxing)
+ .debug_str     0x000005c2      0x107 lab1.o
+                                0x382 (size before relaxing)
+ .debug_str     0x000006c9       0xb0 menu.o
+                                0x276 (size before relaxing)
+ .debug_str     0x00000779       0x16 multiboardInfo.o
+                                0x1c0 (size before relaxing)
+ .debug_str     0x0000078f       0xb9 oled.o
+                                0x22b (size before relaxing)
+ .debug_str     0x00000848       0xf0 sram.o
+                                0x319 (size before relaxing)
 
 .debug_loc      0x00000000     0x1d1c
  *(.debug_loc)

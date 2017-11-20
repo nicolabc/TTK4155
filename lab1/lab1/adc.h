@@ -10,21 +10,11 @@
 #define ADC_H_
 
 
+/*Sets the relevant pins to input/output*/
 void adc_init(void); 
 
-/*
-int adc_getX(void);
-
-int adc_getY(void);
-
-int adc_getLeftSlider(void);
-
-int adc_getRightSlider(void);
-*/
-//void adc_init();
-
+/*Returns the value of the specified channel in the Multifunction board*/
 uint8_t adc_read(uint8_t ch); //ch = 0: joystick x. ch = 1: joystick y. ch = 2: slider left. ch = 3: slider right.
-
 
 
 #endif /* ADC_H_ */

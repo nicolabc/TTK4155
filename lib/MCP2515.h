@@ -23,12 +23,25 @@ Copyright 2003 Kimberly Otten Software Consulting
 
 #endif
 
+/*Read from specified address*/
 uint8_t mcp2515_read(uint8_t address);
+
+/*Write data to a specified address*/
 void mcp2515_write(uint8_t address, uint8_t data);
+
+/*Resets the MCP2515*/
 void mcp2515_reset();
+
+/*Initializes MCP2515 and the SPI communication*/
 uint8_t mcp2515_init();
+
+/*Requests to send to a specified buffer*/
 void mcp2515_request_to_send(int whichBuffer);
+
+/*Reads status register*/
 uint8_t mcp2515_read_status();
+
+/*Modifies specified bits in a specified register using a mask*/
 void mcp2515_bit_modify(uint8_t regAdr, uint8_t maskBits, uint8_t data);
 
 

@@ -47,8 +47,8 @@ void menu_init(void){
 	
 	
 	currentHead = newgame;
-	//currentSelection = DER PILEN DIN PEKER NÅ
-	currentSelection = newgame;
+
+	currentSelection = newgame;	//currentSelection = DER PILEN DIN PEKER NÅ
 	
 	menu_defineMenuEntries(newgame,"New Game",highscore,NULL,easy,NULL);
 		menu_defineMenuEntries(easy,"Easy",normal,NULL,NULL,newgame);
@@ -65,7 +65,7 @@ void menu_init(void){
 		
 	
 	menu_defineMenuEntries(credits,"Credits",NULL,options, developers, NULL);
-		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017",NULL,NULL,NULL,credits);
+		menu_defineMenuEntries(developers,"Daniel Tavakoli          Nicolas Carbone          Byggern Autumn 2017          ¨ ¨ ¨",NULL,NULL,NULL,credits);
 		
 }
 
@@ -91,7 +91,7 @@ void menu_save(void){ //Argument node_t* firstNode?
 		
 		
 		if(currentSelection == temp && currentSelection != developers){
-			sram_save_string("-->",page,0); //Burde pilen hardkodes et sted slik eller legges rett etter skriften?
+			sram_save_string("-->",page,0); 
 		}
 		sram_save_string(temp->name, page,20);
 		

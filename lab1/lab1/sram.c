@@ -73,7 +73,6 @@ void sram_save_char(char myChar){
 	int number = asciValue -32;
 	int i = 0;
 	
-	//IF-SETNINGER FOR DE NYE CHARACTERENE VI LAGER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	for(i=0; i<5; i++){
 		if(asciValue == 198){ //Æ
 			sram_write_data(pgm_read_byte(&font5[95][i]));
@@ -105,7 +104,7 @@ void sram_save_string(char* myString, uint8_t page, uint8_t col){
 
 	//kode for å gå til neste linje (page) om col er nærme slutten av pagen, horisontalt sett
 	for (characterNr = 0; characterNr < strlen(myString); characterNr++){
-		if((5*colCounter + xPosition) > 123){ //OM VI ENDRER FONT SIZE FRA FONT5, MÅ VI ENDRE 5*colCounter OGSÅ, og vi må endre oled_print_char sine for-løkke-lengder!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		if((5*colCounter + xPosition) > 123){ 
     		++PAGE;
 			COL = 0;
 			xPosition = 0;
@@ -120,28 +119,28 @@ void sram_save_string(char* myString, uint8_t page, uint8_t col){
 void sram_gameScreen(void){
 	switch(GAMESTATUS){
 		case PLAYING_EASY:
-		sram_save_string("EASY", 0,30);
-		sram_save_string("TOUCH LEFT BUTTON TO QUIT", 5,0);
-		
-		break;
+			sram_save_string("EASY", 0,30);
+			sram_save_string("TOUCH LEFT BUTTON TO QUIT", 5,0);
+			break;
 		case PLAYING_NORMAL:
-		sram_save_string("NORMAL",0,30);
-		sram_save_string("TOUCH LEFT BUTTON TO QUIT", 5,0);
-		break;
+			sram_save_string("NORMAL",0,30);
+			sram_save_string("TOUCH LEFT BUTTON TO QUIT", 5,0);
+			break;
+			
 		case PLAYING_HARD:
-		sram_save_string("HARD",0,30);
-		sram_save_string("TOUCH LEFT BUTTON TO QUIT", 5,0);
-		break;
+			sram_save_string("HARD",0,30);
+			sram_save_string("TOUCH LEFT BUTTON TO QUIT", 5,0);
+			break;
 		
 		case GAMEOVER:
-		sram_save_string("GAME OVER",3,40);
-		sram_save_string("TOUCH LEFT BUTTON TO QUIT", 5,0);
-		break;
+			sram_save_string("GAME OVER",3,40);
+			sram_save_string("TOUCH LEFT BUTTON TO QUIT", 5,0);
+			break;
 		
 		case PLAYING_CUSTOM:
-		sram_save_string("CUSTOM",0,30);
-		sram_save_string("TOUCH LEFT BUTTON TO QUIT", 5,0);
-		break;
+			sram_save_string("CUSTOM",0,30);
+			sram_save_string("TOUCH LEFT BUTTON TO QUIT", 5,0);
+			break;
 	}
 
 }

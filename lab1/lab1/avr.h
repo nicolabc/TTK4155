@@ -9,7 +9,7 @@
 #ifndef AVR_H_
 #define AVR_H_
 
-
+/*Sets relevant pins to input/output*/
 void avr_init(void);
 
 

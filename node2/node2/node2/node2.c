@@ -38,8 +38,7 @@
 #define clear_bit( reg, bit ) (reg &= ~(1 << bit))
 #define test_bit( reg, bit ) (reg & (1 << bit))
 
-
-volatile int RECEIVE_BUFFER_INTERRUPT = 0;
+/*----------GLOBAL VARIABLES----------*/
 volatile int TIMER_OVERFLOW_INTERRUPT = 0;
 volatile int ADC_CONVERSION_COMPLETE_INTERRUPT = 0;
 volatile int16_t ENCODERVALUE = 0;
@@ -49,7 +48,7 @@ volatile int REF_TO_MOTOR_PID = 0;
 volatile int HAVE_ENTERED_CUSTOM = 0;
 volatile int RECEIVED_GAMESTATUS = 0; //Default MENU
 
-//CUSTOM CONTROLLER PARAMETERS
+/*----------CUSTOM CONTROLLER PARAMETERS----------*/
 volatile int KP;
 volatile int KI;
 volatile int KD;
@@ -57,6 +56,7 @@ volatile int KD;
 
 int main(void)
 {
+	/*----------INITIALIZATION----------*/
 	cli();
 	USART_Init(MYUBRR);
 	can_init();
@@ -67,74 +67,42 @@ int main(void)
 	encoder_init();
 	solenoid_init();
 	
-	
-	/*set_sleep_mode(0);
-	sleep_mode();
+	/*---------Init of sleep---------------*/
+	set_sleep_mode(SLEEP_MODE_IDLE);
 	sleep_enable();
-	sei();
-	sleep_cpu();*/
-	//sleep_disable();
-	
 	
 	sei(); //Global interrupt enable
-	//motor_calibrate();
 	
-	can_msg melding;
-	melding.id = 5;
-	melding.length = 8;
-	melding.data[0] = (uint8_t)('1');
-	melding.data[1] = (uint8_t)('2');
-	melding.data[2] = (uint8_t)('3');
-	melding.data[3] = (uint8_t)('4');
-	melding.data[4] = (uint8_t)('5');
-	melding.data[5] = (uint8_t)('6');
-	melding.data[6] = (uint8_t)('7');
-	melding.data[7] = (uint8_t)('8');
-	
-	uint16_t result;
-	
-	int mottatt_data_char0 = 50; //startposisjon
-	
-	
-	
+	/*---------MAIN BODY OF THE GAME---------------*/
     while(1)
     {
-		/*//Interrupt
-		if(//TIMERINTRERRUPT (MÅ OGSÅ VEKKE FRA SLEEP)
 		
-		//Sleep
-		*/
 		if(ADC_CONVERSION_COMPLETE_INTERRUPT){
-			
 			uint8_t gameOver = game_isGameOver();
-			//printf("Game Over = %i \n", gameOver);
 			
-			//sender can melding som har info om spillet er over
+			/*---------SENDS CAN MESSAGE TO NOTIFY IF THE GAME IS OVER---------------*/
 			can_msg gameInfo;
 			gameInfo.id = 5;
 			gameInfo.length = 1; //skal kun sende over én verdi, som er verdien gameOver
 			gameInfo.data[0] = gameOver;
 			can_send_message(&gameInfo);
 
-			
+			/*---------START CONVERSION AND CLEAR INTERRUPT FLAG---------------*/
 			internalADC_startConversion(); //Starte ny interrupt
-			
 			ADC_CONVERSION_COMPLETE_INTERRUPT = 0;
 		}
 		
-		//	can_send_message(&melding);
-		can_msg mottatt;
+		can_msg mottatt; //RECEIVED CAN MESSAGE FROM NODE 1
 		
 		
-		//sjekker om receive bufre inneholder noe. se s. 69 i mcp2515
-		volatile uint8_t statusReg = mcp2515_read_status();
+		volatile uint8_t statusReg = mcp2515_read_status(); //CHECKS THE STATUS REGISTER
 	
-		if(test_bit(statusReg, 0)){ //Mulig å lage det som en funskjon i ettertid
-			
-			//---------------CAN----------------------
+		/*------------IF THE RECEIVE BUFFER INTERRUPT FLAG IS SET-----------*/
+		if(test_bit(statusReg, 0)){ 
 			can_receive_message(&mottatt);		
 			
-			if(mottatt.id == 100){
+			/*-------IF CAN MESSAGE IS CUSTOM CONTROLLER INFO-------*/
+			if(mottatt.id == 100){ 
 				HAVE_ENTERED_CUSTOM = 1; //Set flag high that we have customized the parameters
 				KP = mottatt.data[0];
 				KI = mottatt.data[1];
@@ -145,7 +113,7 @@ int main(void)
 			
 			/*-------IF CAN MESSAGE IS JOYSTICK INFO-------*/
 			if(mottatt.id == 1){
-				mottatt_data_char0 = mottatt.data[0]; //X-akse
+				int mottatt_data_char0 = mottatt.data[0]; //X-akse
 				int mottatt_data_char1 = mottatt.data[1];
 				int mottatt_data_char2 = mottatt.data[2];
 				int mottatt_data_char3 = mottatt.data[3];
@@ -154,64 +122,69 @@ int main(void)
 				int mottatt_data_char6 = mottatt.data[6];
 				
 				/*------------- VALUES TO MOTOR ------------------------*/
-				CAN_CALIBRATION_NEEDED +=1;
+				CAN_CALIBRATION_NEEDED +=1; //If the value is equal to 1, we set the midpoint in the conversion to percentage
 				REF_TO_MOTOR_PID = joy_convertToPercentage(mottatt_data_char0,CAN_CALIBRATION_NEEDED); //for x-akse på joystick
 				ENCODERVALUE = encoder_read(); //Leser verdi på encoderen
 				CAN_FIRST_MESSAGE_RECEIVED = 1;
 				
-				/*----------------TO SERVO -------------------*/
-				servo_positionUpdate(255-mottatt_data_char6);
+				/*----------------CHANGE BEHAVIOUR OF SERVO ACCORDING TO GAME STATUS-------------------*/
+				if(RECEIVED_GAMESTATUS == PLAYING_EASY){
+					servo_positionUpdate(255-mottatt_data_char0);
+				}
+				else if(RECEIVED_GAMESTATUS == PLAYING_HARD){
+					servo_positionUpdate(mottatt_data_char0);
+				}
+				else if (RECEIVED_GAMESTATUS == PLAYING_NORMAL || RECEIVED_GAMESTATUS == PLAYING_CUSTOM)
+				{
+					servo_positionUpdate(255-mottatt_data_char6);
+				}
+				else{
+					//Do nothing. Do not update the servo position when not playing 
+				}
 				
-				/*---------------SOLENOID-----------------*/
-				if(mottatt_data_char4 == 1){
-					
+				
+				/*---------------TO SHOOT THE SOLENOID-----------------*/
+				if(mottatt_data_char4 == 1 && RECEIVED_GAMESTATUS != GAMEOVER){
 					solenoid_shoot();
 				}
-				//printf("ID: %i  LENGTH: %i   ALL DATA  %i    %i   %i    %i    %i    %i    %i   \n", mottatt.id , mottatt.length, mottatt_data_char0, mottatt_data_char1, mottatt_data_char2, mottatt_data_char3, mottatt_data_char4, mottatt_data_char5, mottatt_data_char6);
-				printf("RECEIVED GAMESTATUS = %i \n",RECEIVED_GAMESTATUS);
-			}
-			
-			
-			
-			
-			RECEIVE_BUFFER_INTERRUPT = 0; //clearer interruptflagget
-			
-			
-			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //for å kunne reenable receive buffer 0 interrupten
-			
-			
+				
+			}	
+			mcp2515_bit_modify(MCP_CANINTF, 0b00000001, 0b00000000); //SET THE RECEIVE BUFFER INTERRUPT FLAG LOW AFTER HANDLING THE INTERRUPT
 		}
-		/*if(TIMER_COMPARE_MATCH == 1){
-			
-			TIMER_COMPARE_MATCH = 0;
-		}*/
 		
-		//sleep_mode(); Blir så vekket av interrupt og kjører videre
+		sleep_mode(); //The MCU wakes up by an interrupt routine
 		
 	}
 }
 
-ISR(INT2_vect){
-	RECEIVE_BUFFER_INTERRUPT = 1;
-	
-}
 
 ISR(ADC_vect){
 	ADC_CONVERSION_COMPLETE_INTERRUPT = 1;
 }
 
 
-//Timer interrupt vector for sleep of program
 ISR(TIMER3_COMPA_vect){
-	//sleep_disable();
 	if(CAN_FIRST_MESSAGE_RECEIVED == 1){
 		if (RECEIVED_GAMESTATUS == PLAYING_CUSTOM) //If we have customized the parameters
 		{
 			motor_PIDspeed(REF_TO_MOTOR_PID,ENCODERVALUE,KP,KI,KD);
 		}
-		else{
-			motor_PIDspeed(REF_TO_MOTOR_PID,ENCODERVALUE,0,0,0);  ////Oppdater PID og spenning til motor (u)
+		else if (RECEIVED_GAMESTATUS == PLAYING_EASY) 
+		{
+			motor_PIDspeed(REF_TO_MOTOR_PID,ENCODERVALUE,120,50,4);
 		}
-		
+		else if (RECEIVED_GAMESTATUS == PLAYING_NORMAL) 
+		{
+			
+			motor_PIDspeed(REF_TO_MOTOR_PID,ENCODERVALUE,120,50,4);
+		}
+		else if (RECEIVED_GAMESTATUS == PLAYING_HARD){
+			
+			motor_PIDspeed(REF_TO_MOTOR_PID,ENCODERVALUE,0,100,100);  //Oppdater PID og spenning til motor (u)
+		}
+		else{
+			printf("Game over\n");
+			motor_PIDspeed(0,0,0,0,0); 
+		}
 	}
 }

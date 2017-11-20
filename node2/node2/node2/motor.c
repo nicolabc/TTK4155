@@ -41,7 +41,7 @@ void motor_init(void){
 }
 
 void motor_setVoltage(uint8_t myValue){
-	dac_send(myValue); //Må fikse logikk på joystick evt slider
+	dac_send(myValue); 
 }
 
 void motor_dirLeft(void){
@@ -51,19 +51,6 @@ void motor_dirLeft(void){
 
 void motor_dirRight(void){
 	set_bit(PORTH,PH1);
-}
-
-void motor_calibrate(void){
-	motor_dirRight();
-	motor_setVoltage(70);//start calibration by going to the right
-	_delay_ms(3000);
-	CALIBRATE_MAX = encoder_read();
-	motor_dirLeft();
-	_delay_ms(3000);
-	CALIBRATE_MIN = encoder_read();
-	motor_setVoltage(0);
-	
-	printf("Max: %i  Min: %i \n\n\n", CALIBRATE_MAX, CALIBRATE_MIN);
 }
 
 
@@ -80,22 +67,22 @@ void motor_PIDspeed(int velRef, int16_t encoderValue, int Kp_in, int Ki_in, int 
 	velocity = velocity/1000; //For å ikke få altfor høye verdier
 	PREV_ENCODERVALUE = encoderValue;
 	
-	double Kp;  //1.5;
-	double Ki;  //0.5;
-	double T =  0.05;  //0.05;
-	double Kd; //0.07;
+	double Kp;  
+	double Ki;  
+	double T =  0.05;  
+	double Kd; 
 	
 	//If all inputs are 0 then we use the standard parameters
 	if(Kp_in+Ki_in+Kd_in == 0){
-		Kp = 1.2;  //1.5;
-		Ki = 0.5;  //0.5;
-		Kd = 0.05; //0.07;
+		Kp = 1.2;
+		Ki = 0.5;
+		Kd = 0.05;
 	}
 	
 	else{
-		Kp = ((double)Kp_in) / 10;  
-		Ki = ((double)Ki_in) / 10;  
-		Kd = ((double)Kd_in) / 10;
+		Kp = ((double)Kp_in) / 100;
+		Ki = ((double)Ki_in) / 100;
+		Kd = ((double)Kd_in) / 100;
 	}
 	
 	
@@ -109,10 +96,7 @@ void motor_PIDspeed(int velRef, int16_t encoderValue, int Kp_in, int Ki_in, int 
 		SUM_ERROR = 0;
 	}
 	
-	
-	
-	
-	
+
 	//-------Diskret PD regulator
 	int u = Kp*AbsError+ T*Ki*SUM_ERROR  + Kd/T*(error-PREV_ERROR); //
 	

@@ -54,7 +54,6 @@ uint8_t mcp2515_init(){
 	if((value & MODE_MASK)  != MODE_CONFIG) {
 		return 1;
 	}
-	// More initialization
 	return 0;
 }
 
@@ -84,13 +83,6 @@ uint8_t mcp2515_read_status(){
 	spi_MasterTransmit(MCP_READ_STATUS);
 	statusRegister = spi_MasterRead(); //disse to skal være like hverandre, se s. 69
 	statusRegister2 = spi_MasterRead(); //disse to skal være like hverandre, se s. 69
-
-	/*
-	//kun for å sjekke om begge registrene har samme data i seg. egentlig ikke nødvendig.
-	if(statusRegister != statusRegister2){
-		printf("Status registers in mcp2515_read_status() not identical.\n");
-		return 0;
-	}*/
 
 	set_bit(PORTB,SS); //Setter SS høy
 

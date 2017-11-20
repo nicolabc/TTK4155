@@ -41,8 +41,6 @@ int16_t encoder_read(void){
 	int16_t LSB = 0;
 	int16_t encoderValue = 0;
 	
-	//clear_bit(PORTH,PH5); //Enable counter on MJ2 (!OE) ---- Set !OE low to enable output of encoder
-	
 	clear_bit(PORTH,PH3); //Set SEL low to get high byte
 	
 	_delay_us(20); //Wait 20 microseconds
@@ -55,16 +53,6 @@ int16_t encoder_read(void){
 	
 	encoderValue |= PINK; //Read 8LSB from encoder
 	
-	
-/*
-	//Reset encoder
-	clear_bit(PORTH,PH6); //Reset encoder counter (!RST)
-	_delay_us(50); //Safety margin before starting counter
-	set_bit(PORTH,PH6); //Enable encoder counter (!RST)
-	*/
-	//set_bit(PORTH,PH5); //Disable output of encoder
-	
-	//encoderValue =(int16_t) (MSB | LSB);
 	
 	return encoderValue;
 }

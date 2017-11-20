@@ -9,7 +9,7 @@
 #ifndef DAC_H_
 #define DAC_H_
 
-
+/*Sends the data over TWI*/
 void dac_send(uint8_t data);
 
 

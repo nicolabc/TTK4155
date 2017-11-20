@@ -20,10 +20,13 @@ typedef struct node{
 extern node_t* currentSelection; //Deklarerer med extern
 extern node_t* currentHead;		//Definisjonen ligger i .c filen
 
+/*Creates all nodes and linked lists*/
 void menu_init(void);
+
+/*Create a node, define all its attributes*/
 void menu_defineMenuEntries(node_t* myNode, char* nodeName, node_t* next, node_t* previous, node_t* child, node_t* parent);//, node_t* parent);
+
+/*Saves the complete menu to the SRAM*/
 void menu_save(void);
-
-
 
 #endif /* MENU_H_ */

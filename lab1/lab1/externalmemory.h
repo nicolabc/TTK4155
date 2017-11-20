@@ -9,9 +9,7 @@
 #ifndef EXTERNALMEMORY_H_
 #define EXTERNALMEMORY_H_
 
+/*Initializes the external memory for the AVR*/
 void extMem_init(void);
-
-
-
 
 #endif /* EXTERNALMEMORY_H_ */

@@ -18,16 +18,14 @@ typedef struct {
 	uint8_t length;
 } can_msg;
 
+/*Initializes CAN*/
 void can_init();
+
+/*Sends a can message, which is a struct*/
 void can_send_message(can_msg* send);
+
+/*Receives a can message struct*/
 int can_receive_message(can_msg *wholeMessage);
-
-//Burde implementeres. Sjekk error-flagg på error-register i mcp2515, og om et error-flagg er høyt; returner 1. Er egentlig bare if-setninger
-int can_error(); //returnerer 1 om vi har en error, 0 hvis ikke
-
-//Disse kan være unødvendige. Ikke implementert foreløpig
-int can_transmit_complete(); //om TXB0CTRL.TXREQ er lav, vil transmission være ferdig. returnerer 1 om vi har completed transmission. Nødvendig funksjon?
-void can_int_vect(); //hva skal denne?
 
 
 #endif /* CAN_H_ */

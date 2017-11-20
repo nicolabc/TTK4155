@@ -6,12 +6,9 @@
  */ 
 
 #include <stdint.h>
-//#include <inttypes.h>
 #include <avr/io.h>
 #include <stdio.h>
 #include <avr/interrupt.h>
-//#include <avr/pgmspace.h>
-
 
 #define F_CPU 4915200
 
@@ -28,7 +25,7 @@
 #include "../../lib/can.h"
 #include "../../lib/joy.h"
 #include "multiboardInfo.h"
-//#include "fonts.h"
+
 
 #define FOSC 4915200// Clock Speed
 #define BAUD 9600
@@ -39,13 +36,6 @@
 
 volatile int RECEIVE_BUFFER_INTERRUPT = 0;
 volatile int FIRST_TIME_IN_CUSTOM_GAME = 1;
-
-//Kan legge til flere states slik at spillet utvikler seg. F.eks hver vanskelighestgrad
-/*
-enum gamestate {
-	MENU = 0,
-	PLAYING = 1,
-};*/
 
 int GAMESTATUS = 0;
 
@@ -68,8 +58,6 @@ int main(void)
 	GAMESTATUS = MENU;
 	uint8_t gameOverValue = 0; //Initialiserer gameOver til å ikke være sann
 	
-	
-	//NEED TO IMPLEMENT SLEEP
 	while(1)
 	{
 		
@@ -107,7 +95,7 @@ int main(void)
 				
 				break;
 			case PLAYING_EASY:
-				oled_clear_screen(); //Litt dumt at alt refresher hver gang i main nå da :) Kan ha counter som blir en første gang slik at den ikke cleares hver gang, men kun første gang
+				oled_clear_screen();
 				sram_gameScreen();
 				oled_refresh();
 				if(gameOverValue == 1){
@@ -160,7 +148,8 @@ int main(void)
 				
 				/*------CUSTOMIZE CONTROLLER---------*/
 				if(FIRST_TIME_IN_CUSTOM_GAME == 1){
-					printf("Choose parameters. NOTE: ALL VALUES WILL BE DIVIDED BY 10. MAX = 255 \n");
+					printf("Choose parameters. MIN = 0,MAX = 255.  \n");
+					
 					printf("Kp = ");
 					int Kp;
 					scanf("%i",&Kp);  //Fra termite
@@ -173,11 +162,7 @@ int main(void)
 					int Kd;
 					scanf("%i",&Kd);  //Fra termite
 					
-					//Printe på oled??
-					/*char* sramKp = "Kd = "+Kp;
-					sram_save_string("Kd = ")*/
 					printf("New Kp = %i, new Ki = %i, new Kd = %i \n",Kp,Ki,Kd);
-					
 					
 					/*---------------SENDING CONTROLLER PARAMETERS TO NODE 2 ---------*/
 					controllerParameters.id = 100;
@@ -210,7 +195,7 @@ int main(void)
 				if(joy_readButton(0)){
 					GAMESTATUS = MENU;
 				}
-				
+				break;
 			default:
 			break;
 		}

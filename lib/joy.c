@@ -98,14 +98,12 @@ int joy_doesDirectionChange(void){
 	}
 	switch(joyCurrentDirection){
 		case DOWN:
-			//oled_print("DOWN", 6 , 70);
 			if(currentSelection->next != NULL){
 				currentSelection = currentSelection->next;
 			}
 				
 			break;
 		case UP:
-			//oled_print("UP", 6,70);
 			if(currentSelection->previous != NULL){
 				currentSelection = currentSelection->previous;
 			}
@@ -141,11 +139,6 @@ int joy_doesDirectionChange(void){
 			break;
 		case NEUTRAL:
 			break;
-		//default:
-				
-		//default:
-			
-		//Burde ikke skje
 			
 	}
 	joyLastDirectionY = joyCurrentDirectionY; //Oppdaterer hva som var sist

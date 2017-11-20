@@ -26,8 +26,13 @@
 //SS, MOSI, MISO, SCK   PB7, ikke pb4 er ss
 //sett PB0 til output og sett pb0 høy, miso lav, 
 
+/*Set relevant pins to input/output and enable SPI bits (SS, MOSI, MISO and SCK*/
 void spi_init(void);
-void spi_MasterTransmit(char cData); //void spi_send();
+
+/*Sends data from the master*/
+void spi_MasterTransmit(char cData); 
+
+/*Reads data to the master*/
 uint8_t spi_MasterRead();
 
 

@@ -9,7 +9,10 @@
 #ifndef ENCODER_H_
 #define ENCODER_H_
 
+/*Initializes relevant pins to input/output*/
 void encoder_init(void);
+
+/*Reads the values from the encoder*/
 int16_t encoder_read(void);
 
 

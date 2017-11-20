@@ -37,7 +37,7 @@
 	
  }
 
-void can_send_message(can_msg* send){//unsigned int identifier, uint8_t *message, uint8_t lengthOfData
+void can_send_message(can_msg* send){
 	
 	while((mcp2515_read(MCP_TXB0CTRL) & MCP_TXREQ)){ //så lenge transfer buffer 0 er fullt, vil MCP_TXREQ være høy, og vi er stuck i whilen. Når det er tomt, vil vi gå ut av whilen
 	}
@@ -100,8 +100,3 @@ int can_receive_message(can_msg *wholeMessage){
 	
 	return 1;
 }
-
-
-
- //enable rollover
- //kap. 3, kap. 4, kap. 7
